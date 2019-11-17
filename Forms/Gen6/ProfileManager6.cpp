@@ -1,0 +1,117 @@
+/*
+ * This file is part of 3DSTimeFinder
+ * Copyright (C) 2019 by Admiral_Fish
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+#include "ProfileManager6.hpp"
+#include "ui_ProfileManager6.h"
+#include <Forms/Gen6/ProfileEditor6.hpp>
+#include <QMessageBox>
+#include <QSettings>
+
+ProfileManager6::ProfileManager6(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::ProfileManager6)
+{
+    ui->setupUi(this);
+    setAttribute(Qt::WA_QuitOnClose, false);
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    setupModels();
+}
+
+ProfileManager6::~ProfileManager6()
+{
+    QSettings setting;
+    setting.setValue("profileManager/geometry", this->saveGeometry());
+
+    delete ui;
+}
+
+void ProfileManager6::setupModels()
+{
+    model = new ProfileModel6(ui->tableView);
+    model->addItems(Profile6::loadProfileList());
+    ui->tableView->setModel(model);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    QSettings setting;
+    if (setting.contains("profileManager/geometry"))
+        this->restoreGeometry(setting.value("profileManager/geometry").toByteArray());
+}
+
+void ProfileManager6::on_pushButtonNew_clicked()
+{
+    QScopedPointer<ProfileEditor6> dialog(new ProfileEditor6);
+    if (dialog->exec() == QDialog::Accepted)
+    {
+        Profile6 profile = dialog->getNewProfile();
+        profile.saveProfile();
+        model->addItem(profile);
+        emit updateProfiles();
+    }
+}
+
+void ProfileManager6::on_pushButtonEdit_clicked()
+{
+    int r = ui->tableView->currentIndex().row();
+
+    if (r < 0)
+    {
+        QMessageBox error;
+        error.setText(tr("Please select a profile."));
+        error.exec();
+        return;
+    }
+
+    QScopedPointer<ProfileEditor6> dialog(new ProfileEditor6);
+    if (dialog->exec() == QDialog::Accepted)
+    {
+        Profile6 profile = dialog->getNewProfile();
+        profile.updateProfile(dialog->getOriginal());
+        model->updateItem(profile, r);
+        emit updateProfiles();
+    }
+}
+
+void ProfileManager6::on_pushButtonDelete_clicked()
+{
+    int r = ui->tableView->currentIndex().row();
+
+    if (r < 0)
+    {
+        QMessageBox error;
+        error.setText(tr("Please select a profile."));
+        error.exec();
+        return;
+    }
+
+    QMessageBox message(QMessageBox::Question, tr("Delete profile"),
+        tr("Are you sure you wish to delete this profile?"), QMessageBox::Yes | QMessageBox::No);
+    if (message.exec() == QMessageBox::Yes)
+    {
+        Profile6 profile = model->getItem(r);
+        profile.deleteProfile();
+        model->removeItem(r);
+        emit updateProfiles();
+    }
+}
+
+void ProfileManager6::on_pushButtonDone_clicked()
+{
+    this->close();
+}

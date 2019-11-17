@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ID7</class>
+ <widget class="QWidget" name="ID7">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Gen 7 TID/SID</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBoxProfile">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Profiles</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_15">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelProfile">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Profile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBoxProfiles"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelProfileTID">
+        <property name="text">
+         <string>TID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="labelProfileTIDValue">
+        <property name="text">
+         <string notr="true">12345</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" rowspan="2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="labelProfileGame">
+        <property name="text">
+         <string>Game</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLabel" name="labelProfileGameValue">
+        <property name="text">
+         <string>Ultra Sun</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7" rowspan="2">
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QLabel" name="labelProfileTick">
+        <property name="text">
+         <string>Tick</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9">
+       <widget class="QLabel" name="labelProfileTickValue">
+        <property name="text">
+         <string>383e329</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pushButtonProfileManager">
+        <property name="text">
+         <string>Manager</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="labelProfileSID">
+        <property name="text">
+         <string>SID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="labelProfileSIDValue">
+        <property name="text">
+         <string notr="true">54321</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="labelProfileShinyCharm">
+        <property name="text">
+         <string>Shiny Charm</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLabel" name="labelProfileShinyCharmValue">
+        <property name="text">
+         <string>No</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
+       <widget class="QLabel" name="labelProfileOffset">
+        <property name="text">
+         <string>Offset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="9">
+       <widget class="QLabel" name="labelProfileOffsetValue">
+        <property name="text">
+         <string>17</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBoxIDRNGInfo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>RNG Info</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelIDStartDate">
+        <property name="text">
+         <string>Start Date:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelIDEndDate">
+        <property name="text">
+         <string>End Date:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelIDFrame">
+        <property name="text">
+         <string>Frame:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="TextBox" name="textBoxIDStartFrame">
+        <property name="text">
+         <string notr="true">1132</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="TextBox" name="textBoxIDEndFrame">
+        <property name="text">
+         <string notr="true">10000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3">
+       <widget class="QPushButton" name="pushButtonIDSearch">
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QPushButton" name="pushButtonIDCancel">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QDateTimeEdit" name="dateTimeEditIDStartDate">
+        <property name="displayFormat">
+         <string>M/d/yyyy H:mm:ss</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QDateTimeEdit" name="dateTimeEditIDEndDate">
+        <property name="displayFormat">
+         <string>M/d/yyyy H:mm:ss</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBoxIDFilter">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>2</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Filters</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_7">
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelIDTSV">
+        <property name="text">
+         <string>TSV</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" rowspan="4">
+       <widget class="QTextEdit" name="textEditIDFilter"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radioButtonIDTID">
+        <property name="text">
+         <string>TID</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="radioButtonIDTIDSID">
+        <property name="text">
+         <string>TID/SID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" rowspan="4">
+       <widget class="QTextEdit" name="textEditTSVFilter"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="radioButtonIDSID">
+        <property name="text">
+         <string>SID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QRadioButton" name="radioButtonIDTID7">
+        <property name="text">
+         <string>G7TID</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QProgressBar" name="progressBarID">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="TableView" name="tableViewID">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>2</verstretch>
+      </sizepolicy>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>60</number>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TextBox</class>
+   <extends>QLineEdit</extends>
+   <header>Forms/Controls/TextBox.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>TableView</class>
+   <extends>QTableView</extends>
+   <header>Forms/Controls/TableView.hpp</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxProfiles</tabstop>
+  <tabstop>pushButtonProfileManager</tabstop>
+  <tabstop>dateTimeEditIDStartDate</tabstop>
+  <tabstop>dateTimeEditIDEndDate</tabstop>
+  <tabstop>textBoxIDStartFrame</tabstop>
+  <tabstop>textBoxIDEndFrame</tabstop>
+  <tabstop>pushButtonIDSearch</tabstop>
+  <tabstop>pushButtonIDCancel</tabstop>
+  <tabstop>radioButtonIDTID</tabstop>
+  <tabstop>radioButtonIDSID</tabstop>
+  <tabstop>radioButtonIDTIDSID</tabstop>
+  <tabstop>radioButtonIDTID7</tabstop>
+  <tabstop>textEditIDFilter</tabstop>
+  <tabstop>textEditTSVFilter</tabstop>
+  <tabstop>tableViewID</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

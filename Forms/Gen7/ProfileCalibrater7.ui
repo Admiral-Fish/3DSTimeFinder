@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ProfileCalibrater7</class>
+ <widget class="QWidget" name="ProfileCalibrater7">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>820</width>
+    <height>330</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>820</width>
+    <height>330</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Profile Calibrater</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelVerison">
+        <property name="text">
+         <string>Verison</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="comboBox">
+        <item>
+         <property name="text">
+          <string>Sun/Moon</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Ultra Sun/Ultra Moon</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="labelBaseTick">
+        <property name="text">
+         <string>Base Tick</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="TextBox" name="textBoxBaseTick">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string notr="true">3532EA4</string>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="labelBaseOffset">
+        <property name="text">
+         <string>Base Offset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="TextBox" name="textBoxBaseOffset">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string notr="true">54</string>
+        </property>
+        <property name="maxLength">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QPushButton" name="pushButtonSearch">
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="QPushButton" name="pushButtonCancel">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Parameters</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QDateTimeEdit" name="dateTimeEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>You may need to adjust the hours by +- 1 due to day light savings.</string>
+        </property>
+        <property name="displayFormat">
+         <string>M/d/yyyy H:mm:ss</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelDate">
+        <property name="text">
+         <string>Date/Time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelTickRange">
+        <property name="text">
+         <string>Tick Range +-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="TextBox" name="textBoxTickRange">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string notr="true">1000</string>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelInitialSeed">
+        <property name="text">
+         <string>Initial Seed</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="TextBox" name="textBoxInitialSeed">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="TextBox" name="textBoxOffsetRange">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string notr="true">10</string>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Offset Range +-</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QTableView" name="tableView">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TextBox</class>
+   <extends>QLineEdit</extends>
+   <header>Forms/Controls/TextBox.hpp</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>comboBox</tabstop>
+  <tabstop>textBoxBaseTick</tabstop>
+  <tabstop>textBoxBaseOffset</tabstop>
+  <tabstop>dateTimeEdit</tabstop>
+  <tabstop>textBoxTickRange</tabstop>
+  <tabstop>textBoxInitialSeed</tabstop>
+  <tabstop>textBoxOffsetRange</tabstop>
+  <tabstop>pushButtonSearch</tabstop>
+  <tabstop>pushButtonCancel</tabstop>
+  <tabstop>tableView</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

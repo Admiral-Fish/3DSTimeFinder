@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Wild7</class>
+ <widget class="QWidget" name="Wild7">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Gen 7 Wild</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="3">
+    <widget class="QGroupBox" name="groupBoxProfile">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Profiles</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_15">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelProfile">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Profile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBoxProfiles"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelProfileTID">
+        <property name="text">
+         <string>TID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="labelProfileTIDValue">
+        <property name="text">
+         <string notr="true">12345</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" rowspan="2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="labelProfileGame">
+        <property name="text">
+         <string>Game</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLabel" name="labelProfileGameValue">
+        <property name="text">
+         <string>Ultra Sun</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7" rowspan="2">
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QLabel" name="labelProfileTick">
+        <property name="text">
+         <string>Tick</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9">
+       <widget class="QLabel" name="labelProfileTickValue">
+        <property name="text">
+         <string>383e329</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pushButtonProfileManager">
+        <property name="text">
+         <string>Manager</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="labelProfileSID">
+        <property name="text">
+         <string>SID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="labelProfileSIDValue">
+        <property name="text">
+         <string notr="true">54321</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="labelProfileShinyCharm">
+        <property name="text">
+         <string>Shiny Charm</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLabel" name="labelProfileShinyCharmValue">
+        <property name="text">
+         <string>No</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
+       <widget class="QLabel" name="labelProfileOffset">
+        <property name="text">
+         <string>Offset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="9">
+       <widget class="QLabel" name="labelProfileOffsetValue">
+        <property name="text">
+         <string>17</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBoxWildRNGInfo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>RNG Info</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_18">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelWildStartDate">
+        <property name="text">
+         <string>Start Date:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QDateTimeEdit" name="dateTimeEditWildStartDate">
+        <property name="displayFormat">
+         <string>M/d/yyyy H:mm:ss</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelWildEndDate">
+        <property name="text">
+         <string>End Date:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QDateTimeEdit" name="dateTimeEditWildEndDate">
+        <property name="displayFormat">
+         <string>M/d/yyyy H:mm:ss</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelWildFrame">
+        <property name="text">
+         <string>Frame:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="TextBox" name="textBoxWildStartFrame">
+        <property name="text">
+         <string notr="true">478</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="TextBox" name="textBoxWildEndFrame">
+        <property name="text">
+         <string notr="true">10000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3">
+       <widget class="QPushButton" name="pushButtonWildSearch">
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QPushButton" name="pushButtonWildCancel">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBoxWildSettings">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_20">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelWildEncounter">
+        <property name="text">
+         <string>Encounter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBoxWildEncounter">
+        <item>
+         <property name="text">
+          <string>Grass</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fish</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="checkBoxWildSynch">
+        <property name="text">
+         <string>Synch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="comboBoxWildSynchNature"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="labelWildGenderRatio">
+        <property name="text">
+         <string>Gender Ratio</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QComboBox" name="comboBoxWildGenderRatio"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QGroupBox" name="groupBoxWildFilter">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>3</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Filters</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_19">
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelWildNature">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string>Nature</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="CheckList" name="comboBoxWildNature"/>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pushButtonWildAnyNature">
+        <property name="text">
+         <string>Any</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="labelWildHiddenPower">
+        <property name="text">
+         <string>Hidden Power</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="CheckList" name="comboBoxWildHiddenPower"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pushButtonWildAnyHiddenPower">
+        <property name="text">
+         <string>Any</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="labelWildEncounterSlot">
+        <property name="text">
+         <string>Encounter Slots</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="CheckList" name="comboBoxWildEncounterSlot">
+        <item>
+         <property name="text">
+          <string>1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>7</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>9</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>10</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="pushButtonWildAnyEncounterSlot">
+        <property name="text">
+         <string>Any</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLabel" name="labelWildAbility">
+        <property name="text">
+         <string>Ability</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QComboBox" name="comboBoxWildAbility">
+        <item>
+         <property name="text">
+          <string>Any</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">H</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="labelWildGender">
+        <property name="text">
+         <string>Gender</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QComboBox" name="comboBoxWildGender">
+        <item>
+         <property name="text">
+          <string>Any</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">♂</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">♀</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="labelWildShiny">
+        <property name="text">
+         <string>Shiny</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QCheckBox" name="checkBoxWildShiny">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" rowspan="6">
+       <widget class="IVFilter" name="ivFilterWild" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QProgressBar" name="progressBarWild">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="TableView" name="tableViewWild">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>2</verstretch>
+      </sizepolicy>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>60</number>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TextBox</class>
+   <extends>QLineEdit</extends>
+   <header>Forms/Controls/TextBox.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>TableView</class>
+   <extends>QTableView</extends>
+   <header>Forms/Controls/TableView.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>IVFilter</class>
+   <extends>QWidget</extends>
+   <header>Forms/Controls/IVFilter.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CheckList</class>
+   <extends>QComboBox</extends>
+   <header>Forms/Controls/CheckList.hpp</header>
+   <slots>
+    <slot>resetChecks()</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxProfiles</tabstop>
+  <tabstop>pushButtonProfileManager</tabstop>
+  <tabstop>dateTimeEditWildStartDate</tabstop>
+  <tabstop>dateTimeEditWildEndDate</tabstop>
+  <tabstop>textBoxWildStartFrame</tabstop>
+  <tabstop>textBoxWildEndFrame</tabstop>
+  <tabstop>pushButtonWildSearch</tabstop>
+  <tabstop>pushButtonWildCancel</tabstop>
+  <tabstop>comboBoxWildEncounter</tabstop>
+  <tabstop>checkBoxWildSynch</tabstop>
+  <tabstop>comboBoxWildSynchNature</tabstop>
+  <tabstop>comboBoxWildGenderRatio</tabstop>
+  <tabstop>comboBoxWildNature</tabstop>
+  <tabstop>pushButtonWildAnyNature</tabstop>
+  <tabstop>comboBoxWildHiddenPower</tabstop>
+  <tabstop>pushButtonWildAnyHiddenPower</tabstop>
+  <tabstop>comboBoxWildEncounterSlot</tabstop>
+  <tabstop>pushButtonWildAnyEncounterSlot</tabstop>
+  <tabstop>comboBoxWildAbility</tabstop>
+  <tabstop>comboBoxWildGender</tabstop>
+  <tabstop>checkBoxWildShiny</tabstop>
+  <tabstop>tableViewWild</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButtonWildAnyNature</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBoxWildNature</receiver>
+   <slot>resetChecks()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1038</x>
+     <y>171</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1012</x>
+     <y>166</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonWildAnyHiddenPower</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBoxWildHiddenPower</receiver>
+   <slot>resetChecks()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1053</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>976</x>
+     <y>195</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonWildAnyEncounterSlot</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBoxWildEncounterSlot</receiver>
+   <slot>resetChecks()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1068</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>934</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
