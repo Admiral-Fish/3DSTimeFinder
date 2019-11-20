@@ -82,12 +82,14 @@ void ProfileEditor6::setupModels()
     ui->comboBoxProfileVersion->setItemData(2, Game::OR);
     ui->comboBoxProfileVersion->setItemData(3, Game::AS);
 
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ProfileEditor6::accepted);
+
     QSettings setting;
     if (setting.contains("profileEditor/geometry"))
         this->restoreGeometry(setting.value("profileEditor/geometry").toByteArray());
 }
 
-void ProfileEditor6::on_buttonBox_accepted()
+void ProfileEditor6::accepted()
 {
     QString input = ui->lineEditProfileName->text().trimmed();
     if (input.isEmpty())
@@ -103,9 +105,4 @@ void ProfileEditor6::on_buttonBox_accepted()
         static_cast<Game>(ui->comboBoxProfileVersion->currentData().toInt()), ui->checkBoxShinyCharm->isChecked());
 
     done(QDialog::Accepted);
-}
-
-void ProfileEditor6::on_buttonBox_rejected()
-{
-    done(QDialog::Rejected);
 }

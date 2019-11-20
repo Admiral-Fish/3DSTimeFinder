@@ -96,12 +96,14 @@ void ProfileEditor7::setupModels()
     ui->comboBoxProfileVersion->setItemData(2, Game::UltraSun);
     ui->comboBoxProfileVersion->setItemData(3, Game::UltraMoon);
 
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ProfileEditor7::accepted);
+
     QSettings setting;
     if (setting.contains("profileEditor/geometry"))
         this->restoreGeometry(setting.value("profileEditor/geometry").toByteArray());
 }
 
-void ProfileEditor7::on_buttonBox_accepted()
+void ProfileEditor7::accepted()
 {
     QString input = ui->lineEditProfileName->text().trimmed();
     if (input.isEmpty())
@@ -117,9 +119,4 @@ void ProfileEditor7::on_buttonBox_accepted()
         static_cast<Game>(ui->comboBoxProfileVersion->currentData().toInt()), ui->checkBoxShinyCharm->isChecked());
 
     done(QDialog::Accepted);
-}
-
-void ProfileEditor7::on_buttonBox_rejected()
-{
-    done(QDialog::Rejected);
 }

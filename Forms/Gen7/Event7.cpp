@@ -105,6 +105,14 @@ void Event7::setupModel()
     ui->dateTimeEditEventStartDate->setMinimumDateTime(dt);
     ui->dateTimeEditEventEndDate->setMinimumDateTime(dt);
 
+    connect(ui->pushButtonEventSearch, &QPushButton::clicked, this, &Event7::search);
+    connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &Event7::profileManager);
+    connect(
+        ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Event7::profilesIndexChanged);
+    connect(ui->checkBoxEventAbilityLock, &QCheckBox::clicked, this, &Event7::checkBoxEventAbilityLock);
+    connect(ui->comboBoxEventPIDType, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+        &Event7::comboBoxEventPIDTypeIndexChanged);
+
     QSettings setting;
     if (setting.contains("event7/geometry"))
         this->restoreGeometry(setting.value("event7/geometry").toByteArray());

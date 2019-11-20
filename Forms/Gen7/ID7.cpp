@@ -29,6 +29,11 @@ ID7::ID7(QWidget *parent)
     , ui(new Ui::ID7)
 {
     ui->setupUi(this);
+
+    setupModel();
+    updateProfiles();
+
+    qRegisterMetaType<QVector<IDResult>>("QVector<IDResult>");
 }
 
 ID7::~ID7()
@@ -75,6 +80,11 @@ void ID7::setupModel()
     QDateTime dt(QDate(2000, 1, 1), QTime(0, 0, 0));
     ui->dateTimeEditIDStartDate->setMinimumDateTime(dt);
     ui->dateTimeEditIDEndDate->setMinimumDateTime(dt);
+
+    connect(ui->pushButtonIDSearch, &QPushButton::clicked, this, &ID7::search);
+    connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &ID7::profileManager);
+    connect(
+        ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ID7::profilesIndexChanged);
 
     QSettings setting;
     if (setting.contains("id7/geometry"))

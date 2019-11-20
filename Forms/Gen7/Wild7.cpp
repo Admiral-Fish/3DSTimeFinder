@@ -105,6 +105,11 @@ void Wild7::setupModel()
     ui->dateTimeEditWildStartDate->setMinimumDateTime(dt);
     ui->dateTimeEditWildEndDate->setMinimumDateTime(dt);
 
+    connect(ui->pushButtonWildSearch, &QPushButton::clicked, this, &Wild7::search);
+    connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &Wild7::profileManager);
+    connect(
+        ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Wild7::profilesIndexChanged);
+
     QSettings setting;
     if (setting.contains("wild7/geometry"))
         this->restoreGeometry(setting.value("wild/geometry").toByteArray());

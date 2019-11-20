@@ -49,12 +49,16 @@ void ProfileManager7::setupModels()
     ui->tableView->setModel(model);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    connect(ui->pushButtonNew, &QPushButton::clicked, this, &ProfileManager7::create);
+    connect(ui->pushButtonEdit, &QPushButton::clicked, this, &ProfileManager7::edit);
+    connect(ui->pushButtonDelete, &QPushButton::clicked, this, &ProfileManager7::remove);
+
     QSettings setting;
     if (setting.contains("profileManager/geometry"))
         this->restoreGeometry(setting.value("profileManager/geometry").toByteArray());
 }
 
-void ProfileManager7::on_pushButtonNew_clicked()
+void ProfileManager7::create()
 {
     QScopedPointer<ProfileEditor7> dialog(new ProfileEditor7);
     if (dialog->exec() == QDialog::Accepted)
@@ -66,7 +70,7 @@ void ProfileManager7::on_pushButtonNew_clicked()
     }
 }
 
-void ProfileManager7::on_pushButtonEdit_clicked()
+void ProfileManager7::edit()
 {
     int r = ui->tableView->currentIndex().row();
 
@@ -88,7 +92,7 @@ void ProfileManager7::on_pushButtonEdit_clicked()
     }
 }
 
-void ProfileManager7::on_pushButtonDelete_clicked()
+void ProfileManager7::remove()
 {
     int r = ui->tableView->currentIndex().row();
 
@@ -109,9 +113,4 @@ void ProfileManager7::on_pushButtonDelete_clicked()
         model->removeItem(r);
         emit updateProfiles();
     }
-}
-
-void ProfileManager7::on_pushButtonDone_clicked()
-{
-    this->close();
 }

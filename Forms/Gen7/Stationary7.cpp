@@ -102,6 +102,11 @@ void Stationary7::setupModel()
     ui->dateTimeEditStationaryStartDate->setMinimumDateTime(dt);
     ui->dateTimeEditStationaryEndDate->setMinimumDateTime(dt);
 
+    connect(ui->pushButtonStationarySearch, &QPushButton::clicked, this, &Stationary7::search);
+    connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &Stationary7::profileManager);
+    connect(ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+        &Stationary7::profilesIndexChanged);
+
     QSettings setting;
     if (setting.contains("stationary7/geometry"))
         this->restoreGeometry(setting.value("stationary7/geometry").toByteArray());

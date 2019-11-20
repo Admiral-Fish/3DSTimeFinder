@@ -48,10 +48,10 @@ private:
     void setupModels();
 
 private slots:
-    void on_pushButtonSearch_clicked();
-    void updateResults(QVector<QPair<u32, u32>> results, int val);
-    void on_comboBox_currentIndexChanged(int index);
-    void on_tableView_customContextMenuRequested(const QPoint &pos);
+    void search();
+    void update(const QVector<QPair<u32, u32>> &results, int val);
+    void indexChanged(int index);
+    void tableViewContextMenu(QPoint pos);
     void createProfile();
 };
 

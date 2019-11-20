@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Profile Editor</string>
+   <string>Gen 6 Profile Editor</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

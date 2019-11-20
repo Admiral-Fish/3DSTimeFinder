@@ -57,20 +57,23 @@ void ProfileCalibrater7::setupModels()
     ui->textBoxOffsetRange->setValues(InputType::Frame32Bit);
 
     ui->dateTimeEdit->setCalendarPopup(true);
-    QDateTime dt;
-    dt.fromString(QStringLiteral("2000-01-01 00:00:01"), QStringLiteral("yyyy-MM-dd hh:mm:ss"));
+    QDateTime dt(QDate(2000, 1, 1), QTime(0, 0, 0));
     ui->dateTimeEdit->setMinimumDateTime(dt);
 
     contextMenu = new QMenu(ui->tableView);
     QAction *createProfile = contextMenu->addAction(tr("Create profile from parameters"));
     connect(createProfile, &QAction::triggered, this, &ProfileCalibrater7::createProfile);
 
+    connect(ui->pushButtonSearch, &QPushButton::clicked, this, &ProfileCalibrater7::search);
+    connect(ui->comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ProfileCalibrater7::indexChanged);
+    connect(ui->tableView, &QTableView::customContextMenuRequested, this, &ProfileCalibrater7::tableViewContextMenu);
+
     QSettings setting;
     if (setting.contains("profileCalibrater/geometry"))
         this->restoreGeometry(setting.value("profileCalibrater/geometry").toByteArray());
 }
 
-void ProfileCalibrater7::on_pushButtonSearch_clicked()
+void ProfileCalibrater7::search()
 {
     model->removeRows(0, model->rowCount());
     ui->pushButtonSearch->setEnabled(false);
@@ -90,7 +93,7 @@ void ProfileCalibrater7::on_pushButtonSearch_clicked()
         ui->pushButtonSearch->setEnabled(true);
         ui->pushButtonCancel->setEnabled(false);
     });
-    connect(search, &ProfileSearcher7::updateProgress, this, &ProfileCalibrater7::updateResults);
+    connect(search, &ProfileSearcher7::updateProgress, this, &ProfileCalibrater7::update);
     connect(ui->pushButtonCancel, &QPushButton::clicked, search, &ProfileSearcher7::cancelSearch);
 
     ui->progressBar->setValue(0);
@@ -99,7 +102,7 @@ void ProfileCalibrater7::on_pushButtonSearch_clicked()
     search->startSearch();
 }
 
-void ProfileCalibrater7::updateResults(QVector<QPair<u32, u32>> results, int val)
+void ProfileCalibrater7::update(const QVector<QPair<u32, u32>> &results, int val)
 {
     for (const auto &result : results)
     {
@@ -111,7 +114,7 @@ void ProfileCalibrater7::updateResults(QVector<QPair<u32, u32>> results, int val
     ui->progressBar->setValue(val);
 }
 
-void ProfileCalibrater7::on_comboBox_currentIndexChanged(int index)
+void ProfileCalibrater7::indexChanged(int index)
 {
     if (index == 0)
     {
@@ -125,7 +128,7 @@ void ProfileCalibrater7::on_comboBox_currentIndexChanged(int index)
     }
 }
 
-void ProfileCalibrater7::on_tableView_customContextMenuRequested(const QPoint &pos)
+void ProfileCalibrater7::tableViewContextMenu(QPoint pos)
 {
     contextMenu->popup(ui->tableView->viewport()->mapToGlobal(pos));
 }
@@ -141,7 +144,7 @@ void ProfileCalibrater7::createProfile()
                      .toString()
                      .toUInt();
 
-    auto *dialog = new ProfileEditor7(tick, offset);
+    QScopedPointer<ProfileEditor7> dialog(new ProfileEditor7(tick, offset));
     if (dialog->exec() == QDialog::Accepted)
     {
         Profile7 profile = dialog->getNewProfile();
