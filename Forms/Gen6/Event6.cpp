@@ -33,6 +33,7 @@ Event6::Event6(QWidget *parent)
     ui->setupUi(this);
 
     setupModels();
+    updateProfiles();
 
     qRegisterMetaType<QVector<EventResult>>("QVector<EventResult>");
 }
