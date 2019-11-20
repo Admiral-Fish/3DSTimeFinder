@@ -37,7 +37,7 @@ signals:
 
 public:
     explicit Event7(QWidget *parent = nullptr);
-    ~Event7();
+    ~Event7() override;
     void updateProfiles();
 
 private:

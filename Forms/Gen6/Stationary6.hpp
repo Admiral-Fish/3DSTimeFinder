@@ -37,7 +37,7 @@ signals:
 
 public:
     explicit Stationary6(QWidget *parent = nullptr);
-    ~Stationary6();
+    ~Stationary6() override;
     void updateProfiles();
 
 private:

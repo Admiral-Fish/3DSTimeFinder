@@ -37,7 +37,7 @@ signals:
 
 public:
     explicit Wild7(QWidget *parent = nullptr);
-    ~Wild7();
+    ~Wild7() override;
     void updateProfiles();
 
 private:
