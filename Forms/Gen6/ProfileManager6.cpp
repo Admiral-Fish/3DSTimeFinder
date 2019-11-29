@@ -82,7 +82,7 @@ void ProfileManager6::edit()
         return;
     }
 
-    QScopedPointer<ProfileEditor6> dialog(new ProfileEditor6);
+    QScopedPointer<ProfileEditor6> dialog(new ProfileEditor6(model->getItem(r)));
     if (dialog->exec() == QDialog::Accepted)
     {
         Profile6 profile = dialog->getNewProfile();
