@@ -1,6 +1,6 @@
 /*
- * This file is part of Gen7TimeFinder
- * Copyright (C) 2018-2019 by Admiral_Fish
+ * This file is part of 3DSTimeFinder
+ * Copyright (C) 2019 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

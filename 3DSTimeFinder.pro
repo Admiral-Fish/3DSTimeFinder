@@ -8,8 +8,8 @@ TARGET = 3DSTimeFinder
 TEMPLATE = app
 VERSION = 1.0.0
 
-#RC_ICONS += Images/gen7timefinder.ico
-#ICON += Images/gen7timefinder.icns
+#RC_ICONS += Images/3dstimefinder.ico
+#ICON += Images/3dstimefinder.icns
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
