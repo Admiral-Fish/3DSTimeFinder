@@ -111,7 +111,14 @@
     <addaction name="menuCPU_Threads"/>
     <addaction name="menuStyle"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionCalibrator7"/>
+   </widget>
    <addaction name="menuSettings"/>
+   <addaction name="menuTools"/>
   </widget>
   <action name="actionDark">
    <property name="checkable">
@@ -127,6 +134,11 @@
    </property>
    <property name="text">
     <string>Light</string>
+   </property>
+  </action>
+  <action name="actionCalibrator7">
+   <property name="text">
+    <string>Gen 7 Calibrator</string>
    </property>
   </action>
  </widget>

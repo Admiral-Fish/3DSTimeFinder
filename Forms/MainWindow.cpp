@@ -19,6 +19,13 @@
 
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
+#include <Forms/Gen6/Event6.hpp>
+#include <Forms/Gen6/Stationary6.hpp>
+#include <Forms/Gen7/Event7.hpp>
+#include <Forms/Gen7/ID7.hpp>
+#include <Forms/Gen7/ProfileCalibrater7.hpp>
+#include <Forms/Gen7/Stationary7.hpp>
+#include <Forms/Gen7/Wild7.hpp>
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
@@ -52,6 +59,7 @@ void MainWindow::setupModel()
     connect(ui->pushButtonID7, &QPushButton::clicked, this, &MainWindow::openID7);
     connect(ui->pushButtonStationary7, &QPushButton::clicked, this, &MainWindow::openStationary7);
     connect(ui->pushButtonWild7, &QPushButton::clicked, this, &MainWindow::openWild7);
+    connect(ui->actionCalibrator7, &QAction::triggered, this, &MainWindow::openCalibrator7);
 
     QSettings setting;
     if (setting.contains("mainWindow/geometry"))
@@ -242,4 +250,10 @@ void MainWindow::openWild7()
     }
     wild7->show();
     wild7->raise();
+}
+
+void MainWindow::openCalibrator7()
+{
+    auto *calibrator = new ProfileCalibrater7();
+    calibrator->show();
 }

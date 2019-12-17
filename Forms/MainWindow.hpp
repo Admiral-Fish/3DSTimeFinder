@@ -20,14 +20,15 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <Forms/Gen6/Event6.hpp>
-#include <Forms/Gen6/Stationary6.hpp>
-#include <Forms/Gen7/Event7.hpp>
-#include <Forms/Gen7/ID7.hpp>
-#include <Forms/Gen7/Stationary7.hpp>
-#include <Forms/Gen7/Wild7.hpp>
 #include <QActionGroup>
 #include <QMainWindow>
+
+class Event6;
+class Stationary6;
+class Event7;
+class ID7;
+class Stationary7;
+class Wild7;
 
 namespace Ui
 {
@@ -68,5 +69,6 @@ private slots:
     void openID7();
     void openStationary7();
     void openWild7();
+    void openCalibrator7();
 };
 #endif // MAINWINDOW_HPP
