@@ -29,6 +29,7 @@ ID7::ID7(QWidget *parent)
     , ui(new Ui::ID7)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_QuitOnClose, false);
 
     setupModel();
     updateProfiles();

@@ -30,6 +30,7 @@ Stationary6::Stationary6(QWidget *parent)
     , ui(new Ui::Stationary6)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_QuitOnClose, false);
 
     setupModel();
     updateProfiles();

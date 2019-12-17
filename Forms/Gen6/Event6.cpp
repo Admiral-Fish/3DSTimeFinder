@@ -31,6 +31,7 @@ Event6::Event6(QWidget *parent)
     , ui(new Ui::Event6)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_QuitOnClose, false);
 
     setupModels();
     updateProfiles();

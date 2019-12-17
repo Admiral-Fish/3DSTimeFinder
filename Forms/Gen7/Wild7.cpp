@@ -29,6 +29,7 @@ Wild7::Wild7(QWidget *parent)
     , ui(new Ui::Wild7)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_QuitOnClose, false);
 
     setupModel();
     updateProfiles();
