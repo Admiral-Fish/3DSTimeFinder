@@ -20,8 +20,10 @@
 #include "TableView.hpp"
 #include <QApplication>
 #include <QClipboard>
+#include <QFileDialog>
 #include <QHeaderView>
 #include <QMouseEvent>
+#include <QTextStream>
 
 TableView::TableView(QWidget *parent)
     : QTableView(parent)
@@ -45,14 +47,9 @@ void TableView::resizeEvent(QResizeEvent *event)
 
 void TableView::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    if (event->type() == QMouseEvent::MouseButtonDblClick)
+    if (event && event->type() == QMouseEvent::MouseButtonDblClick)
     {
-        QModelIndex index = this->currentIndex();
-        if (index.isValid())
-        {
-            QString str = this->model()->data(index).toString();
-            QApplication::clipboard()->setText(str);
-        }
+        setSelectionToClipBoard();
     }
 }
 
@@ -60,16 +57,64 @@ void TableView::keyPressEvent(QKeyEvent *event)
 {
     QTableView::keyPressEvent(event);
 
-    if (event)
+    QTableView::keyPressEvent(event);
+
+    if (event && (event->key() == Qt::Key_C) && (event->modifiers() == Qt::ControlModifier))
     {
-        if ((event->key() == Qt::Key_C) && (event->modifiers() == Qt::ControlModifier))
+        setSelectionToClipBoard();
+    }
+}
+
+void TableView::setSelectionToClipBoard()
+{
+    QString fileName = QFileDialog::getSaveFileName(
+        nullptr, tr("Save Output to TXT"), QDir::currentPath(), tr("Text File (*.txt);;All Files (*)"));
+
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        QAbstractItemModel *model = this->model();
+
+        QTextStream ts(&file);
+        int rows = model->rowCount();
+        int columns = model->columnCount();
+
+        QString header = "";
+        for (int i = 0; i < columns; i++)
         {
-            QModelIndex index = this->currentIndex();
-            if (index.isValid())
+            header += model->headerData(i, Qt::Horizontal, 0).toString();
+            if (i != columns - 1)
             {
-                QString str = this->model()->data(index).toString();
-                QApplication::clipboard()->setText(str);
+                header += "\t";
             }
         }
+        header += "\n";
+        ts << header;
+
+        for (int i = 0; i < rows; i++)
+        {
+            QString body = "";
+            for (int j = 0; j < columns; j++)
+            {
+                QString entry = model->data(model->index(i, j)).toString();
+                body += (entry.isEmpty() ? "-" : entry);
+                if (i != columns - 1)
+                {
+                    body += "\t";
+                }
+            }
+            if (i != rows - 1)
+            {
+                body += "\n";
+            }
+            ts << body;
+        }
+
+        file.close();
     }
 }
