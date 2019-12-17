@@ -16,12 +16,16 @@ script:
 before_deploy:
   - /usr/local/Cellar/qt/5.13.2/bin/macdeployqt 3DSTimeFinder.app -dmg -verbose=2
   - zip -r 3DSTimeFinder-macOS.zip 3DSTimeFinder.dmg
+  - shasum -a 256 3DSTimeFinder-macOS.zip > 3DSTimeFinder-macOS.zip.sha256
+
 
 deploy:
   provider: releases
   api_key:
-    secure: j4tDOhJM/2k/8cmIWV6IqpK/Vlu8RKNW0L2Hm1AJaKZqrmAGBn6ex+cOl5p7CfyXg8OA8YpQTjmX987kUgSI5v08B1VfrTu8+tqB5BsrPi9DIhMr3m2TYRObtW3PmcFns0QKp0FACLmwKJdKFh1atyP9SdC+0XRzsOfiVoJXN2C8r6fv23mGc4i5vINiKuv4QHtOhyS1d2iUAI/Me9WjLkP2RbYmIrejATvsAcdOp+QxlTqecGiWchkkTfWRKVmULcyGnv20KhvvKnoMWh21JwNyxQ3BLLyBMiK/aFU6JDiGccDLoaxvg4f+OvCmpIl/LqxUD1/z+vWJ4BOJ9CWgyPya3MGXsc8WqOPaaq/J/XyzB9hytpod6qKQylDC+H6H4hNeufb6oNzy4oIZ5mquICBXjgipkLtWlBX11kK9li3W3zbfbcwDaxISJkuYbNeeMVZFS4KHdpkB1QNr0AzRmXzPfogBmDXxF97MrJxPFv3pooLa55gStUOuTQz5tKUhAOzqrzkGa79klk6JjVVnWR+xoln61gqEdLxFotA4osQuRiINcwYp8S619PX6fkzMl64/nr6bG5DL8APfNljEwraGhl59hKxQQFxc8ArVBbvlGhkMkwjDMtUG0xX7TbujkhE+DGohRPuLeUVIYpUELQl50EvQCZr8S/Lm/4lnVLA=
-  file: "3DSTimeFinder-macOS.zip"
+    secure: HXoTmPvwpCRpVcS/fddHHQVvoaw/cELTPFLG2Q7G98MTX6wgxIWG9mmJEybZRHjwpgWgGwW1UgZKXUyoyrKiBrlppkczl5VE7xY7GzdU2mIBpN7u72YuS2KExnthZGScsty8Jyt2ZoSHV3RHBV8aINiC2fwyH9k5OW3wQ4MFRww18YluFUmO/bOMTG83V6hv4YkpN9nf9D+eduoetJdaMftHPNrvxE87CwhP+QIhoKc+s3jCW9a+6T3Zyu09S4ox7zjnxYgkvlAK2eFedfTGNeLspem8PPh/4mx54MVEOgKgl6l/QWYU4yD/NBdshlR+kLnsyKARZx67/h50arYFHpmLcdnxNfHJSo0AT9n+zai2AI0mXCym9qnkCfmPX+GC3wpNOcJapEunSZvvb1zbG8FgkptWB8MHZts8rStGKj7Eeagh7hJ4hxNuuPD4f8oHEEjweJx08JYym6/UQzLHjn0pvkHvst0E3J99r7dmbgoL/eTRTMKv0MxjPHL7w02lD/peHRiuFjI+Dn0BX3ZbeDKanK+PkLoZ4E0vVC50stETF+zRiQYhS3c00TYW/cklCe+loBOqcb08wD5vuD9qw0MH4+7OaqHBxFBP5oWyEANtjtvs9n058aAMm7SrySmolZIZSWGfSAF4V97/HCCBhShXs/SnKUiPn8e2+zgk7Iw=
+  file: 
+    - "3DSTimeFinder-macOS.zip"
+    - "3DSTimeFinder-macOS.zip.sha256"
   skip_cleanup: true
   on:
     repo: Admiral-Fish/3DSTimeFinder
