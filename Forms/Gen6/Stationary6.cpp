@@ -22,6 +22,7 @@
 #include <Core/Gen6/StationarySearcher6.hpp>
 #include <Core/Util/Utility.hpp>
 #include <Forms/Gen6/ProfileManager6.hpp>
+#include <Models/StationaryModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
 

@@ -21,8 +21,10 @@
 #define WILD7_HPP
 
 #include <Core/Gen7/Profile7.hpp>
-#include <Models/WildModel.hpp>
+#include <Core/Parents/WildResult.hpp>
 #include <QWidget>
+
+class WildModel;
 
 namespace Ui
 {

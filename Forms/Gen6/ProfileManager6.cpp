@@ -20,6 +20,7 @@
 #include "ProfileManager6.hpp"
 #include "ui_ProfileManager6.h"
 #include <Forms/Gen6/ProfileEditor6.hpp>
+#include <Models/ProfileModel6.hpp>
 #include <QMessageBox>
 #include <QSettings>
 

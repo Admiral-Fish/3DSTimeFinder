@@ -21,8 +21,10 @@
 #define ID7_HPP
 
 #include <Core/Gen7/Profile7.hpp>
-#include <Models/IDModel.hpp>
+#include <Core/Parents/IDResult.hpp>
 #include <QWidget>
+
+class IDModel;
 
 namespace Ui
 {

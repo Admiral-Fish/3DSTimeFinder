@@ -21,6 +21,7 @@
 #include "ui_Wild7.h"
 #include <Core/Gen7/WildSearcher7.hpp>
 #include <Forms/Gen7/ProfileManager7.hpp>
+#include <Models/WildModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
 

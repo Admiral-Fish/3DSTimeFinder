@@ -21,8 +21,10 @@
 #define STATIONARY6_HPP
 
 #include <Core/Gen6/Profile6.hpp>
-#include <Models/StationaryModel.hpp>
+#include <Core/Parents/StationaryResult.hpp>
 #include <QWidget>
+
+class StationaryModel;
 
 namespace Ui
 {

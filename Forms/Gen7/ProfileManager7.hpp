@@ -21,8 +21,9 @@
 #define PROFILEMANAGER7_HPP
 
 #include <Core/Util/Utility.hpp>
-#include <Models/ProfileModel7.hpp>
 #include <QWidget>
+
+class ProfileModel7;
 
 namespace Ui
 {

@@ -21,8 +21,10 @@
 #define STATIONARY7_HPP
 
 #include <Core/Gen7/Profile7.hpp>
-#include <Models/StationaryModel.hpp>
+#include <Core/Parents/StationaryResult.hpp>
 #include <QWidget>
+
+class StationaryModel;
 
 namespace Ui
 {

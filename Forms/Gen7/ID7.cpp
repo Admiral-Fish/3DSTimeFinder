@@ -21,6 +21,7 @@
 #include "ui_ID7.h"
 #include <Core/Gen7/IDSearcher7.hpp>
 #include <Forms/Gen7/ProfileManager7.hpp>
+#include <Models/IDModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
 

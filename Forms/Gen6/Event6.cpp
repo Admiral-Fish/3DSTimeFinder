@@ -22,6 +22,7 @@
 #include <Core/Gen6/EventSearcher6.hpp>
 #include <Core/Util/Utility.hpp>
 #include <Forms/Gen6/ProfileManager6.hpp>
+#include <Models/EventModel.hpp>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
