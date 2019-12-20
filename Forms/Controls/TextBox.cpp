@@ -22,7 +22,7 @@
 TextBox::TextBox(QWidget *parent)
     : QLineEdit(parent)
 {
-    connect(this, &TextBox::textChanged, this, &TextBox::onTextChanged);
+    connect(this, &TextBox::editingFinished, this, &TextBox::onEditFinished);
     setup = false;
 }
 
@@ -91,11 +91,11 @@ u32 TextBox::getUInt()
     return this->text().toUInt(nullptr, base);
 }
 
-void TextBox::onTextChanged(QString string)
+void TextBox::onEditFinished()
 {
     if (setup)
     {
-        string = string.toUpper();
+        QString string = this->text().toUpper();
         string.remove(filter);
         u64 temp = string.toULongLong(nullptr, base);
 

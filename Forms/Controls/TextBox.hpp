@@ -52,7 +52,7 @@ private:
     QRegExp filter;
 
 private slots:
-    void onTextChanged(QString string);
+    void onEditFinished();
 };
 
 #endif // TEXTBOX_HPP
