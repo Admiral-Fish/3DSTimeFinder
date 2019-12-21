@@ -22,6 +22,7 @@
 TextBox::TextBox(QWidget *parent)
     : QLineEdit(parent)
 {
+    connect(this, &TextBox::textChanged, this, &TextBox::onTextChanged);
     connect(this, &TextBox::editingFinished, this, &TextBox::onEditFinished);
     setup = false;
 }
@@ -91,12 +92,24 @@ u32 TextBox::getUInt()
     return this->text().toUInt(nullptr, base);
 }
 
+void TextBox::onTextChanged(QString string)
+{
+    if (setup)
+    {
+        string = string.toUpper();
+        string.remove(filter);
+
+        int position = this->cursorPosition();
+        this->setText(string);
+        this->setCursorPosition(position);
+    }
+}
+
 void TextBox::onEditFinished()
 {
     if (setup)
     {
-        QString string = this->text().toUpper();
-        string.remove(filter);
+        QString string = this->text();
         u64 temp = string.toULongLong(nullptr, base);
 
         if (temp > maxValue)
@@ -108,8 +121,6 @@ void TextBox::onEditFinished()
             string = QString::number(minValue, base);
         }
 
-        int position = cursorPosition();
-        setText(string);
-        setCursorPosition(position);
+        this->setText(string);
     }
 }
