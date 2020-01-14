@@ -8,6 +8,8 @@ TARGET = 3DSTimeFinder
 TEMPLATE = app
 VERSION = 1.0.0
 
+DEFINES += VERSION=\\\"$$VERSION\\\"
+
 #RC_ICONS += Images/3dstimefinder.ico
 #ICON += Images/3dstimefinder.icns
 

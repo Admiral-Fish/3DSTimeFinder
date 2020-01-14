@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle(QString("3DS Time Finder %1").arg(VERSION));
 
     setupModel();
     setupStyle();
