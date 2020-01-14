@@ -114,7 +114,9 @@ void Wild7::setupModel()
 
     QSettings setting;
     if (setting.contains("wild7/geometry"))
+    {
         this->restoreGeometry(setting.value("wild/geometry").toByteArray());
+    }
 }
 
 void Wild7::search()

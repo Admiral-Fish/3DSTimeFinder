@@ -32,9 +32,7 @@ ProfileEditor6::ProfileEditor6(QWidget *parent)
     setupModels();
 }
 
-ProfileEditor6::ProfileEditor6(const Profile6 &profile, QWidget *parent)
-    : QDialog(parent)
-    , ui(new Ui::ProfileEditor6)
+ProfileEditor6::ProfileEditor6(const Profile6 &profile, QWidget *parent) : QDialog(parent), ui(new Ui::ProfileEditor6)
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_QuitOnClose, false);
@@ -86,7 +84,9 @@ void ProfileEditor6::setupModels()
 
     QSettings setting;
     if (setting.contains("profileEditor/geometry"))
+    {
         this->restoreGeometry(setting.value("profileEditor/geometry").toByteArray());
+    }
 }
 
 void ProfileEditor6::accepted()

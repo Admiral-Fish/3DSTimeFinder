@@ -22,8 +22,8 @@
 #include <Core/Util/Utility.hpp>
 #include <QtConcurrent>
 
-static const QVector<u8> grassSlots = { 19, 39, 49, 59, 69, 79, 89, 94, 98, 99 };
-static const QVector<u8> waterSlots = { 78, 98, 99 };
+constexpr u8 grassSlots[10] = { 19, 39, 49, 59, 69, 79, 89, 94, 98, 99 };
+constexpr u8 waterSlots[3] = { 78, 98, 99 };
 
 WildSearcher7::WildSearcher7(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame, bool useSynch,
     int synchNature, WildType type, int gender, const Profile7 &profile, const WildFilter &filter)
@@ -212,7 +212,7 @@ u8 WildSearcher7::getSlot(u8 value)
     {
         for (u8 i = 0; i < 10; i++)
         {
-            if (value <= grassSlots.at(i))
+            if (value <= grassSlots[i])
             {
                 return i + 1;
             }
@@ -222,7 +222,7 @@ u8 WildSearcher7::getSlot(u8 value)
 
     for (u8 i = 0; i < 3; i++)
     {
-        if (value <= waterSlots.at(i))
+        if (value <= waterSlots[i])
         {
             return i + 1;
         }

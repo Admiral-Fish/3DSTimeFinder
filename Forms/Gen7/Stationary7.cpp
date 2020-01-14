@@ -111,7 +111,9 @@ void Stationary7::setupModel()
 
     QSettings setting;
     if (setting.contains("stationary7/geometry"))
+    {
         this->restoreGeometry(setting.value("stationary7/geometry").toByteArray());
+    }
 }
 
 void Stationary7::search()

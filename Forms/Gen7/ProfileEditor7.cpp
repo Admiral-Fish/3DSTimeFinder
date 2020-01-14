@@ -32,9 +32,7 @@ ProfileEditor7::ProfileEditor7(QWidget *parent)
     setupModels();
 }
 
-ProfileEditor7::ProfileEditor7(const Profile7 &profile, QWidget *parent)
-    : QDialog(parent)
-    , ui(new Ui::ProfileEditor7)
+ProfileEditor7::ProfileEditor7(const Profile7 &profile, QWidget *parent) : QDialog(parent), ui(new Ui::ProfileEditor7)
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_QuitOnClose, false);
@@ -58,7 +56,6 @@ ProfileEditor7::ProfileEditor7(u32 tick, u32 offset, QWidget *parent)
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_QuitOnClose, false);
-    setWindowFlags(Qt::Widget | Qt::MSWindowsFixedSizeDialogHint);
 
     setupModels();
 
@@ -100,7 +97,9 @@ void ProfileEditor7::setupModels()
 
     QSettings setting;
     if (setting.contains("profileEditor/geometry"))
+    {
         this->restoreGeometry(setting.value("profileEditor/geometry").toByteArray());
+    }
 }
 
 void ProfileEditor7::accepted()

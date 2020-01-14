@@ -36,7 +36,8 @@ QVariant WildModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole)
     {
         auto &frame = model.at(index.row());
-        switch (index.column())
+        int column = index.column();
+        switch (column)
         {
         case 0:
             return frame.getDateTime();
@@ -45,17 +46,12 @@ QVariant WildModel::data(const QModelIndex &index, int role) const
         case 2:
             return frame.getFrame();
         case 3:
-            return frame.getIV(0);
         case 4:
-            return frame.getIV(1);
         case 5:
-            return frame.getIV(2);
         case 6:
-            return frame.getIV(3);
         case 7:
-            return frame.getIV(4);
         case 8:
-            return frame.getIV(5);
+            return frame.getIV(static_cast<u8>(column - 3));
         case 9:
             return Utility::getNature(frame.getNature());
         case 10:

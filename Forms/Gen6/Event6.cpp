@@ -123,7 +123,9 @@ void Event6::setupModels()
 
     QSettings setting;
     if (setting.contains("event6/geometry"))
+    {
         this->restoreGeometry(setting.value("event6/geometry").toByteArray());
+    }
 }
 
 void Event6::search()

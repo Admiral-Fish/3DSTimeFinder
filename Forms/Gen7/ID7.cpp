@@ -90,7 +90,9 @@ void ID7::setupModel()
 
     QSettings setting;
     if (setting.contains("id7/geometry"))
+    {
         this->restoreGeometry(setting.value("id7/geometry").toByteArray());
+    }
 }
 
 void ID7::search()

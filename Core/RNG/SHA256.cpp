@@ -28,6 +28,16 @@ constexpr u32 K[64] = { 0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c2
     0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb,
     0xbef9a3f7, 0xc67178f2 };
 
+inline u32 rightRotate(u32 val, u8 count)
+{
+    return (val >> count) | (val << (32 - count));
+}
+
+inline u32 changeEndian(u32 num)
+{
+    return ((num >> 24) & 0xff) | ((num << 8) & 0xff0000) | ((num >> 8) & 0xff00) | ((num << 24) & 0xff000000);
+}
+
 u32 SHA256::hash(u32 tick, u32 epochLow, u32 epochHigh)
 {
     u32 w[64] = { changeEndian(tick), 0, changeEndian(epochLow), changeEndian(epochHigh), 0x80000000, 0, 0, 0, 0, 0, 0,
@@ -36,7 +46,6 @@ u32 SHA256::hash(u32 tick, u32 epochLow, u32 epochHigh)
     // w[16] is always changeEndian(tick) as long as w[1] == 0 is true, precompute
     w[16] = changeEndian(tick);
 
-    auto rightRotate = [](u32 val, u8 count) { return (val >> count) | (val << (32 - count)); };
     for (u8 i = 17; i < 64; i++)
     {
         u32 sig0 = rightRotate(w[i - 15], 7) ^ rightRotate(w[i - 15], 18) ^ (w[i - 15] >> 3);
@@ -77,9 +86,4 @@ u32 SHA256::hash(u32 tick, u32 epochLow, u32 epochHigh)
     }
 
     return changeEndian(a + 0x6a09e667);
-}
-
-u32 SHA256::changeEndian(u32 num)
-{
-    return ((num >> 24) & 0xff) | ((num << 8) & 0xff0000) | ((num >> 8) & 0xff00) | ((num << 24) & 0xff000000);
 }

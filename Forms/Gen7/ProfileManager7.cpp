@@ -56,7 +56,9 @@ void ProfileManager7::setupModels()
 
     QSettings setting;
     if (setting.contains("profileManager/geometry"))
+    {
         this->restoreGeometry(setting.value("profileManager/geometry").toByteArray());
+    }
 }
 
 void ProfileManager7::create()

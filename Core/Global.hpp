@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <cstdint>
-
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
+
+#include <cstdint>
 
 using u8 = uint8_t;
 using u16 = uint16_t;

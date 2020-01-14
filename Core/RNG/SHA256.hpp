@@ -25,7 +25,6 @@
 namespace SHA256
 {
     u32 hash(u32 tick, u32 epochLow, u32 epochHigh);
-    u32 changeEndian(u32 num);
 };
 
 #endif // SHA256_HPP

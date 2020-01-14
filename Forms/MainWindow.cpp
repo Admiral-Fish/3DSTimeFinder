@@ -63,7 +63,9 @@ void MainWindow::setupModel()
 
     QSettings setting;
     if (setting.contains("mainWindow/geometry"))
+    {
         this->restoreGeometry(setting.value("mainWindow/geometry").toByteArray());
+    }
 }
 
 void MainWindow::setupStyle()
