@@ -64,6 +64,7 @@ HEADERS += \
     Core/Util/Utility.hpp \
     Core/Util/WildType.hpp \
     Forms/Controls/CheckList.hpp \
+    Forms/Controls/ComboBox.hpp \
     Forms/Controls/IVFilter.hpp \
     Forms/Controls/Label.hpp \
     Forms/Controls/TableView.hpp \
@@ -113,6 +114,7 @@ SOURCES += \
     Core/RNG/SHA256.cpp \
     Core/Util/Utility.cpp \
     Forms/Controls/CheckList.cpp \
+    Forms/Controls/ComboBox.cpp \
     Forms/Controls/IVFilter.cpp \
     Forms/Controls/Label.cpp \
     Forms/Controls/TableView.cpp \

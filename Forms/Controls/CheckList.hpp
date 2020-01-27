@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,9 +28,8 @@ class CheckList : public QComboBox
     Q_OBJECT
 public:
     explicit CheckList(QWidget *parent = nullptr);
-    void setup();
+    void setup(const QStringList &items = QStringList());
     QVector<bool> getChecked();
-    void setChecks(const QVector<bool> &flags);
 
 public slots:
     void resetChecks();
@@ -41,11 +40,10 @@ protected:
 private:
     QStandardItemModel *model;
 
-    void updateText();
     int checkState();
 
 private slots:
-    void modelDataChanged();
+    void updateText();
     void itemPressed(const QModelIndex &index);
 };
 

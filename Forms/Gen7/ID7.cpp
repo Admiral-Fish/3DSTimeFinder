@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,8 @@
 #include <Models/IDModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTimer>
+#include <QtConcurrent>
 
 ID7::ID7(QWidget *parent)
     : QWidget(parent)
@@ -69,21 +71,21 @@ void ID7::updateProfiles()
 
 void ID7::setupModel()
 {
-    model = new IDModel(ui->tableViewID);
+    model = new IDModel(ui->tableView);
 
-    ui->tableViewID->setModel(model);
+    ui->tableView->setModel(model);
 
-    ui->textBoxIDStartFrame->setValues(InputType::Frame32Bit);
-    ui->textBoxIDEndFrame->setValues(InputType::Frame32Bit);
+    ui->textBoxStartFrame->setValues(InputType::Frame32Bit);
+    ui->textBoxEndFrame->setValues(InputType::Frame32Bit);
 
-    ui->dateTimeEditIDStartDate->setCalendarPopup(true);
-    ui->dateTimeEditIDEndDate->setCalendarPopup(true);
+    ui->dateTimeEditStartDate->setCalendarPopup(true);
+    ui->dateTimeEditEndDate->setCalendarPopup(true);
 
     QDateTime dt(QDate(2000, 1, 1), QTime(0, 0, 0));
-    ui->dateTimeEditIDStartDate->setMinimumDateTime(dt);
-    ui->dateTimeEditIDEndDate->setMinimumDateTime(dt);
+    ui->dateTimeEditStartDate->setMinimumDateTime(dt);
+    ui->dateTimeEditEndDate->setMinimumDateTime(dt);
 
-    connect(ui->pushButtonIDSearch, &QPushButton::clicked, this, &ID7::search);
+    connect(ui->pushButtonSearch, &QPushButton::clicked, this, &ID7::search);
     connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &ID7::profileManager);
     connect(
         ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ID7::profilesIndexChanged);
@@ -97,12 +99,12 @@ void ID7::setupModel()
 
 void ID7::search()
 {
-    QDateTime start = ui->dateTimeEditIDStartDate->dateTime();
+    QDateTime start = ui->dateTimeEditStartDate->dateTime();
     start.setTimeSpec(Qt::UTC);
-    QDateTime end = ui->dateTimeEditIDEndDate->dateTime();
+    QDateTime end = ui->dateTimeEditEndDate->dateTime();
     end.setTimeSpec(Qt::UTC);
-    u32 frameStart = ui->textBoxIDStartFrame->getUInt();
-    u32 frameEnd = ui->textBoxIDEndFrame->getUInt();
+    u32 frameStart = ui->textBoxStartFrame->getUInt();
+    u32 frameEnd = ui->textBoxEndFrame->getUInt();
 
     if (start > end)
     {
@@ -120,19 +122,19 @@ void ID7::search()
     }
 
     model->clearModel();
-    ui->pushButtonIDSearch->setEnabled(false);
-    ui->pushButtonIDCancel->setEnabled(true);
+    ui->pushButtonSearch->setEnabled(false);
+    ui->pushButtonCancel->setEnabled(true);
 
     IDType type;
-    if (ui->radioButtonIDTID->isChecked())
+    if (ui->radioButtonTID->isChecked())
     {
         type = IDType::TID;
     }
-    else if (ui->radioButtonIDSID->isChecked())
+    else if (ui->radioButtonSID->isChecked())
     {
         type = IDType::SID;
     }
-    else if (ui->radioButtonIDTIDSID->isChecked())
+    else if (ui->radioButtonTIDSID->isChecked())
     {
         type = IDType::TIDSID;
     }
@@ -141,28 +143,41 @@ void ID7::search()
         type = IDType::G7TID;
     }
 
-    IDFilter filter(ui->textEditIDFilter->toPlainText(), ui->textEditTSVFilter->toPlainText(), type);
+    IDFilter filter(ui->textEditFilter->toPlainText(), ui->textEditTSVFilter->toPlainText(), type);
 
-    auto *search
-        = new IDSearcher7(start, end, frameStart, frameEnd, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    auto *searcher = new IDSearcher7(start, end, frameStart, frameEnd, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
-    connect(search, &IDSearcher7::finished, this, [=] {
-        ui->pushButtonIDSearch->setEnabled(true);
-        ui->pushButtonIDCancel->setEnabled(false);
+    ui->progressBar->setRange(0, searcher->getMaxProgress());
+
+    auto *timer = new QTimer();
+    connect(timer, &QTimer::timeout, [=] {
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
     });
-    connect(search, &IDSearcher7::updateProgress, this, &ID7::update);
-    connect(ui->pushButtonIDCancel, &QPushButton::clicked, search, &IDSearcher7::cancelSearch);
 
-    ui->progressBarID->setValue(0);
-    ui->progressBarID->setMaximum(search->maxProgress());
+    auto *watcher = new QFutureWatcher<void>();
+    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
+    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
+        ui->pushButtonSearch->setEnabled(true);
+        ui->pushButtonCancel->setEnabled(false);
 
-    search->startSearch();
-}
+        timer->stop();
+        delete timer;
 
-void ID7::update(const QVector<IDResult> &frames, int val)
-{
-    model->addItems(frames);
-    ui->progressBarID->setValue(val);
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
+
+        delete searcher;
+    });
+
+    QSettings settings;
+    int threads = settings.value("settings/threads", QThread::idealThreadCount()).toInt();
+
+    auto future = QtConcurrent::run([=] { searcher->startSearch(threads); });
+
+    watcher->setFuture(future);
+    timer->start(1000);
 }
 
 void ID7::profileManager()

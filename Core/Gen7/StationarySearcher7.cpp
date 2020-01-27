@@ -1,94 +1,101 @@
-/*
- * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+; /*
+   * This file is part of 3DSTimeFinder
+   * Copyright (C) 2019-2020 by Admiral_Fish
+   *
+   * This program is free software; you can redistribute it and/or
+   * modify it under the terms of the GNU General Public License
+   * as published by the Free Software Foundation; either version 3
+   * of the License, or (at your option) any later version.
+   *
+   * This program is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   * GNU General Public License for more details.
+   *
+   * You should have received a copy of the GNU General Public License
+   * along with this program; if not, write to the Free Software
+   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+   */
 
 #include "StationarySearcher7.hpp"
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
+#include <QThreadPool>
 #include <QtConcurrent>
 
-StationarySearcher7::StationarySearcher7(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame,
-    bool ivCount, int ability, int synchNature, int gender, bool alwaysSynch, bool shinyLocked, const Profile7 &profile,
-    const StationaryFilter &filter)
+StationarySearcher7::StationarySearcher7(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, bool ivCount,
+                                         u8 ability, u8 synchNature, u8 gender, bool alwaysSynch, bool shinyLocked, const Profile7 &profile,
+                                         const StationaryFilter &filter) :
+    profile(profile),
+    filter(filter),
+    startTime(startTime),
+    endTime(endTime),
+    startFrame(startFrame),
+    endFrame(endFrame),
+    ivCount(ivCount ? 3 : 0),
+    ability(ability),
+    synchNature(synchNature),
+    pidCount(profile.getShinyCharm() ? 3 : 1),
+    gender(gender),
+    alwaysSynch(alwaysSynch),
+    shinyLocked(shinyLocked),
+    progress(0),
+    searching(false)
 {
-    startTime = start;
-    endTime = end;
-    this->startFrame = startFrame;
-    this->endFrame = endFrame;
-    this->ivCount = ivCount ? 3 : 0;
-    this->ability = ability;
-    this->synchNature = synchNature;
-    this->gender = gender;
-    this->alwaysSynch = alwaysSynch;
-    this->shinyLocked = shinyLocked;
-    this->profile = profile;
-    this->filter = filter;
-    pidCount = profile.getShinyCharm() ? 3 : 1;
-
-    searching = false;
-    cancel = false;
-    progress = 0;
-    threadsFinished = 0;
-
-    connect(this, &StationarySearcher7::threadFinished, this, &StationarySearcher7::checkFinish);
-    connect(this, &StationarySearcher7::finished, this, [=] {
-        searching = false;
-        emit updateProgress(getResults(), progress);
-        QTimer::singleShot(1000, this, &StationarySearcher7::deleteLater);
-    });
 }
 
-void StationarySearcher7::startSearch()
+void StationarySearcher7::startSearch(int threads)
 {
-    if (!searching)
+    searching = true;
+    QThreadPool pool;
+
+    u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
+    u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
+
+    u64 epochSplit = (epochEnd - epochStart) / threads;
+    epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
+
+    if (epochSplit < 1000)
     {
-        searching = true;
-        cancel = false;
-        progress = 0;
-        threadsFinished = 0;
+        pool.setMaxThreadCount(1);
+        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
+        future.waitForFinished();
 
-        QSettings setting;
-        threads = setting.value("settings/threads", QThread::idealThreadCount()).toInt();
-        threadPool.setMaxThreadCount(threads + 1);
+        return;
+    }
 
-        u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
-        u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
-
-        u64 epochSplit = (epochEnd - epochStart) / threads;
-        epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
-
-        QtConcurrent::run(&threadPool, [=] { update(); });
-        for (int i = 0; i < threads; i++)
+    pool.setMaxThreadCount(threads);
+    QVector<QFuture<void>> threadContainer;
+    for (int i = 0; i < threads; i++)
+    {
+        if (i == threads - 1)
         {
-            if (i == threads - 1)
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochEnd); });
-            }
-            else
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochStart + epochSplit); });
-            }
-            epochStart += epochSplit;
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
         }
+        else
+        {
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+        }
+        epochStart += epochSplit;
+    }
+
+    for (int i = 0; i < threads; i++)
+    {
+        threadContainer[i].waitForFinished();
     }
 }
 
-int StationarySearcher7::maxProgress()
+void StationarySearcher7::cancelSearch()
+{
+    searching = false;
+}
+
+int StationarySearcher7::getProgress() const
+{
+    return progress;
+}
+
+int StationarySearcher7::getMaxProgress() const
 {
     auto val = static_cast<int>(
         (Utility::getCitraTime(endTime, profile.getOffset()) - Utility::getCitraTime(startTime, profile.getOffset()))
@@ -96,9 +103,14 @@ int StationarySearcher7::maxProgress()
     return val + 1;
 }
 
-void StationarySearcher7::cancelSearch()
+QVector<StationaryResult> StationarySearcher7::getResults()
 {
-    cancel = true;
+    std::lock_guard<std::mutex> lock(resultMutex);
+
+    auto data(results);
+    results.clear();
+
+    return data;
 }
 
 void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
@@ -109,14 +121,8 @@ void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
     u16 tid = profile.getTID();
     u16 sid = profile.getSID();
 
-    for (u64 epoch = epochStart; epoch <= epochEnd; epoch += 1000)
+    for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        if (cancel)
-        {
-            emit threadFinished();
-            return;
-        }
-
         QDateTime target
             = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
@@ -183,49 +189,23 @@ void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
             }
             result.calcHiddenPower();
 
-            result.setAbility(ability > 0 ? ability : ((rngList.at(frame + index++) & 1) + 1));
+            result.setAbility(ability != 255 ? ability : rngList.at(frame + index++) & 1);
 
             result.setNature(alwaysSynch ? synchNature : rngList.at(frame + index++) % 25);
 
-            result.setGender(gender > 2 ? (rngList.at(frame + index++) % 252 >= gender ? 1 : 2) : gender);
+            result.setGender((gender > 0 && gender < 254) ? (rngList.at(frame + index++) % 252 < gender) : gender);
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
                 result.setFrame(frame + startFrame);
 
-                QMutexLocker locker(&resultMutex);
+                std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);
             }
         }
+
+        std::lock_guard<std::mutex> lock(progressMutex);
         progress++;
-    }
-    emit threadFinished();
-}
-
-void StationarySearcher7::update()
-{
-    do
-    {
-        emit updateProgress(getResults(), progress);
-        QThread::sleep(1);
-    } while (searching);
-}
-
-QVector<StationaryResult> StationarySearcher7::getResults()
-{
-    QMutexLocker locker(&resultMutex);
-    auto data(results);
-    results.clear();
-
-    return data;
-}
-
-void StationarySearcher7::checkFinish()
-{
-    QMutexLocker locker(&threadMutex);
-    if (++threadsFinished == threads)
-    {
-        emit finished();
     }
 }

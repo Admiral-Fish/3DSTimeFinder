@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,14 +20,12 @@
 #include "IVFilter.hpp"
 #include "ui_IVFilter.h"
 
-IVFilter::IVFilter(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::IVFilter)
+IVFilter::IVFilter(QWidget *parent) : QWidget(parent), ui(new Ui::IVFilter)
 {
     ui->setupUi(this);
 
     QStringList tips = { tr("Click to clear"), tr("Click holding ctrl to set 31"), tr("Click holding alt to set 30-31"),
-        tr("Click holding ctrl+alt to set 0") };
+                         tr("Click holding ctrl+alt to set 0") };
 
     QString tip = tips.join('\n');
     ui->labelHP->setToolTip(tip);
@@ -45,18 +43,18 @@ IVFilter::~IVFilter()
 
 QVector<u8> IVFilter::getLower() const
 {
-    QVector<u8> low = { static_cast<u8>(ui->spinBoxHPMin->value()), static_cast<u8>(ui->spinBoxAtkMin->value()),
-        static_cast<u8>(ui->spinBoxDefMin->value()), static_cast<u8>(ui->spinBoxSpAMin->value()),
-        static_cast<u8>(ui->spinBoxSpDMin->value()), static_cast<u8>(ui->spinBoxSpeMin->value()) };
+    QVector<u8> low = { static_cast<u8>(ui->spinBoxHPMin->value()),  static_cast<u8>(ui->spinBoxAtkMin->value()),
+                        static_cast<u8>(ui->spinBoxDefMin->value()), static_cast<u8>(ui->spinBoxSpAMin->value()),
+                        static_cast<u8>(ui->spinBoxSpDMin->value()), static_cast<u8>(ui->spinBoxSpeMin->value()) };
 
     return low;
 }
 
 QVector<u8> IVFilter::getUpper() const
 {
-    QVector<u8> high = { static_cast<u8>(ui->spinBoxHPMax->value()), static_cast<u8>(ui->spinBoxAtkMax->value()),
-        static_cast<u8>(ui->spinBoxDefMax->value()), static_cast<u8>(ui->spinBoxSpAMax->value()),
-        static_cast<u8>(ui->spinBoxSpDMax->value()), static_cast<u8>(ui->spinBoxSpeMax->value()) };
+    QVector<u8> high = { static_cast<u8>(ui->spinBoxHPMax->value()),  static_cast<u8>(ui->spinBoxAtkMax->value()),
+                         static_cast<u8>(ui->spinBoxDefMax->value()), static_cast<u8>(ui->spinBoxSpAMax->value()),
+                         static_cast<u8>(ui->spinBoxSpDMax->value()), static_cast<u8>(ui->spinBoxSpeMax->value()) };
 
     return high;
 }
@@ -69,16 +67,6 @@ void IVFilter::clearValues()
     changeSpA(0, 31);
     changeSpD(0, 31);
     changeSpe(0, 31);
-}
-
-void IVFilter::setValues(u8 hp, u8 atk, u8 def, u8 spa, u8 spd, u8 spe)
-{
-    changeHP(hp, hp);
-    changeAtk(atk, atk);
-    changeDef(def, def);
-    changeSpA(spa, spa);
-    changeSpD(spd, spd);
-    changeSpe(spe, spe);
 }
 
 void IVFilter::changeHP(int min, int max)

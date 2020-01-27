@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,13 +33,19 @@ WildFilter::WildFilter(const QVector<u8> &minIV, const QVector<u8> &maxIV, const
 
 bool WildFilter::compare(const WildResult &frame)
 {
-    for (u8 i = 0; i < 6; i++)
+    if (shiny && !frame.getShiny())
     {
-        u8 iv = frame.getIV(i);
-        if (iv < minIV.at(i) || iv > maxIV.at(i))
-        {
-            return false;
-        }
+        return false;
+    }
+
+    if (ability != 255 && ability != frame.getAbility())
+    {
+        return false;
+    }
+
+    if (gender != 255 && gender != frame.getGender())
+    {
+        return false;
     }
 
     if (!nature.at(frame.getNature()))
@@ -57,25 +63,10 @@ bool WildFilter::compare(const WildResult &frame)
         return false;
     }
 
-    if (ability != 255)
+    for (u8 i = 0; i < 6; i++)
     {
-        if (ability != frame.getAbility())
-        {
-            return false;
-        }
-    }
-
-    if (shiny)
-    {
-        if (!frame.getShiny())
-        {
-            return false;
-        }
-    }
-
-    if (gender != 0)
-    {
-        if (gender != frame.getGender() && frame.getGender() != 0)
+        u8 iv = frame.getIV(i);
+        if (iv < minIV.at(i) || iv > maxIV.at(i))
         {
             return false;
         }

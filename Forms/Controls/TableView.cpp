@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,8 +25,7 @@
 #include <QMouseEvent>
 #include <QTextStream>
 
-TableView::TableView(QWidget *parent)
-    : QTableView(parent)
+TableView::TableView(QWidget *parent) : QTableView(parent)
 {
 }
 
@@ -57,18 +56,16 @@ void TableView::keyPressEvent(QKeyEvent *event)
 {
     QTableView::keyPressEvent(event);
 
-    QTableView::keyPressEvent(event);
-
     if (event && (event->key() == Qt::Key_C) && (event->modifiers() == Qt::ControlModifier))
     {
         setSelectionToClipBoard();
     }
 }
 
-void TableView::setSelectionToClipBoard()
+void TableView::outputModelTXT()
 {
-    QString fileName = QFileDialog::getSaveFileName(
-        nullptr, tr("Save Output to TXT"), QDir::currentPath(), tr("Text File (*.txt);;All Files (*)"));
+    QString fileName
+        = QFileDialog::getSaveFileName(nullptr, tr("Save Output to TXT"), QDir::currentPath(), tr("Text File (*.txt);;All Files (*)"));
 
     if (fileName.isEmpty())
     {
@@ -116,5 +113,91 @@ void TableView::setSelectionToClipBoard()
         }
 
         file.close();
+    }
+}
+
+void TableView::outputModelCSV()
+{
+    QString fileName
+        = QFileDialog::getSaveFileName(nullptr, tr("Save Output to CSV"), QDir::currentPath(), tr("CSV File (*.csv);;All Files (*)"));
+
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        QAbstractItemModel *model = this->model();
+
+        QTextStream ts(&file);
+        int rows = model->rowCount();
+        int columns = model->columnCount();
+
+        QString header = "";
+        for (int i = 0; i < columns; i++)
+        {
+            header += model->headerData(i, Qt::Horizontal, 0).toString();
+            if (i != columns - 1)
+            {
+                header += ",";
+            }
+        }
+        header += "\n";
+        ts << header;
+
+        for (int i = 0; i < rows; i++)
+        {
+            QString body = "";
+            for (int j = 0; j < columns; j++)
+            {
+                QString entry = model->data(model->index(i, j)).toString();
+                body += (entry.isEmpty() ? "-" : entry);
+                if (j != columns - 1)
+                {
+                    body += ",";
+                }
+            }
+            if (i != rows - 1)
+            {
+                body += "\n";
+            }
+            ts << body;
+        }
+
+        file.close();
+    }
+}
+
+void TableView::setSelectionToClipBoard()
+{
+    QModelIndexList indexes = this->selectionModel()->selectedIndexes();
+    if (!indexes.isEmpty())
+    {
+        QString selectedText;
+
+        for (auto i = 0; i < indexes.size(); i++)
+        {
+            QModelIndex current = indexes[i];
+            QString text = current.data().toString();
+
+            if (i + 1 < selectedIndexes().count())
+            {
+                QModelIndex next = indexes[i + 1];
+
+                if (next.row() != current.row())
+                {
+                    text += "\n";
+                }
+                else
+                {
+                    text += "\t";
+                }
+            }
+            selectedText += text;
+        }
+
+        QApplication::clipboard()->setText(selectedText);
     }
 }

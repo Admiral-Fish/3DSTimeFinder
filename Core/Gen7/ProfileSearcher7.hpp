@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,39 +22,31 @@
 
 #include <Core/Global.hpp>
 #include <QDateTime>
-#include <QMutex>
-#include <QObject>
 #include <QVector>
+#include <mutex>
 
-class ProfileSearcher7 : public QObject
+class ProfileSearcher7
 {
-    Q_OBJECT
-signals:
-    void finished();
-    void updateProgress(const QVector<QPair<u32, u32>> &results, int progress);
-
 public:
-    ProfileSearcher7(
-        const QDateTime &start, u32 initialSeed, u32 baseTick, u32 baseOffset, u32 tickRange, u32 offsetRange);
+    ProfileSearcher7(const QDateTime &startDate, u32 initialSeed, u32 baseTick, u32 baseOffset, u32 tickRange, u32 offsetRange);
     void startSearch();
-    int maxProgress();
-
-public slots:
     void cancelSearch();
+    int getProgress() const;
+    int getMaxProgress() const;
+    QVector<QPair<u32, u32>> getResults();
 
 private:
     QDateTime startDate;
     u32 initialSeed;
     u32 baseTick, baseOffset;
     u32 tickRange, offsetRange;
+
     QVector<QPair<u32, u32>> results;
-    QMutex mutex;
+    std::mutex mutex;
     int progress;
-    bool searching, cancel;
+    bool searching;
 
     void search();
-    void update();
-    QVector<QPair<u32, u32>> getResults();
 };
 
 #endif // PROFILESEARCHER7_HPP

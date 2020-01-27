@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,49 +23,35 @@
 #include <Core/Gen7/Profile7.hpp>
 #include <Core/Parents/StationaryFilter.hpp>
 #include <Core/Parents/StationaryResult.hpp>
-#include <QMutex>
-#include <QObject>
-#include <QThreadPool>
 #include <QVector>
+#include <mutex>
 
-class StationarySearcher7 : public QObject
+class StationarySearcher7
 {
-    Q_OBJECT
-signals:
-    void finished();
-    void threadFinished();
-    void updateProgress(const QVector<StationaryResult> &results, int progress);
-
 public:
-    StationarySearcher7(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame, bool ivCount,
-        int ability, int synchNature, int gender, bool alwaysSynch, bool shinyLocked, const Profile7 &profile,
-        const StationaryFilter &filter);
-    void startSearch();
-    int maxProgress();
-
-public slots:
+    StationarySearcher7(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, bool ivCount, u8 ability,
+                        u8 synchNature, u8 gender, bool alwaysSynch, bool shinyLocked, const Profile7 &profile,
+                        const StationaryFilter &filter);
+    void startSearch(int threads);
     void cancelSearch();
+    int getProgress() const;
+    int getMaxProgress() const;
+    QVector<StationaryResult> getResults();
 
 private:
     Profile7 profile;
     StationaryFilter filter;
     QDateTime startTime, endTime;
     u32 startFrame, endFrame;
-    int ivCount, ability, synchNature, pidCount, gender;
+    u8 ivCount, ability, synchNature, pidCount, gender;
     bool alwaysSynch, shinyLocked;
 
     QVector<StationaryResult> results;
-    QThreadPool threadPool;
-    QMutex resultMutex, threadMutex;
-    int progress, threads, threadsFinished;
-    bool searching, cancel;
+    std::mutex resultMutex, progressMutex;
+    int progress;
+    bool searching;
 
     void search(u64 epochStart, u64 epochEnd);
-    void update();
-    QVector<StationaryResult> getResults();
-
-private slots:
-    void checkFinish();
 };
 
 #endif // STATIONARYSEARCHER7_HPP

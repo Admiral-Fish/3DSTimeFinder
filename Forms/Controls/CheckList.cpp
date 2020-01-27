@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,8 +22,7 @@
 #include <QLineEdit>
 #include <QListView>
 
-CheckList::CheckList(QWidget *parent)
-    : QComboBox(parent)
+CheckList::CheckList(QWidget *parent) : QComboBox(parent)
 {
     model = new QStandardItemModel(this);
     setModel(model);
@@ -34,11 +33,17 @@ CheckList::CheckList(QWidget *parent)
 
     connect(lineEdit(), &QLineEdit::selectionChanged, lineEdit(), &QLineEdit::deselect);
     connect(dynamic_cast<QListView *>(view()), &QAbstractItemView::pressed, this, &CheckList::itemPressed);
-    connect(model, &QAbstractItemModel::dataChanged, this, &CheckList::modelDataChanged);
+    connect(model, &QAbstractItemModel::dataChanged, this, &CheckList::updateText);
 }
 
-void CheckList::setup()
+void CheckList::setup(const QStringList &items)
 {
+    if (!items.isEmpty())
+    {
+        clear();
+        addItems(items);
+    }
+
     for (int i = 0; i < model->rowCount(); i++)
     {
         QStandardItem *item = model->item(i);
@@ -66,14 +71,6 @@ QVector<bool> CheckList::getChecked()
     return result;
 }
 
-void CheckList::setChecks(const QVector<bool> &flags)
-{
-    for (auto i = 0; i < model->rowCount(); i++)
-    {
-        model->item(i)->setCheckState(flags.at(i) ? Qt::Checked : Qt::Unchecked);
-    }
-}
-
 void CheckList::resetChecks()
 {
     for (auto i = 0; i < model->rowCount(); i++)
@@ -91,6 +88,27 @@ bool CheckList::eventFilter(QObject *object, QEvent *event)
     }
 
     return false;
+}
+
+int CheckList::checkState()
+{
+    int total = model->rowCount();
+    int checked = 0;
+    int unchecked = 0;
+
+    for (int i = 0; i < total; i++)
+    {
+        if (model->item(i)->checkState() == Qt::Checked)
+        {
+            checked++;
+        }
+        else if (model->item(i)->checkState() == Qt::Unchecked)
+        {
+            unchecked++;
+        }
+    }
+
+    return checked == total ? Qt::Checked : unchecked == total ? Qt::Unchecked : Qt::PartiallyChecked;
 }
 
 void CheckList::updateText()
@@ -124,30 +142,6 @@ void CheckList::updateText()
     }
 
     lineEdit()->setText(text);
-}
-
-int CheckList::checkState()
-{
-    int total = model->rowCount(), checked = 0, unchecked = 0;
-
-    for (int i = 0; i < total; i++)
-    {
-        if (model->item(i)->checkState() == Qt::Checked)
-        {
-            checked++;
-        }
-        else if (model->item(i)->checkState() == Qt::Unchecked)
-        {
-            unchecked++;
-        }
-    }
-
-    return checked == total ? Qt::Checked : unchecked == total ? Qt::Unchecked : Qt::PartiallyChecked;
-}
-
-void CheckList::modelDataChanged()
-{
-    updateText();
 }
 
 void CheckList::itemPressed(const QModelIndex &index)

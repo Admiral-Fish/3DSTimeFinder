@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,39 +24,30 @@
 #include <Core/Parents/EventFilter.hpp>
 #include <Core/Parents/EventResult.hpp>
 #include <Core/Util/PIDType.hpp>
-#include <QDateTime>
-#include <QMutex>
-#include <QObject>
-#include <QThreadPool>
 #include <QVector>
+#include <mutex>
 
-class EventSearcher6 : public QObject
+class EventSearcher6
 {
-    Q_OBJECT
-signals:
-    void finished();
-    void threadFinished();
-    void updateProgress(const QVector<EventResult> &results, int progress);
-
 public:
-    EventSearcher6(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame, int ivCount,
-        PIDType pidType, const Profile6 &profile, const EventFilter &filter);
-    void setLocks(bool abilityLocked, int ability, bool natureLocked, int nature, bool genderLocked, int gender);
+    EventSearcher6(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, u8 ivCount, PIDType pidType,
+                   const Profile6 &profile, const EventFilter &filter);
+    void setLocks(bool abilityLocked, u8 ability, bool natureLocked, u8 nature, bool genderLocked, u8 gender);
     void setIDs(bool checkInfo, u16 tid, u16 sid, bool ownID);
     void setHidden(u32 pid, u32 ec);
     void setIVTemplate(const QVector<u8> &ivs);
-    void startSearch();
-    int maxProgress();
-
-public slots:
+    void startSearch(int threads);
     void cancelSearch();
+    int getProgress() const;
+    int getMaxProgress() const;
+    QVector<EventResult> getResults();
 
 private:
     Profile6 profile;
     EventFilter filter;
     QDateTime startTime, endTime;
     u32 startFrame, endFrame;
-    int ivCount, ability, nature, gender;
+    u8 ivCount, ability, nature, gender;
     bool otherInfo, abilityLocked, natureLocked, genderLocked, ownID;
     PIDType pidType;
     u32 ec, pid;
@@ -64,17 +55,11 @@ private:
     QVector<u8> ivTemplate;
 
     QVector<EventResult> results;
-    QThreadPool threadPool;
-    QMutex resultMutex, threadMutex;
-    int progress, threads, threadsFinished;
-    bool searching, cancel;
+    std::mutex resultMutex, progressMutex;
+    int progress;
+    bool searching;
 
     void search(u64 epochStart, u64 epochEnd);
-    void update();
-    QVector<EventResult> getResults();
-
-private slots:
-    void checkFinish();
 };
 
 #endif // EVENTSEARCHER6_HPP

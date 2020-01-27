@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +37,6 @@ public:
     QVector<u8> getLower() const;
     QVector<u8> getUpper() const;
     void clearValues();
-    void setValues(u8 hp, u8 atk, u8 def, u8 spa, u8 spd, u8 spe);
 
 private:
     Ui::IVFilter *ui;

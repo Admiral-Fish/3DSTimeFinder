@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -51,11 +51,10 @@ private:
 
 private slots:
     void search();
-    void update(const QVector<EventResult> &frames, int val);
     void profileManager();
     void profilesIndexChanged(int index);
-    void checkBoxEventAbilityLock(bool checked);
-    void comboBoxEventPIDTypeIndexChanged(int index);
+    void checkBoxAbilityLock(bool checked);
+    void comboBoxPIDTypeIndexChanged(int index);
     void importEvent();
 };
 

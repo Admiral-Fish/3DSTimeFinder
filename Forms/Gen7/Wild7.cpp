@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,8 @@
 #include <Models/WildModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTimer>
+#include <QtConcurrent>
 
 Wild7::Wild7(QWidget *parent)
     : QWidget(parent)
@@ -69,45 +71,39 @@ void Wild7::updateProfiles()
 
 void Wild7::setupModel()
 {
-    model = new WildModel(ui->tableViewWild);
+    model = new WildModel(ui->tableView);
 
-    ui->tableViewWild->setModel(model);
+    ui->tableView->setModel(model);
 
     auto natures = Utility::getNatures();
     auto hiddenPowers = Utility::getHiddenPowers();
     auto genderRatios = Utility::getGenderRatios();
 
-    ui->comboBoxWildNature->addItems(natures);
-    ui->comboBoxWildNature->setup();
-    ui->comboBoxWildHiddenPower->addItems(hiddenPowers);
-    ui->comboBoxWildHiddenPower->setup();
-    ui->comboBoxWildEncounterSlot->setup();
-    ui->comboBoxWildGenderRatio->addItems(genderRatios);
-    ui->comboBoxWildSynchNature->addItems(natures);
+    ui->comboBoxNature->setup(natures);
+    ui->comboBoxHiddenPower->setup(hiddenPowers);
+    ui->comboBoxEncounterSlot->setup();
+    ui->comboBoxGenderRatio->addItems(genderRatios);
+    ui->comboBoxSynchNature->addItems(natures);
 
-    ui->comboBoxWildGenderRatio->setItemData(0, 0);
-    ui->comboBoxWildGenderRatio->setItemData(1, 126);
-    ui->comboBoxWildGenderRatio->setItemData(2, 30);
-    ui->comboBoxWildGenderRatio->setItemData(3, 62);
-    ui->comboBoxWildGenderRatio->setItemData(4, 190);
-    ui->comboBoxWildGenderRatio->setItemData(5, 224);
-    ui->comboBoxWildGenderRatio->setItemData(6, 1);
-    ui->comboBoxWildGenderRatio->setItemData(7, 2);
+    ui->comboBoxGenderRatio->setup({ 255, 127, 191, 63, 31, 0, 254 });
 
-    ui->comboBoxWildEncounter->setItemData(0, WildType::Grass);
-    ui->comboBoxWildEncounter->setItemData(1, WildType::Fish);
+    ui->comboBoxGender->setup({ 255, 0, 1 });
 
-    ui->textBoxWildStartFrame->setValues(InputType::Frame32Bit);
-    ui->textBoxWildEndFrame->setValues(InputType::Frame32Bit);
+    ui->comboBoxAbility->setup({ 255, 0, 1, 2 });
 
-    ui->dateTimeEditWildStartDate->setCalendarPopup(true);
-    ui->dateTimeEditWildEndDate->setCalendarPopup(true);
+    ui->comboBoxEncounter->setup({ WildType::Grass, WildType::Fish });
+
+    ui->textBoxStartFrame->setValues(InputType::Frame32Bit);
+    ui->textBoxEndFrame->setValues(InputType::Frame32Bit);
+
+    ui->dateTimeEditStartDate->setCalendarPopup(true);
+    ui->dateTimeEditEndDate->setCalendarPopup(true);
 
     QDateTime dt(QDate(2000, 1, 1), QTime(0, 0, 0));
-    ui->dateTimeEditWildStartDate->setMinimumDateTime(dt);
-    ui->dateTimeEditWildEndDate->setMinimumDateTime(dt);
+    ui->dateTimeEditStartDate->setMinimumDateTime(dt);
+    ui->dateTimeEditEndDate->setMinimumDateTime(dt);
 
-    connect(ui->pushButtonWildSearch, &QPushButton::clicked, this, &Wild7::search);
+    connect(ui->pushButtonSearch, &QPushButton::clicked, this, &Wild7::search);
     connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &Wild7::profileManager);
     connect(
         ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Wild7::profilesIndexChanged);
@@ -121,12 +117,12 @@ void Wild7::setupModel()
 
 void Wild7::search()
 {
-    QDateTime start = ui->dateTimeEditWildStartDate->dateTime();
+    QDateTime start = ui->dateTimeEditStartDate->dateTime();
     start.setTimeSpec(Qt::UTC);
-    QDateTime end = ui->dateTimeEditWildEndDate->dateTime();
+    QDateTime end = ui->dateTimeEditEndDate->dateTime();
     end.setTimeSpec(Qt::UTC);
-    u32 frameStart = ui->textBoxWildStartFrame->getUInt();
-    u32 frameEnd = ui->textBoxWildEndFrame->getUInt();
+    u32 frameStart = ui->textBoxStartFrame->getUInt();
+    u32 frameEnd = ui->textBoxEndFrame->getUInt();
 
     if (start > end)
     {
@@ -144,38 +140,52 @@ void Wild7::search()
     }
 
     model->clearModel();
-    ui->pushButtonWildSearch->setEnabled(false);
-    ui->pushButtonWildCancel->setEnabled(true);
+    ui->pushButtonSearch->setEnabled(false);
+    ui->pushButtonCancel->setEnabled(true);
 
-    QVector<u8> min = ui->ivFilterWild->getLower();
-    QVector<u8> max = ui->ivFilterWild->getUpper();
+    QVector<u8> min = ui->ivFilter->getLower();
+    QVector<u8> max = ui->ivFilter->getUpper();
 
-    WildFilter filter(min, max, ui->comboBoxWildNature->getChecked(), ui->comboBoxWildHiddenPower->getChecked(),
-        ui->comboBoxWildEncounterSlot->getChecked(), ui->comboBoxWildAbility->currentIndex() - 1,
-        ui->checkBoxWildShiny->isChecked(), ui->comboBoxWildGender->currentIndex());
+    WildFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
+                      ui->comboBoxEncounterSlot->getChecked(), ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(),
+                      ui->comboBoxGender->getCurrentByte());
 
-    auto *search = new WildSearcher7(start, end, frameStart, frameEnd, ui->checkBoxWildSynch->isChecked(),
-        ui->comboBoxWildSynchNature->currentIndex(),
-        static_cast<WildType>(ui->comboBoxWildEncounter->currentData().toInt()),
-        ui->comboBoxWildGenderRatio->currentData().toInt(), profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    auto *searcher = new WildSearcher7(
+        start, end, frameStart, frameEnd, ui->checkBoxSynch->isChecked(), static_cast<u8>(ui->comboBoxSynchNature->currentIndex()),
+        static_cast<WildType>(ui->comboBoxEncounter->getCurrentByte()), ui->comboBoxGenderRatio->getCurrentByte(),
+        profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
-    connect(search, &WildSearcher7::finished, this, [=] {
-        ui->pushButtonWildSearch->setEnabled(true);
-        ui->pushButtonWildCancel->setEnabled(false);
+    ui->progressBar->setRange(0, searcher->getMaxProgress());
+
+    auto *timer = new QTimer();
+    connect(timer, &QTimer::timeout, [=] {
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
     });
-    connect(search, &WildSearcher7::updateProgress, this, &Wild7::update);
-    connect(ui->pushButtonWildCancel, &QPushButton::clicked, search, &WildSearcher7::cancelSearch);
 
-    ui->progressBarWild->setValue(0);
-    ui->progressBarWild->setMaximum(search->maxProgress());
+    auto *watcher = new QFutureWatcher<void>();
+    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
+    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
+        ui->pushButtonSearch->setEnabled(true);
+        ui->pushButtonCancel->setEnabled(false);
 
-    search->startSearch();
-}
+        timer->stop();
+        delete timer;
 
-void Wild7::update(const QVector<WildResult> &frames, int val)
-{
-    model->addItems(frames);
-    ui->progressBarWild->setValue(val);
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
+
+        delete searcher;
+    });
+
+    QSettings settings;
+    int threads = settings.value("settings/threads", QThread::idealThreadCount()).toInt();
+
+    auto future = QtConcurrent::run([=] { searcher->startSearch(threads); });
+
+    watcher->setFuture(future);
+    timer->start(1000);
 }
 
 void Wild7::profileManager()

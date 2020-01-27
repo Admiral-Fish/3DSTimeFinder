@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,11 +24,14 @@
 
 class TableView : public QTableView
 {
+    Q_OBJECT
 public:
     explicit TableView(QWidget *parent = nullptr);
     void resizeEvent(QResizeEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void outputModelTXT();
+    void outputModelCSV();
 
 private:
     void setSelectionToClipBoard();

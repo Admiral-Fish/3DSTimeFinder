@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,48 +21,49 @@
 #include <Core/Util/Utility.hpp>
 #include <QtConcurrent>
 
-ProfileSearcher7::ProfileSearcher7(
-    const QDateTime &start, u32 initialSeed, u32 baseTick, u32 baseOffset, u32 tickRange, u32 offsetRange)
+ProfileSearcher7::ProfileSearcher7(const QDateTime &startDate, u32 initialSeed, u32 baseTick, u32 baseOffset, u32 tickRange,
+                                   u32 offsetRange) :
+    startDate(startDate),
+    initialSeed(initialSeed),
+    baseTick(baseTick),
+    baseOffset(baseOffset),
+    tickRange(tickRange),
+    offsetRange(offsetRange),
+    progress(0),
+    searching(false)
 {
-    startDate = start;
-    this->initialSeed = initialSeed;
-    this->baseTick = baseTick;
-    this->baseOffset = baseOffset;
-    this->tickRange = tickRange;
-    this->offsetRange = offsetRange;
-
-    searching = false;
-    cancel = false;
-    progress = 0;
-
-    connect(this, &ProfileSearcher7::finished, this, [=] {
-        searching = false;
-        emit updateProgress(getResults(), progress);
-        QTimer::singleShot(1000, this, &ProfileSearcher7::deleteLater);
-    });
 }
 
 void ProfileSearcher7::startSearch()
 {
-    if (!searching)
-    {
-        searching = true;
-        cancel = false;
-        progress = 0;
+    searching = true;
 
-        QtConcurrent::run([=] { update(); });
-        QtConcurrent::run([=] { search(); });
-    }
-}
-
-int ProfileSearcher7::maxProgress()
-{
-    return static_cast<int>(tickRange + 1);
+    QtConcurrent::run([=] { search(); });
 }
 
 void ProfileSearcher7::cancelSearch()
 {
-    cancel = true;
+    searching = false;
+}
+
+int ProfileSearcher7::getProgress() const
+{
+    return progress;
+}
+
+int ProfileSearcher7::getMaxProgress() const
+{
+    return static_cast<int>(tickRange + 1);
+}
+
+QVector<QPair<u32, u32>> ProfileSearcher7::getResults()
+{
+    std::lock_guard<std::mutex> lock(mutex);
+
+    auto data(results);
+    results.clear();
+
+    return data;
 }
 
 void ProfileSearcher7::search()
@@ -71,9 +72,8 @@ void ProfileSearcher7::search()
     {
         for (u32 offset = 0; offset <= offsetRange; offset++)
         {
-            if (cancel)
+            if (!searching)
             {
-                emit finished();
                 return;
             }
 
@@ -82,7 +82,7 @@ void ProfileSearcher7::search()
             u32 seedPlus = Utility::calcInitialSeed(baseTick + tick, epochPlus);
             if (seedPlus == initialSeed)
             {
-                QMutexLocker locker(&mutex);
+                std::lock_guard<std::mutex> lock(mutex);
                 results.append(QPair<u32, u32>(baseTick + tick, baseOffset + offset));
             }
 
@@ -91,29 +91,11 @@ void ProfileSearcher7::search()
             u32 seedMinus = Utility::calcInitialSeed(baseTick - tick, epochMinus);
             if (seedMinus == initialSeed)
             {
-                QMutexLocker locker(&mutex);
+                std::lock_guard<std::mutex> lock(mutex);
                 results.append(QPair<u32, u32>(baseTick - tick, baseOffset - offset));
             }
         }
+
         progress++;
     }
-    emit finished();
-}
-
-void ProfileSearcher7::update()
-{
-    do
-    {
-        emit updateProgress(getResults(), progress);
-        QThread::sleep(1);
-    } while (searching);
-}
-
-QVector<QPair<u32, u32>> ProfileSearcher7::getResults()
-{
-    QMutexLocker locker(&mutex);
-    auto data(results);
-    results.clear();
-
-    return data;
 }

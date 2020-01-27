@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,67 +20,74 @@
 #include "IDSearcher7.hpp"
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
+#include <QThreadPool>
 #include <QtConcurrent>
 
-IDSearcher7::IDSearcher7(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame,
-    const Profile7 &profile, const IDFilter &filter)
+IDSearcher7::IDSearcher7(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, const Profile7 &profile,
+                         const IDFilter &filter) :
+    startTime(startTime),
+    endTime(endTime),
+    startFrame(startFrame),
+    endFrame(endFrame),
+    filter(filter),
+    profile(profile),
+    progress(0),
+    searching(false)
 {
-    startTime = start;
-    endTime = end;
-    this->startFrame = startFrame;
-    this->endFrame = endFrame;
-    this->profile = profile;
-    this->filter = filter;
-
-    searching = false;
-    cancel = false;
-    progress = 0;
-    threadsFinished = 0;
-
-    connect(this, &IDSearcher7::threadFinished, this, &IDSearcher7::checkFinish);
-    connect(this, &IDSearcher7::finished, this, [=] {
-        searching = false;
-        emit updateProgress(getResults(), progress);
-        QTimer::singleShot(1000, this, &IDSearcher7::deleteLater);
-    });
 }
 
-void IDSearcher7::startSearch()
+void IDSearcher7::startSearch(int threads)
 {
-    if (!searching)
+    searching = true;
+    QThreadPool pool;
+
+    u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
+    u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
+
+    u64 epochSplit = (epochEnd - epochStart) / threads;
+    epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
+
+    if (epochSplit < 1000)
     {
-        searching = true;
-        cancel = false;
-        progress = 0;
-        threadsFinished = 0;
+        pool.setMaxThreadCount(1);
+        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
+        future.waitForFinished();
 
-        QSettings setting;
-        threads = setting.value("settings/threads", QThread::idealThreadCount()).toInt();
-        threadPool.setMaxThreadCount(threads + 1);
+        return;
+    }
 
-        u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
-        u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
-
-        u64 epochSplit = (epochEnd - epochStart) / threads;
-        epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
-
-        QtConcurrent::run(&threadPool, [=] { update(); });
-        for (int i = 0; i < threads; i++)
+    pool.setMaxThreadCount(threads);
+    QVector<QFuture<void>> threadContainer;
+    for (int i = 0; i < threads; i++)
+    {
+        if (i == threads - 1)
         {
-            if (i == threads - 1)
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochEnd); });
-            }
-            else
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochStart + epochSplit); });
-            }
-            epochStart += epochSplit;
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
         }
+        else
+        {
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+        }
+        epochStart += epochSplit;
+    }
+
+    for (int i = 0; i < threads; i++)
+    {
+        threadContainer[i].waitForFinished();
     }
 }
 
-int IDSearcher7::maxProgress()
+void IDSearcher7::cancelSearch()
+{
+    searching = false;
+}
+
+int IDSearcher7::getProgress() const
+{
+    return progress;
+}
+
+int IDSearcher7::getMaxProgress() const
 {
     auto val = static_cast<int>(
         (Utility::getCitraTime(endTime, profile.getOffset()) - Utility::getCitraTime(startTime, profile.getOffset()))
@@ -88,9 +95,14 @@ int IDSearcher7::maxProgress()
     return val + 1;
 }
 
-void IDSearcher7::cancelSearch()
+QVector<IDResult> IDSearcher7::getResults()
 {
-    cancel = true;
+    std::lock_guard<std::mutex> lock(resultMutex);
+
+    auto data(results);
+    results.clear();
+
+    return data;
 }
 
 void IDSearcher7::search(u64 epochStart, u64 epochEnd)
@@ -98,14 +110,8 @@ void IDSearcher7::search(u64 epochStart, u64 epochEnd)
     u32 tick = profile.getTick();
     u32 offset = profile.getOffset();
 
-    for (u64 epoch = epochStart; epoch <= epochEnd; epoch += 1000)
+    for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        if (cancel)
-        {
-            emit threadFinished();
-            return;
-        }
-
         QDateTime target
             = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
@@ -118,39 +124,12 @@ void IDSearcher7::search(u64 epochStart, u64 epochEnd)
             {
                 id.setTarget(target);
 
-                QMutexLocker locker(&resultMutex);
+                std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(id);
             }
         }
 
+        std::lock_guard<std::mutex> lock(progressMutex);
         progress++;
-    }
-    emit threadFinished();
-}
-
-void IDSearcher7::update()
-{
-    do
-    {
-        emit updateProgress(getResults(), progress);
-        QThread::sleep(1);
-    } while (searching);
-}
-
-QVector<IDResult> IDSearcher7::getResults()
-{
-    QMutexLocker locker(&resultMutex);
-    auto data(results);
-    results.clear();
-
-    return data;
-}
-
-void IDSearcher7::checkFinish()
-{
-    QMutexLocker locker(&threadMutex);
-    if (++threadsFinished == threads)
-    {
-        emit finished();
     }
 }

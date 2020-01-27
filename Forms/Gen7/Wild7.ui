@@ -157,7 +157,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBoxWildRNGInfo">
+    <widget class="QGroupBox" name="groupBoxRNGInfo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
@@ -169,63 +169,63 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_18">
       <item row="0" column="0">
-       <widget class="QLabel" name="labelWildStartDate">
+       <widget class="QLabel" name="labelStartDate">
         <property name="text">
          <string>Start Date:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEditWildStartDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditStartDate">
         <property name="displayFormat">
          <string>M/d/yyyy H:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="labelWildEndDate">
+       <widget class="QLabel" name="labelEndDate">
         <property name="text">
          <string>End Date:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEditWildEndDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditEndDate">
         <property name="displayFormat">
          <string>M/d/yyyy H:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="labelWildFrame">
+       <widget class="QLabel" name="labelFrame">
         <property name="text">
          <string>Frame:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="TextBox" name="textBoxWildStartFrame">
+       <widget class="TextBox" name="textBoxStartFrame">
         <property name="text">
          <string notr="true">478</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="TextBox" name="textBoxWildEndFrame">
+       <widget class="TextBox" name="textBoxEndFrame">
         <property name="text">
          <string notr="true">10000</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonWildSearch">
+       <widget class="QPushButton" name="pushButtonSearch">
         <property name="text">
          <string>Search</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonWildCancel">
+       <widget class="QPushButton" name="pushButtonCancel">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -238,7 +238,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBoxWildSettings">
+    <widget class="QGroupBox" name="groupBoxSettings">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
@@ -250,14 +250,14 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_20">
       <item row="0" column="0">
-       <widget class="QLabel" name="labelWildEncounter">
+       <widget class="QLabel" name="labelEncounter">
         <property name="text">
          <string>Encounter</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="comboBoxWildEncounter">
+       <widget class="ComboBox" name="comboBoxEncounter">
         <item>
          <property name="text">
           <string>Grass</string>
@@ -271,30 +271,30 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="checkBoxWildSynch">
+       <widget class="QCheckBox" name="checkBoxSynch">
         <property name="text">
          <string>Synch</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="comboBoxWildSynchNature"/>
+       <widget class="QComboBox" name="comboBoxSynchNature"/>
       </item>
       <item row="1" column="2">
-       <widget class="QLabel" name="labelWildGenderRatio">
+       <widget class="QLabel" name="labelGenderRatio">
         <property name="text">
          <string>Gender Ratio</string>
         </property>
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QComboBox" name="comboBoxWildGenderRatio"/>
+       <widget class="ComboBox" name="comboBoxGenderRatio"/>
       </item>
      </layout>
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="QGroupBox" name="groupBoxWildFilter">
+    <widget class="QGroupBox" name="groupBoxFilter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>3</horstretch>
@@ -306,7 +306,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_19">
       <item row="0" column="1">
-       <widget class="QLabel" name="labelWildNature">
+       <widget class="QLabel" name="labelNature">
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -316,41 +316,41 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="CheckList" name="comboBoxWildNature"/>
+       <widget class="CheckList" name="comboBoxNature"/>
       </item>
       <item row="0" column="3">
-       <widget class="QPushButton" name="pushButtonWildAnyNature">
+       <widget class="QPushButton" name="pushButtonAnyNature">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="labelWildHiddenPower">
+       <widget class="QLabel" name="labelHiddenPower">
         <property name="text">
          <string>Hidden Power</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="CheckList" name="comboBoxWildHiddenPower"/>
+       <widget class="CheckList" name="comboBoxHiddenPower"/>
       </item>
       <item row="1" column="3">
-       <widget class="QPushButton" name="pushButtonWildAnyHiddenPower">
+       <widget class="QPushButton" name="pushButtonAnyHiddenPower">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="labelWildEncounterSlot">
+       <widget class="QLabel" name="labelEncounterSlot">
         <property name="text">
          <string>Encounter Slots</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="CheckList" name="comboBoxWildEncounterSlot">
+       <widget class="CheckList" name="comboBoxEncounterSlot">
         <item>
          <property name="text">
           <string>1</string>
@@ -404,21 +404,21 @@
        </widget>
       </item>
       <item row="2" column="3">
-       <widget class="QPushButton" name="pushButtonWildAnyEncounterSlot">
+       <widget class="QPushButton" name="pushButtonAnyEncounterSlot">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="labelWildAbility">
+       <widget class="QLabel" name="labelAbility">
         <property name="text">
          <string>Ability</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QComboBox" name="comboBoxWildAbility">
+       <widget class="ComboBox" name="comboBoxAbility">
         <item>
          <property name="text">
           <string>Any</string>
@@ -442,14 +442,14 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLabel" name="labelWildGender">
+       <widget class="QLabel" name="labelGender">
         <property name="text">
          <string>Gender</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QComboBox" name="comboBoxWildGender">
+       <widget class="ComboBox" name="comboBoxGender">
         <item>
          <property name="text">
           <string>Any</string>
@@ -468,34 +468,34 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QLabel" name="labelWildShiny">
+       <widget class="QLabel" name="labelShiny">
         <property name="text">
          <string>Shiny</string>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QCheckBox" name="checkBoxWildShiny">
+       <widget class="QCheckBox" name="checkBoxShiny">
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item row="0" column="0" rowspan="6">
-       <widget class="IVFilter" name="ivFilterWild" native="true"/>
+       <widget class="IVFilter" name="ivFilter" native="true"/>
       </item>
      </layout>
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
-    <widget class="QProgressBar" name="progressBarWild">
+    <widget class="QProgressBar" name="progressBar">
      <property name="value">
       <number>0</number>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="3">
-    <widget class="TableView" name="tableViewWild">
+    <widget class="TableView" name="tableView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -537,37 +537,42 @@
     <slot>resetChecks()</slot>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>Forms/Controls/ComboBox.hpp</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>comboBoxProfiles</tabstop>
   <tabstop>pushButtonProfileManager</tabstop>
-  <tabstop>dateTimeEditWildStartDate</tabstop>
-  <tabstop>dateTimeEditWildEndDate</tabstop>
-  <tabstop>textBoxWildStartFrame</tabstop>
-  <tabstop>textBoxWildEndFrame</tabstop>
-  <tabstop>pushButtonWildSearch</tabstop>
-  <tabstop>pushButtonWildCancel</tabstop>
-  <tabstop>comboBoxWildEncounter</tabstop>
-  <tabstop>checkBoxWildSynch</tabstop>
-  <tabstop>comboBoxWildSynchNature</tabstop>
-  <tabstop>comboBoxWildGenderRatio</tabstop>
-  <tabstop>comboBoxWildNature</tabstop>
-  <tabstop>pushButtonWildAnyNature</tabstop>
-  <tabstop>comboBoxWildHiddenPower</tabstop>
-  <tabstop>pushButtonWildAnyHiddenPower</tabstop>
-  <tabstop>comboBoxWildEncounterSlot</tabstop>
-  <tabstop>pushButtonWildAnyEncounterSlot</tabstop>
-  <tabstop>comboBoxWildAbility</tabstop>
-  <tabstop>comboBoxWildGender</tabstop>
-  <tabstop>checkBoxWildShiny</tabstop>
-  <tabstop>tableViewWild</tabstop>
+  <tabstop>dateTimeEditStartDate</tabstop>
+  <tabstop>dateTimeEditEndDate</tabstop>
+  <tabstop>textBoxStartFrame</tabstop>
+  <tabstop>textBoxEndFrame</tabstop>
+  <tabstop>pushButtonSearch</tabstop>
+  <tabstop>pushButtonCancel</tabstop>
+  <tabstop>comboBoxEncounter</tabstop>
+  <tabstop>checkBoxSynch</tabstop>
+  <tabstop>comboBoxSynchNature</tabstop>
+  <tabstop>comboBoxGenderRatio</tabstop>
+  <tabstop>comboBoxNature</tabstop>
+  <tabstop>pushButtonAnyNature</tabstop>
+  <tabstop>comboBoxHiddenPower</tabstop>
+  <tabstop>pushButtonAnyHiddenPower</tabstop>
+  <tabstop>comboBoxEncounterSlot</tabstop>
+  <tabstop>pushButtonAnyEncounterSlot</tabstop>
+  <tabstop>comboBoxAbility</tabstop>
+  <tabstop>comboBoxGender</tabstop>
+  <tabstop>checkBoxShiny</tabstop>
+  <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButtonWildAnyNature</sender>
+   <sender>pushButtonAnyNature</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxWildNature</receiver>
+   <receiver>comboBoxNature</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -581,9 +586,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButtonWildAnyHiddenPower</sender>
+   <sender>pushButtonAnyHiddenPower</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxWildHiddenPower</receiver>
+   <receiver>comboBoxHiddenPower</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -597,9 +602,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButtonWildAnyEncounterSlot</sender>
+   <sender>pushButtonAnyEncounterSlot</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxWildEncounterSlot</receiver>
+   <receiver>comboBoxEncounterSlot</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">

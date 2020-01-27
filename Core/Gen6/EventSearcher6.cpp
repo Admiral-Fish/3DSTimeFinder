@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,35 +20,25 @@
 #include "EventSearcher6.hpp"
 #include <Core/RNG/MT.hpp>
 #include <Core/Util/Utility.hpp>
+#include <QThreadPool>
 #include <QtConcurrent>
 
-EventSearcher6::EventSearcher6(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame, int ivCount,
-    PIDType pidType, const Profile6 &profile, const EventFilter &filter)
+EventSearcher6::EventSearcher6(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, u8 ivCount,
+                               PIDType pidType, const Profile6 &profile, const EventFilter &filter) :
+    profile(profile),
+    filter(filter),
+    startTime(startTime),
+    endTime(endTime),
+    startFrame(startFrame),
+    endFrame(endFrame),
+    ivCount(ivCount),
+    pidType(pidType),
+    progress(0),
+    searching(false)
 {
-    startTime = start;
-    endTime = end;
-    this->startFrame = startFrame;
-    this->endFrame = endFrame;
-    this->ivCount = ivCount;
-    this->pidType = pidType;
-    this->profile = profile;
-    this->filter = filter;
-
-    searching = false;
-    cancel = false;
-    progress = 0;
-    threadsFinished = 0;
-
-    connect(this, &EventSearcher6::threadFinished, this, &EventSearcher6::checkFinish);
-    connect(this, &EventSearcher6::finished, this, [=] {
-        searching = false;
-        emit updateProgress(getResults(), progress);
-        QTimer::singleShot(1000, this, &EventSearcher6::deleteLater);
-    });
 }
 
-void EventSearcher6::setLocks(
-    bool abilityLocked, int ability, bool natureLocked, int nature, bool genderLocked, int gender)
+void EventSearcher6::setLocks(bool abilityLocked, u8 ability, bool natureLocked, u8 nature, bool genderLocked, u8 gender)
 {
     this->abilityLocked = abilityLocked;
     this->ability = ability;
@@ -77,50 +67,71 @@ void EventSearcher6::setIVTemplate(const QVector<u8> &ivs)
     ivTemplate = ivs;
 }
 
-void EventSearcher6::startSearch()
+void EventSearcher6::startSearch(int threads)
 {
-    if (!searching)
+    searching = true;
+    QThreadPool pool;
+
+    u64 epochStart = Utility::getCitraTime(startTime);
+    u64 epochEnd = Utility::getCitraTime(endTime);
+
+    u64 epochSplit = (epochEnd - epochStart) / threads;
+    epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
+
+    if (epochSplit < 1000)
     {
-        searching = true;
-        cancel = false;
-        progress = 0;
-        threadsFinished = 0;
+        pool.setMaxThreadCount(1);
+        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
+        future.waitForFinished();
 
-        QSettings setting;
-        threads = setting.value("settings/threads", QThread::idealThreadCount()).toInt();
-        threadPool.setMaxThreadCount(threads + 1);
+        return;
+    }
 
-        u64 epochStart = Utility::getCitraTime(startTime);
-        u64 epochEnd = Utility::getCitraTime(endTime);
-
-        u64 epochSplit = (epochEnd - epochStart) / threads;
-        epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
-
-        QtConcurrent::run(&threadPool, [=] { update(); });
-        for (int i = 0; i < threads; i++)
+    pool.setMaxThreadCount(threads);
+    QVector<QFuture<void>> threadContainer;
+    for (int i = 0; i < threads; i++)
+    {
+        if (i == threads - 1)
         {
-            if (i == threads - 1)
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochEnd); });
-            }
-            else
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochStart + epochSplit); });
-            }
-            epochStart += epochSplit;
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
         }
+        else
+        {
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+        }
+        epochStart += epochSplit;
+    }
+
+    for (int i = 0; i < threads; i++)
+    {
+        threadContainer[i].waitForFinished();
     }
 }
 
-int EventSearcher6::maxProgress()
+void EventSearcher6::cancelSearch()
+{
+    searching = false;
+}
+
+int EventSearcher6::getProgress() const
+{
+    return progress;
+}
+
+int EventSearcher6::getMaxProgress() const
 {
     auto val = static_cast<int>((Utility::getCitraTime(endTime) - Utility::getCitraTime(startTime)) / 1000);
     return val + 1;
 }
 
-void EventSearcher6::cancelSearch()
+QVector<EventResult> EventSearcher6::getResults()
 {
-    cancel = true;
+    std::lock_guard<std::mutex> lock(resultMutex);
+
+    auto data(results);
+    results.clear();
+
+    return data;
 }
 
 void EventSearcher6::search(u64 epochStart, u64 epochEnd)
@@ -132,14 +143,8 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
     u16 eventSID = ownID ? profile.getSID() : sid;
     u8 counter = (profile.getVersion() & Game::ORAS) ? 2 : 1;
 
-    for (u64 epoch = epochStart; epoch <= epochEnd; epoch += 1000)
+    for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        if (cancel)
-        {
-            emit threadFinished();
-            return;
-        }
-
         QDateTime target
             = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch)), Qt::UTC);
         u32 initialSeed = save + time + epoch;
@@ -204,15 +209,11 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
                 }
                 result.calcHiddenPower();
 
-                result.setAbility(abilityLocked
-                        ? ability
-                        : ((static_cast<u64>(rngList.at(frame + index++)) * (ability + 2) >> 32) + 1));
+                result.setAbility(abilityLocked ? ability : (static_cast<u64>(rngList.at(frame + index++)) * (ability + 2) >> 32));
 
                 result.setNature(natureLocked ? nature : static_cast<u64>(rngList.at(frame + index++)) * 25 >> 32);
 
-                result.setGender(genderLocked
-                        ? gender
-                        : (static_cast<u64>(rngList.at(frame + index++)) * 252 >> 32) >= gender ? 1 : 2);
+                result.setGender(genderLocked ? gender : (static_cast<u64>(rngList.at(frame + index++)) * 252 >> 32) < gender);
             }
 
             if (filter.compare(result))
@@ -220,39 +221,12 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
                 result.setTarget(target);
                 result.setFrame(frame + startFrame);
 
-                QMutexLocker locker(&resultMutex);
+                std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);
             }
         }
 
+        std::lock_guard<std::mutex> lock(progressMutex);
         progress++;
-    }
-    emit threadFinished();
-}
-
-void EventSearcher6::update()
-{
-    do
-    {
-        emit updateProgress(getResults(), progress);
-        QThread::sleep(1);
-    } while (searching);
-}
-
-QVector<EventResult> EventSearcher6::getResults()
-{
-    QMutexLocker locker(&resultMutex);
-    auto data(results);
-    results.clear();
-
-    return data;
-}
-
-void EventSearcher6::checkFinish()
-{
-    QMutexLocker locker(&threadMutex);
-    if (++threadsFinished == threads)
-    {
-        emit finished();
     }
 }

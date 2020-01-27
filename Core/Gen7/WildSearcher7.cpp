@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,75 +20,82 @@
 #include "WildSearcher7.hpp"
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
+#include <QThreadPool>
 #include <QtConcurrent>
 
 constexpr u8 grassSlots[10] = { 19, 39, 49, 59, 69, 79, 89, 94, 98, 99 };
 constexpr u8 waterSlots[3] = { 78, 98, 99 };
 
-WildSearcher7::WildSearcher7(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame, bool useSynch,
-    int synchNature, WildType type, int gender, const Profile7 &profile, const WildFilter &filter)
+WildSearcher7::WildSearcher7(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, bool useSynch,
+                             u8 synchNature, WildType type, u8 gender, const Profile7 &profile, const WildFilter &filter) :
+    profile(profile),
+    filter(filter),
+    startTime(startTime),
+    endTime(endTime),
+    startFrame(startFrame),
+    endFrame(endFrame),
+    synchNature(synchNature),
+    pidCount(profile.getShinyCharm() ? 3 : 1),
+    gender(gender),
+    useSynch(useSynch),
+    type(type),
+    progress(0),
+    searching(false)
 {
-    startTime = start;
-    endTime = end;
-    this->startFrame = startFrame;
-    this->endFrame = endFrame;
-    this->useSynch = useSynch;
-    this->synchNature = synchNature;
-    this->type = type;
-    this->gender = gender;
-    this->profile = profile;
-    this->filter = filter;
-    pidCount = profile.getShinyCharm() ? 3 : 1;
-
-    searching = false;
-    cancel = false;
-    progress = 0;
-    threadsFinished = 0;
-
-    connect(this, &WildSearcher7::threadFinished, this, &WildSearcher7::checkFinish);
-    connect(this, &WildSearcher7::finished, this, [=] {
-        searching = false;
-        emit updateProgress(getResults(), progress);
-        QTimer::singleShot(1000, this, &WildSearcher7::deleteLater);
-    });
 }
 
-void WildSearcher7::startSearch()
+void WildSearcher7::startSearch(int threads)
 {
-    if (!searching)
+    searching = true;
+    QThreadPool pool;
+
+    u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
+    u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
+
+    u64 epochSplit = (epochEnd - epochStart) / threads;
+    epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
+
+    if (epochSplit < 1000)
     {
-        searching = true;
-        cancel = false;
-        progress = 0;
-        threadsFinished = 0;
+        pool.setMaxThreadCount(1);
+        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
+        future.waitForFinished();
 
-        QSettings setting;
-        threads = setting.value("settings/threads", QThread::idealThreadCount()).toInt();
-        threadPool.setMaxThreadCount(threads + 1);
+        return;
+    }
 
-        u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
-        u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
-
-        u64 epochSplit = (epochEnd - epochStart) / threads;
-        epochSplit -= (epochSplit % 1000); // Floor to nearest thousand
-
-        QtConcurrent::run(&threadPool, [=] { update(); });
-        for (int i = 0; i < threads; i++)
+    pool.setMaxThreadCount(threads);
+    QVector<QFuture<void>> threadContainer;
+    for (int i = 0; i < threads; i++)
+    {
+        if (i == threads - 1)
         {
-            if (i == threads - 1)
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochEnd); });
-            }
-            else
-            {
-                QtConcurrent::run(&threadPool, [=] { search(epochStart, epochStart + epochSplit); });
-            }
-            epochStart += epochSplit;
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
         }
+        else
+        {
+            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+        }
+        epochStart += epochSplit;
+    }
+
+    for (int i = 0; i < threads; i++)
+    {
+        threadContainer[i].waitForFinished();
     }
 }
 
-int WildSearcher7::maxProgress()
+void WildSearcher7::cancelSearch()
+{
+    searching = false;
+}
+
+int WildSearcher7::getProgress() const
+{
+    return progress;
+}
+
+int WildSearcher7::getMaxProgress() const
 {
     auto val = static_cast<int>(
         (Utility::getCitraTime(endTime, profile.getOffset()) - Utility::getCitraTime(startTime, profile.getOffset()))
@@ -96,9 +103,14 @@ int WildSearcher7::maxProgress()
     return val + 1;
 }
 
-void WildSearcher7::cancelSearch()
+QVector<WildResult> WildSearcher7::getResults()
 {
-    cancel = true;
+    std::lock_guard<std::mutex> lock(resultMutex);
+
+    auto data(results);
+    results.clear();
+
+    return data;
 }
 
 void WildSearcher7::search(u64 epochStart, u64 epochEnd)
@@ -109,16 +121,9 @@ void WildSearcher7::search(u64 epochStart, u64 epochEnd)
     u16 tid = profile.getTID();
     u16 sid = profile.getSID();
 
-    for (u64 epoch = epochStart; epoch <= epochEnd; epoch += 1000)
+    for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        if (cancel)
-        {
-            emit threadFinished();
-            return;
-        }
-
-        QDateTime target
-            = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
+        QDateTime target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
         SFMT sfmt(initialSeed);
         sfmt.advanceFrames(startFrame);
@@ -166,44 +171,26 @@ void WildSearcher7::search(u64 epochStart, u64 epochEnd)
             }
             result.calcHiddenPower();
 
-            result.setAbility((rngList.at(frame + index++) & 1) + 1);
+            result.setAbility(rngList.at(frame + index++) & 1);
 
             result.setNature(synch ? synchNature : rngList.at(frame + index++) % 25);
 
             // This might be wrong, it's probably fine though
-            result.setGender(gender > 2 ? (rngList.at(frame + index++) % 252 >= gender ? 1 : 2) : gender);
+            result.setGender((gender > 0 && gender < 254) ? (rngList.at(frame + index++) % 252 >= gender ? 1 : 2) : gender);
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
                 result.setFrame(frame + startFrame);
 
-                QMutexLocker locker(&resultMutex);
+                std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);
             }
         }
 
+        std::lock_guard<std::mutex> lock(progressMutex);
         progress++;
     }
-    emit threadFinished();
-}
-
-void WildSearcher7::update()
-{
-    do
-    {
-        emit updateProgress(getResults(), progress);
-        QThread::sleep(1);
-    } while (searching);
-}
-
-QVector<WildResult> WildSearcher7::getResults()
-{
-    QMutexLocker locker(&resultMutex);
-    auto data(results);
-    results.clear();
-
-    return data;
 }
 
 u8 WildSearcher7::getSlot(u8 value)
@@ -217,7 +204,7 @@ u8 WildSearcher7::getSlot(u8 value)
                 return i + 1;
             }
         }
-        return -1;
+        return 255;
     }
 
     for (u8 i = 0; i < 3; i++)
@@ -227,15 +214,5 @@ u8 WildSearcher7::getSlot(u8 value)
             return i + 1;
         }
     }
-    return -1;
-}
-
-void WildSearcher7::checkFinish()
-{
-    QMutexLocker locker(&threadMutex);
-    if (++threadsFinished == threads)
-    {
-        searching = false;
-        emit finished();
-    }
+    return 255;
 }

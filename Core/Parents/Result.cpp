@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -86,12 +86,12 @@ void Result::calcHiddenPower()
 
 QString Result::getAbilityString() const
 {
-    if (ability == 3)
+    if (ability == 2)
     {
         return "H";
     }
 
-    return QString::number(ability);
+    return QString::number(ability + 1);
 }
 
 u8 Result::getAbility() const
@@ -116,7 +116,7 @@ void Result::setNature(const u8 &nature)
 
 QString Result::getGenderString() const
 {
-    return gender == 0 ? "-" : gender == 1 ? "♂" : "♀";
+    return gender == 0 ? "♂" : gender == 1 ? "♀" : "-";
 }
 
 u8 Result::getGender() const

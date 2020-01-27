@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,19 +40,20 @@ class TextBox : public QLineEdit
 public:
     explicit TextBox(QWidget *parent = nullptr);
     void setValues(InputType type);
-    void setValues(u64 minValue, u64 maxValue, int base = 10);
+    void setValues(u64 minValue, u64 maxValue, int length, int base = 10);
+    u8 getByte();
     u16 getUShort();
     u32 getUInt();
+    u64 getULong();
 
 private:
     bool setup;
-    u64 maxValue;
-    u64 minValue;
-    int base;
+    u64 maxValue, minValue;
+    int base, length;
     QRegExp filter;
 
 private slots:
-    void onTextChanged(QString string);
+    void onTextEdited(QString string);
     void onEditFinished();
 };
 

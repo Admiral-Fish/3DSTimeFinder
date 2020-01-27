@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,10 +19,9 @@
 
 #include "TextBox.hpp"
 
-TextBox::TextBox(QWidget *parent)
-    : QLineEdit(parent)
+TextBox::TextBox(QWidget *parent) : QLineEdit(parent)
 {
-    connect(this, &TextBox::textChanged, this, &TextBox::onTextChanged);
+    connect(this, &TextBox::textEdited, this, &TextBox::onTextEdited);
     connect(this, &TextBox::editingFinished, this, &TextBox::onEditFinished);
     setup = false;
 }
@@ -36,36 +35,43 @@ void TextBox::setValues(InputType type)
         minValue = 0;
         maxValue = 0xffffffffffffffff;
         base = 16;
+        length = 16;
         break;
     case InputType::Frame64Bit:
         minValue = 1;
         maxValue = 0xffffffffffffffff;
         base = 10;
+        length = 20;
         break;
     case InputType::Seed32Bit:
         minValue = 0;
         maxValue = 0xffffffff;
         base = 16;
+        length = 8;
         break;
     case InputType::Frame32Bit:
         minValue = 1;
         maxValue = 0xffffffff;
         base = 10;
+        length = 10;
         break;
     case InputType::Seed16Bit:
         minValue = 0;
         maxValue = 0xffff;
         base = 16;
+        length = 4;
         break;
     case InputType::Delay:
         minValue = 0;
         maxValue = 0xffffffff;
         base = 10;
+        length = 10;
         break;
     case InputType::ID:
         minValue = 0;
         maxValue = 0xffff;
         base = 10;
+        length = 5;
         break;
     }
 
@@ -73,13 +79,19 @@ void TextBox::setValues(InputType type)
     setup = true;
 }
 
-void TextBox::setValues(u64 minValue, u64 maxValue, int base)
+void TextBox::setValues(u64 minValue, u64 maxValue, int length, int base)
 {
     this->minValue = minValue;
     this->maxValue = maxValue;
+    this->length = length;
     this->base = base;
     filter = QRegExp(base == 10 ? "[^0-9]" : "[^0-9A-F]");
     setup = true;
+}
+
+u8 TextBox::getByte()
+{
+    return static_cast<u8>(this->text().toUShort(nullptr, base));
 }
 
 u16 TextBox::getUShort()
@@ -92,10 +104,25 @@ u32 TextBox::getUInt()
     return this->text().toUInt(nullptr, base);
 }
 
-void TextBox::onTextChanged(QString string)
+u64 TextBox::getULong()
+{
+    return this->text().toULongLong(nullptr, base);
+}
+
+void TextBox::onTextEdited(QString string)
 {
     if (setup)
     {
+        // Allow pasting hex formatted numbers
+        if (base == 16 && string.startsWith("0x"))
+        {
+            string.remove(0, 2);
+        }
+
+        // Length limit
+        string.chop(string.length() - length);
+
+        // Apply regex filter
         string = string.toUpper();
         string.remove(filter);
 
@@ -110,17 +137,11 @@ void TextBox::onEditFinished()
     if (setup)
     {
         QString string = this->text();
-        u64 temp = string.toULongLong(nullptr, base);
 
-        if (temp > maxValue)
-        {
-            string = QString::number(maxValue, base);
-        }
-        if (temp < minValue)
-        {
-            string = QString::number(minValue, base);
-        }
+        u64 value = string.toULongLong(nullptr, base);
+        value = qBound(minValue, value, maxValue);
 
-        this->setText(string);
+        string = QString::number(value, base);
+        setText(string);
     }
 }

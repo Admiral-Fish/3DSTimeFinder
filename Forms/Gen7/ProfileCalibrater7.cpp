@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,8 @@
 #include <Core/Gen7/ProfileSearcher7.hpp>
 #include <Forms/Gen7/ProfileEditor7.hpp>
 #include <QSettings>
+#include <QTimer>
+#include <QtConcurrent>
 
 ProfileCalibrater7::ProfileCalibrater7(QWidget *parent)
     : QWidget(parent)
@@ -87,31 +89,44 @@ void ProfileCalibrater7::search()
     u32 tickRange = ui->textBoxTickRange->getUInt();
     u32 offsetRange = ui->textBoxOffsetRange->getUInt();
 
-    auto *search = new ProfileSearcher7(dateTime, initialSeed, baseTick, baseOffset, tickRange, offsetRange);
+    auto *searcher = new ProfileSearcher7(dateTime, initialSeed, baseTick, baseOffset, tickRange, offsetRange);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
-    connect(search, &ProfileSearcher7::finished, this, [=] {
+    ui->progressBar->setRange(0, searcher->getMaxProgress());
+
+    auto *timer = new QTimer();
+    connect(timer, &QTimer::timeout, [=] {
+        ui->progressBar->setValue(searcher->getProgress());
+        auto results = searcher->getResults();
+        for (const auto &result : results)
+        {
+            model->appendRow({ new QStandardItem(QString::number(result.first, 16)), new QStandardItem(QString::number(result.second)) });
+        }
+    });
+
+    auto *watcher = new QFutureWatcher<void>();
+    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
+    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
         ui->pushButtonSearch->setEnabled(true);
         ui->pushButtonCancel->setEnabled(false);
+
+        timer->stop();
+        delete timer;
+
+        ui->progressBar->setValue(searcher->getProgress());
+        auto results = searcher->getResults();
+        for (const auto &result : results)
+        {
+            model->appendRow({ new QStandardItem(QString::number(result.first, 16)), new QStandardItem(QString::number(result.second)) });
+        }
+
+        delete searcher;
     });
-    connect(search, &ProfileSearcher7::updateProgress, this, &ProfileCalibrater7::update);
-    connect(ui->pushButtonCancel, &QPushButton::clicked, search, &ProfileSearcher7::cancelSearch);
 
-    ui->progressBar->setValue(0);
-    ui->progressBar->setMaximum(search->maxProgress());
+    auto future = QtConcurrent::run([=] { searcher->startSearch(); });
 
-    search->startSearch();
-}
-
-void ProfileCalibrater7::update(const QVector<QPair<u32, u32>> &results, int val)
-{
-    for (const auto &result : results)
-    {
-        QList<QStandardItem *> list = { new QStandardItem(QString::number(result.first, 16)),
-            new QStandardItem(QString::number(result.second)) };
-        model->appendRow(list);
-    }
-
-    ui->progressBar->setValue(val);
+    watcher->setFuture(future);
+    timer->start(1000);
 }
 
 void ProfileCalibrater7::indexChanged(int index)

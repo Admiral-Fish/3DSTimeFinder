@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,8 @@
 #include <Models/StationaryModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTimer>
+#include <QtConcurrent>
 
 Stationary6::Stationary6(QWidget *parent)
     : QWidget(parent)
@@ -70,50 +72,45 @@ void Stationary6::updateProfiles()
 
 void Stationary6::setupModel()
 {
-    model = new StationaryModel(ui->tableViewStationary);
+    model = new StationaryModel(ui->tableView);
 
-    ui->tableViewStationary->setModel(model);
+    ui->tableView->setModel(model);
 
     auto natures = Utility::getNatures();
     auto hiddenPowers = Utility::getHiddenPowers();
     auto genderRatios = Utility::getGenderRatios();
 
-    ui->comboBoxStationaryNature->addItems(natures);
-    ui->comboBoxStationaryNature->setup();
-    ui->comboBoxStationaryHiddenPower->addItems(hiddenPowers);
-    ui->comboBoxStationaryHiddenPower->setup();
-    ui->comboBoxStationarySynchNature->addItems(natures);
-    ui->comboBoxStationaryGenderRatio->addItems(genderRatios);
+    ui->comboBoxNature->setup(natures);
+    ui->comboBoxHiddenPower->setup(hiddenPowers);
+    ui->comboBoxSynchNature->addItems(natures);
+    ui->comboBoxGenderRatio->addItems(genderRatios);
 
-    ui->comboBoxStationaryGenderRatio->setItemData(0, 0);
-    ui->comboBoxStationaryGenderRatio->setItemData(1, 126);
-    ui->comboBoxStationaryGenderRatio->setItemData(2, 30);
-    ui->comboBoxStationaryGenderRatio->setItemData(3, 62);
-    ui->comboBoxStationaryGenderRatio->setItemData(4, 190);
-    ui->comboBoxStationaryGenderRatio->setItemData(5, 224);
-    ui->comboBoxStationaryGenderRatio->setItemData(6, 1);
-    ui->comboBoxStationaryGenderRatio->setItemData(7, 2);
+    ui->comboBoxGenderRatio->setup({ 255, 127, 191, 63, 31, 0, 254 });
 
-    ui->textBoxStationaryStartFrame->setValues(InputType::Frame32Bit);
-    ui->textBoxStationaryEndFrame->setValues(InputType::Frame32Bit);
+    ui->comboBoxGender->setup({ 255, 0, 1 });
 
-    ui->dateTimeEditStationaryStartDate->setCalendarPopup(true);
-    ui->dateTimeEditStationaryEndDate->setCalendarPopup(true);
+    ui->comboBoxAbility->setup({ 255, 0, 1, 2 });
+
+    ui->textBoxStartFrame->setValues(InputType::Frame32Bit);
+    ui->textBoxEndFrame->setValues(InputType::Frame32Bit);
+
+    ui->dateTimeEditStartDate->setCalendarPopup(true);
+    ui->dateTimeEditEndDate->setCalendarPopup(true);
 
     QDateTime minDT(QDate(2000, 1, 1), QTime(0, 0, 0));
-    ui->dateTimeEditStationaryStartDate->setMinimumDateTime(minDT);
-    ui->dateTimeEditStationaryEndDate->setMinimumDateTime(minDT);
+    ui->dateTimeEditStartDate->setMinimumDateTime(minDT);
+    ui->dateTimeEditEndDate->setMinimumDateTime(minDT);
 
     QDateTime maxDT(QDate(2000, 2, 19), QTime(17, 2, 48));
-    ui->dateTimeEditStationaryStartDate->setMaximumDateTime(maxDT);
-    ui->dateTimeEditStationaryEndDate->setMaximumDateTime(maxDT);
+    ui->dateTimeEditStartDate->setMaximumDateTime(maxDT);
+    ui->dateTimeEditEndDate->setMaximumDateTime(maxDT);
 
-    ui->dateTimeEditStationaryEndDate->setDateTime(maxDT);
+    ui->dateTimeEditEndDate->setDateTime(maxDT);
 
     connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &Stationary6::profileManager);
     connect(ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
         &Stationary6::profilesIndexChanged);
-    connect(ui->pushButtonStationarySearch, &QPushButton::clicked, this, &Stationary6::search);
+    connect(ui->pushButtonSearch, &QPushButton::clicked, this, &Stationary6::search);
 
     QSettings setting;
     if (setting.contains("stationary6/geometry"))
@@ -124,12 +121,12 @@ void Stationary6::setupModel()
 
 void Stationary6::search()
 {
-    QDateTime start = ui->dateTimeEditStationaryStartDate->dateTime();
+    QDateTime start = ui->dateTimeEditStartDate->dateTime();
     start.setTimeSpec(Qt::UTC);
-    QDateTime end = ui->dateTimeEditStationaryEndDate->dateTime();
+    QDateTime end = ui->dateTimeEditEndDate->dateTime();
     end.setTimeSpec(Qt::UTC);
-    u32 frameStart = ui->textBoxStationaryStartFrame->getUInt();
-    u32 frameEnd = ui->textBoxStationaryEndFrame->getUInt();
+    u32 frameStart = ui->textBoxStartFrame->getUInt();
+    u32 frameEnd = ui->textBoxEndFrame->getUInt();
 
     if (start > end)
     {
@@ -147,39 +144,53 @@ void Stationary6::search()
     }
 
     model->clearModel();
-    ui->pushButtonStationarySearch->setEnabled(false);
-    ui->pushButtonStationaryCancel->setEnabled(true);
+    ui->pushButtonSearch->setEnabled(false);
+    ui->pushButtonCancel->setEnabled(true);
 
-    QVector<u8> min = ui->ivFilterStationary->getLower();
-    QVector<u8> max = ui->ivFilterStationary->getUpper();
+    QVector<u8> min = ui->ivFilter->getLower();
+    QVector<u8> max = ui->ivFilter->getUpper();
 
-    StationaryFilter filter(min, max, ui->comboBoxStationaryNature->getChecked(),
-        ui->comboBoxStationaryHiddenPower->getChecked(), ui->comboBoxStationaryAbility->currentIndex() - 1,
-        ui->checkBoxStationaryShiny->isChecked(), ui->comboBoxStationaryGender->currentIndex());
+    StationaryFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
+                            ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(), ui->comboBoxGender->getCurrentByte());
 
-    auto *search = new StationarySearcher6(start, end, frameStart, frameEnd, ui->checkBoxStationary3IVs->isChecked(),
-        ui->checkBoxStationaryAbilityLock->isChecked() ? ui->comboBoxStationaryAbilityLock->currentIndex() : -1,
-        ui->comboBoxStationarySynchNature->currentIndex(), ui->comboBoxStationaryGenderRatio->currentData().toInt(),
-        ui->checkBoxStationaryAlwaysSynch->isChecked(), ui->checkBoxStationaryShinyLock->isChecked(),
-        profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    auto *searcher
+        = new StationarySearcher6(start, end, frameStart, frameEnd, ui->checkBox3IVs->isChecked(),
+                                  ui->checkBoxAbilityLock->isChecked() ? static_cast<u8>(ui->comboBoxAbilityLock->currentIndex()) : 255,
+                                  static_cast<u8>(ui->comboBoxSynchNature->currentIndex()), ui->comboBoxGenderRatio->getCurrentByte(),
+                                  ui->checkBoxAlwaysSynch->isChecked(), ui->checkBoxShinyLock->isChecked(),
+                                  profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
-    connect(search, &StationarySearcher6::finished, this, [=] {
-        ui->pushButtonStationarySearch->setEnabled(true);
-        ui->pushButtonStationaryCancel->setEnabled(false);
+    ui->progressBar->setRange(0, searcher->getMaxProgress());
+
+    auto *timer = new QTimer();
+    connect(timer, &QTimer::timeout, [=] {
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
     });
-    connect(search, &StationarySearcher6::updateProgress, this, &Stationary6::update);
-    connect(ui->pushButtonStationaryCancel, &QPushButton::clicked, search, &StationarySearcher6::cancelSearch);
 
-    ui->progressBarStationary->setValue(0);
-    ui->progressBarStationary->setMaximum(search->maxProgress());
+    auto *watcher = new QFutureWatcher<void>();
+    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
+    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
+        ui->pushButtonSearch->setEnabled(true);
+        ui->pushButtonCancel->setEnabled(false);
 
-    search->startSearch();
-}
+        timer->stop();
+        delete timer;
 
-void Stationary6::update(const QVector<StationaryResult> &frames, int val)
-{
-    model->addItems(frames);
-    ui->progressBarStationary->setValue(val);
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
+
+        delete searcher;
+    });
+
+    QSettings settings;
+    int threads = settings.value("settings/threads", QThread::idealThreadCount()).toInt();
+
+    auto future = QtConcurrent::run([=] { searcher->startSearch(threads); });
+
+    watcher->setFuture(future);
+    timer->start(1000);
 }
 
 void Stationary6::profileManager()

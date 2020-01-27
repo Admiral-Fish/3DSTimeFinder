@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,7 @@ class MT
 {
 public:
     explicit MT(u32 seed, u32 frames = 0);
+    MT(const MT &rng);
     void advanceFrames(u32 frames);
     u32 nextUInt();
 

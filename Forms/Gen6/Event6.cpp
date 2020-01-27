@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTimer>
+#include <QtConcurrent>
 
 Event6::Event6(QWidget *parent)
     : QWidget(parent)
@@ -71,55 +73,56 @@ void Event6::updateProfiles()
 
 void Event6::setupModels()
 {
-    model = new EventModel(ui->tableViewEvent);
+    model = new EventModel(ui->tableView);
 
-    ui->tableViewEvent->setModel(model);
+    ui->tableView->setModel(model);
 
     auto natures = Utility::getNatures();
     auto hiddenPowers = Utility::getHiddenPowers();
 
-    ui->comboBoxEventNature->addItems(natures);
-    ui->comboBoxEventNature->setup();
-    ui->comboBoxEventNatureLocked->addItems(natures);
-    ui->comboBoxEventHiddenPower->addItems(hiddenPowers);
+    ui->comboBoxNature->addItems(natures);
+    ui->comboBoxNature->setup();
+    ui->comboBoxNatureLocked->addItems(natures);
+    ui->comboBoxHiddenPower->addItems(hiddenPowers);
 
-    ui->labelEventPID->setVisible(false);
-    ui->textBoxEventPID->setVisible(false);
-    ui->labelEventEC->setVisible(false);
-    ui->textBoxEventEC->setVisible(false);
-    ui->comboBoxEventPIDType->setItemData(0, PIDType::Random);
-    ui->comboBoxEventPIDType->setItemData(1, PIDType::Nonshiny);
-    ui->comboBoxEventPIDType->setItemData(2, PIDType::Shiny);
-    ui->comboBoxEventPIDType->setItemData(3, PIDType::Specified);
+    ui->labelPID->setVisible(false);
+    ui->textBoxPID->setVisible(false);
+    ui->labelEC->setVisible(false);
+    ui->textBoxEC->setVisible(false);
 
-    ui->textBoxEventStartFrame->setValues(InputType::Frame32Bit);
-    ui->textBoxEventEndFrame->setValues(InputType::Frame32Bit);
-    ui->textBoxEventTID->setValues(InputType::ID);
-    ui->textBoxEventSID->setValues(InputType::ID);
-    ui->textBoxEventPID->setValues(InputType::Seed32Bit);
-    ui->textBoxEventEC->setValues(InputType::Seed32Bit);
+    ui->comboBoxPIDType->setup({ PIDType::Random, PIDType::Nonshiny, PIDType::Shiny, PIDType::Specified });
 
-    ui->dateTimeEditEventStartDate->setCalendarPopup(true);
-    ui->dateTimeEditEventEndDate->setCalendarPopup(true);
+    ui->comboBoxGender->setup({ 255, 0, 1 });
+
+    ui->comboBoxAbility->setup({ 255, 0, 1, 2 });
+
+    ui->textBoxStartFrame->setValues(InputType::Frame32Bit);
+    ui->textBoxEndFrame->setValues(InputType::Frame32Bit);
+    ui->textBoxTID->setValues(InputType::ID);
+    ui->textBoxSID->setValues(InputType::ID);
+    ui->textBoxPID->setValues(InputType::Seed32Bit);
+    ui->textBoxEC->setValues(InputType::Seed32Bit);
+
+    ui->dateTimeEditStartDate->setCalendarPopup(true);
+    ui->dateTimeEditEndDate->setCalendarPopup(true);
 
     QDateTime minDT(QDate(2000, 1, 1), QTime(0, 0, 0));
-    ui->dateTimeEditEventStartDate->setMinimumDateTime(minDT);
-    ui->dateTimeEditEventEndDate->setMinimumDateTime(minDT);
+    ui->dateTimeEditStartDate->setMinimumDateTime(minDT);
+    ui->dateTimeEditEndDate->setMinimumDateTime(minDT);
 
     QDateTime maxDT(QDate(2000, 2, 19), QTime(17, 2, 48));
-    ui->dateTimeEditEventStartDate->setMaximumDateTime(maxDT);
-    ui->dateTimeEditEventEndDate->setMaximumDateTime(maxDT);
+    ui->dateTimeEditStartDate->setMaximumDateTime(maxDT);
+    ui->dateTimeEditEndDate->setMaximumDateTime(maxDT);
 
-    ui->dateTimeEditEventEndDate->setDateTime(maxDT);
+    ui->dateTimeEditEndDate->setDateTime(maxDT);
 
     connect(ui->pushButtonProfileManager, &QPushButton::clicked, this, &Event6::profileManager);
     connect(
         ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Event6::profilesIndexChanged);
-    connect(ui->pushButtonEventSearch, &QPushButton::clicked, this, &Event6::search);
-    connect(ui->checkBoxEventAbilityLock, &QCheckBox::clicked, this, &Event6::checkBoxEventAbilityLock);
-    connect(ui->comboBoxEventPIDType, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
-        &Event6::comboBoxEventPIDTypeIndexChanged);
-    connect(ui->pushButtonEventImport, &QPushButton::clicked, this, &Event6::importEvent);
+    connect(ui->pushButtonSearch, &QPushButton::clicked, this, &Event6::search);
+    connect(ui->checkBoxAbilityLock, &QCheckBox::clicked, this, &Event6::checkBoxAbilityLock);
+    connect(ui->comboBoxPIDType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Event6::comboBoxPIDTypeIndexChanged);
+    connect(ui->pushButtonImport, &QPushButton::clicked, this, &Event6::importEvent);
 
     QSettings setting;
     if (setting.contains("event6/geometry"))
@@ -130,12 +133,12 @@ void Event6::setupModels()
 
 void Event6::search()
 {
-    QDateTime start = ui->dateTimeEditEventStartDate->dateTime();
+    QDateTime start = ui->dateTimeEditStartDate->dateTime();
     start.setTimeSpec(Qt::UTC);
-    QDateTime end = ui->dateTimeEditEventEndDate->dateTime();
+    QDateTime end = ui->dateTimeEditEndDate->dateTime();
     end.setTimeSpec(Qt::UTC);
-    u32 frameStart = ui->textBoxEventStartFrame->getUInt();
-    u32 frameEnd = ui->textBoxEventEndFrame->getUInt();
+    u32 frameStart = ui->textBoxStartFrame->getUInt();
+    u32 frameEnd = ui->textBoxEndFrame->getUInt();
 
     if (start > end)
     {
@@ -153,54 +156,67 @@ void Event6::search()
     }
 
     model->clearModel();
-    ui->pushButtonEventSearch->setEnabled(false);
-    ui->pushButtonEventCancel->setEnabled(true);
+    ui->pushButtonSearch->setEnabled(false);
+    ui->pushButtonCancel->setEnabled(true);
 
-    QVector<u8> min = ui->ivFilterEvent->getLower();
-    QVector<u8> max = ui->ivFilterEvent->getUpper();
+    QVector<u8> min = ui->ivFilter->getLower();
+    QVector<u8> max = ui->ivFilter->getUpper();
 
-    int ivCount = ui->spinBoxEventRandomIVs->value();
-    PIDType type = static_cast<PIDType>(ui->comboBoxEventPIDType->currentData().toInt());
+    u8 ivCount = static_cast<u8>(ui->spinBoxRandomIVs->value());
+    auto type = static_cast<PIDType>(ui->comboBoxPIDType->getCurrentByte());
 
-    EventFilter filter(min, max, ui->comboBoxEventNature->getChecked(), ui->comboBoxEventHiddenPower->getChecked(),
-        ui->comboBoxEventAbility->currentIndex() - 1, ui->checkBoxEventShiny->isChecked(),
-        ui->comboBoxEventGender->currentIndex());
+    EventFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
+                       ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(), ui->comboBoxGender->getCurrentByte());
 
     QVector<u8> ivTemplate;
-    ivTemplate.append(ui->checkBoxEventHP->isChecked() ? ui->spinBoxEventHP->value() : -1);
-    ivTemplate.append(ui->checkBoxEventAtk->isChecked() ? ui->spinBoxEventAtk->value() : -1);
-    ivTemplate.append(ui->checkBoxEventDef->isChecked() ? ui->spinBoxEventDef->value() : -1);
-    ivTemplate.append(ui->checkBoxEventSpA->isChecked() ? ui->spinBoxEventSpA->value() : -1);
-    ivTemplate.append(ui->checkBoxEventSpD->isChecked() ? ui->spinBoxEventSpD->value() : -1);
-    ivTemplate.append(ui->checkBoxEventSpe->isChecked() ? ui->spinBoxEventSpe->value() : -1);
+    ivTemplate.append(ui->checkBoxHP->isChecked() ? static_cast<u8>(ui->spinBoxHP->value()) : 255);
+    ivTemplate.append(ui->checkBoxAtk->isChecked() ? static_cast<u8>(ui->spinBoxAtk->value()) : 255);
+    ivTemplate.append(ui->checkBoxDef->isChecked() ? static_cast<u8>(ui->spinBoxDef->value()) : 255);
+    ivTemplate.append(ui->checkBoxSpA->isChecked() ? static_cast<u8>(ui->spinBoxSpA->value()) : 255);
+    ivTemplate.append(ui->checkBoxSpD->isChecked() ? static_cast<u8>(ui->spinBoxSpD->value()) : 255);
+    ivTemplate.append(ui->checkBoxSpe->isChecked() ? static_cast<u8>(ui->spinBoxSpe->value()) : 255);
 
-    auto *search = new EventSearcher6(
-        start, end, frameStart, frameEnd, ivCount, type, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
-    search->setLocks(ui->checkBoxEventAbilityLock->isChecked(), ui->comboBoxEventAbilityLocked->currentIndex(),
-        ui->checkBoxEventNatureLocked->isChecked(), ui->comboBoxEventNatureLocked->currentIndex(),
-        ui->checkBoxEventGenderLocked->isChecked(), ui->comboBoxEventGender->currentIndex());
-    search->setIDs(ui->checkBoxEventOtherInfo->isChecked(), ui->textBoxEventTID->getUShort(),
-        ui->textBoxEventSID->getUShort(), ui->checkBoxEventYourID->isChecked());
-    search->setHidden(ui->textBoxEventPID->getUInt(), ui->textBoxEventEC->getUInt());
-    search->setIVTemplate(ivTemplate);
+    auto *searcher
+        = new EventSearcher6(start, end, frameStart, frameEnd, ivCount, type, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    searcher->setLocks(ui->checkBoxAbilityLock->isChecked(), static_cast<u8>(ui->comboBoxAbilityLocked->currentIndex()),
+                       ui->checkBoxNatureLocked->isChecked(), static_cast<u8>(ui->comboBoxNatureLocked->currentIndex()),
+                       ui->checkBoxGenderLocked->isChecked(), static_cast<u8>(ui->comboBoxGenderLocked->currentIndex()));
+    searcher->setIDs(ui->checkBoxOtherInfo->isChecked(), ui->textBoxTID->getUShort(), ui->textBoxSID->getUShort(),
+                     ui->checkBoxYourID->isChecked());
+    searcher->setHidden(ui->textBoxPID->getUInt(), ui->textBoxEC->getUInt());
+    searcher->setIVTemplate(ivTemplate);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
-    connect(search, &EventSearcher6::finished, this, [=] {
-        ui->pushButtonEventSearch->setEnabled(true);
-        ui->pushButtonEventCancel->setEnabled(false);
+    ui->progressBar->setRange(0, searcher->getMaxProgress());
+
+    auto *timer = new QTimer();
+    connect(timer, &QTimer::timeout, [=] {
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
     });
-    connect(search, &EventSearcher6::updateProgress, this, &Event6::update);
-    connect(ui->pushButtonEventCancel, &QPushButton::clicked, search, &EventSearcher6::cancelSearch);
 
-    ui->progressBarEvent->setValue(0);
-    ui->progressBarEvent->setMaximum(search->maxProgress());
+    auto *watcher = new QFutureWatcher<void>();
+    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
+    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
+        ui->pushButtonSearch->setEnabled(true);
+        ui->pushButtonCancel->setEnabled(false);
 
-    search->startSearch();
-}
+        timer->stop();
+        delete timer;
 
-void Event6::update(const QVector<EventResult> &frames, int val)
-{
-    model->addItems(frames);
-    ui->progressBarEvent->setValue(val);
+        ui->progressBar->setValue(searcher->getProgress());
+        model->addItems(searcher->getResults());
+
+        delete searcher;
+    });
+
+    QSettings settings;
+    int threads = settings.value("settings/threads", QThread::idealThreadCount()).toInt();
+
+    auto future = QtConcurrent::run([=] { searcher->startSearch(threads); });
+
+    watcher->setFuture(future);
+    timer->start(1000);
 }
 
 void Event6::profileManager()
@@ -228,27 +244,27 @@ void Event6::profilesIndexChanged(int index)
     }
 }
 
-void Event6::checkBoxEventAbilityLock(bool checked)
+void Event6::checkBoxAbilityLock(bool checked)
 {
-    ui->comboBoxEventAbilityLocked->clear();
+    ui->comboBoxAbilityLocked->clear();
     if (checked)
     {
-        ui->comboBoxEventAbilityLocked->addItem("-");
-        ui->comboBoxEventAbilityLocked->addItem("1");
-        ui->comboBoxEventAbilityLocked->addItem("2");
-        ui->comboBoxEventAbilityLocked->addItem("H");
+        ui->comboBoxAbilityLocked->addItem("-");
+        ui->comboBoxAbilityLocked->addItem("1");
+        ui->comboBoxAbilityLocked->addItem("2");
+        ui->comboBoxAbilityLocked->addItem("H");
     }
     else
     {
-        ui->comboBoxEventAbilityLocked->addItem("1/2");
-        ui->comboBoxEventAbilityLocked->addItem("1/2/H");
+        ui->comboBoxAbilityLocked->addItem("1/2");
+        ui->comboBoxAbilityLocked->addItem("1/2/H");
     }
 }
 
-void Event6::comboBoxEventPIDTypeIndexChanged(int index)
+void Event6::comboBoxPIDTypeIndexChanged(int index)
 {
-    ui->labelEventPID->setVisible(index == 3);
-    ui->textBoxEventPID->setVisible(index == 3);
+    ui->labelPID->setVisible(index == 3);
+    ui->textBoxPID->setVisible(index == 3);
 }
 
 void Event6::importEvent()
@@ -283,18 +299,15 @@ void Event6::importEvent()
                 return;
             }
 
-            ui->checkBoxEventAbilityLock->setChecked(data.at(0xA2) < 3);
-            checkBoxEventAbilityLock(ui->checkBoxEventAbilityLock->isChecked());
-            ui->comboBoxEventAbilityLocked->setCurrentIndex(
-                ui->checkBoxEventAbilityLock->isChecked() ? data.at(0xA2) + 1 : data.at(0xA2) - 3);
+            ui->checkBoxAbilityLock->setChecked(data.at(0xA2) < 3);
+            checkBoxAbilityLock(ui->checkBoxAbilityLock->isChecked());
+            ui->comboBoxAbilityLocked->setCurrentIndex(ui->checkBoxAbilityLock->isChecked() ? data.at(0xA2) + 1 : data.at(0xA2) - 3);
 
-            ui->checkBoxEventNatureLocked->setChecked(static_cast<u8>(data.at(0xA0)) != 0xFF);
-            ui->comboBoxEventNatureLocked->setCurrentIndex(
-                ui->checkBoxEventNatureLocked->isChecked() ? data.at(0xA0) : 0);
+            ui->checkBoxNatureLocked->setChecked(static_cast<u8>(data.at(0xA0)) != 0xFF);
+            ui->comboBoxNatureLocked->setCurrentIndex(ui->checkBoxNatureLocked->isChecked() ? data.at(0xA0) : 0);
 
-            ui->checkBoxEventGenderLocked->setChecked(data.at(0xA1) != 3);
-            ui->comboBoxEventGenderLocked->setCurrentIndex(
-                ui->checkBoxEventGenderLocked->isChecked() ? (data.at(0xA1) + 1) % 3 : 0);
+            ui->checkBoxGenderLocked->setChecked(data.at(0xA1) != 3);
+            ui->comboBoxGenderLocked->setCurrentIndex(ui->checkBoxGenderLocked->isChecked() ? (data.at(0xA1) + 1) % 3 : 0);
 
             QVector<u8> ivs;
             for (u8 order : { 0, 1, 2, 4, 5, 3 })
@@ -314,47 +327,47 @@ void Event6::importEvent()
                 }
             }
 
-            ui->spinBoxEventRandomIVs->setValue(ivFlag == 0 ? 0 : ivFlag - 0xFB);
+            ui->spinBoxRandomIVs->setValue(ivFlag == 0 ? 0 : ivFlag - 0xFB);
 
-            ui->checkBoxEventHP->setChecked(ivFlag == 0 && ivs.at(0) <= 31);
-            ui->spinBoxEventHP->setValue(ui->checkBoxEventHP->isChecked() ? ivs.at(0) : 0);
+            ui->checkBoxHP->setChecked(ivFlag == 0 && ivs.at(0) <= 31);
+            ui->spinBoxHP->setValue(ui->checkBoxHP->isChecked() ? ivs.at(0) : 0);
 
-            ui->checkBoxEventAtk->setChecked(ivFlag == 0 && ivs.at(1) <= 31);
-            ui->spinBoxEventAtk->setValue(ui->checkBoxEventAtk->isChecked() ? ivs.at(1) : 0);
+            ui->checkBoxAtk->setChecked(ivFlag == 0 && ivs.at(1) <= 31);
+            ui->spinBoxAtk->setValue(ui->checkBoxAtk->isChecked() ? ivs.at(1) : 0);
 
-            ui->checkBoxEventDef->setChecked(ivFlag == 0 && ivs.at(2) <= 31);
-            ui->spinBoxEventDef->setValue(ui->checkBoxEventDef->isChecked() ? ivs.at(2) : 0);
+            ui->checkBoxDef->setChecked(ivFlag == 0 && ivs.at(2) <= 31);
+            ui->spinBoxDef->setValue(ui->checkBoxDef->isChecked() ? ivs.at(2) : 0);
 
-            ui->checkBoxEventSpA->setChecked(ivFlag == 0 && ivs.at(3) <= 31);
-            ui->spinBoxEventSpA->setValue(ui->checkBoxEventSpA->isChecked() ? ivs.at(3) : 0);
+            ui->checkBoxSpA->setChecked(ivFlag == 0 && ivs.at(3) <= 31);
+            ui->spinBoxSpA->setValue(ui->checkBoxSpA->isChecked() ? ivs.at(3) : 0);
 
-            ui->checkBoxEventSpD->setChecked(ivFlag == 0 && ivs.at(4) <= 31);
-            ui->spinBoxEventSpD->setValue(ui->checkBoxEventSpD->isChecked() ? ivs.at(4) : 0);
+            ui->checkBoxSpD->setChecked(ivFlag == 0 && ivs.at(4) <= 31);
+            ui->spinBoxSpD->setValue(ui->checkBoxSpD->isChecked() ? ivs.at(4) : 0);
 
-            ui->checkBoxEventSpe->setChecked(ivFlag == 0 && ivs.at(5) <= 31);
-            ui->spinBoxEventSpe->setValue(ui->checkBoxEventSpe->isChecked() ? ivs.at(5) : 0);
+            ui->checkBoxSpe->setChecked(ivFlag == 0 && ivs.at(5) <= 31);
+            ui->spinBoxSpe->setValue(ui->checkBoxSpe->isChecked() ? ivs.at(5) : 0);
 
-            ui->checkBoxEventOtherInfo->setChecked(true);
+            ui->checkBoxOtherInfo->setChecked(true);
             u16 tid = (static_cast<u16>(data.at(0x69)) << 8) | static_cast<u8>(data.at(0x68));
-            ui->textBoxEventTID->setText(QString::number(tid));
+            ui->textBoxTID->setText(QString::number(tid));
             u16 sid = (static_cast<u16>(data.at(0x6B)) << 8) | static_cast<u8>(data.at(0x6A));
-            ui->textBoxEventSID->setText(QString::number(sid));
+            ui->textBoxSID->setText(QString::number(sid));
 
             QVector<u8> typeOrder = { 3, 0, 2, 1 };
-            ui->comboBoxEventPIDType->setCurrentIndex(typeOrder.at(data.at(0xA3)));
-            if (ui->comboBoxEventPIDType->currentIndex() == 3)
+            ui->comboBoxPIDType->setCurrentIndex(typeOrder.at(data.at(0xA3)));
+            if (ui->comboBoxPIDType->currentIndex() == 3)
             {
                 u32 pid = (data.at(0xD7) << 24) | (data.at(0xD6) << 16) | (data.at(0xD5) << 8) | data.at(0xD4);
-                ui->textBoxEventPID->setText(QString::number(pid, 16));
+                ui->textBoxPID->setText(QString::number(pid, 16));
             }
 
             u32 ec = (data.at(0x73) << 24) | (data.at(0x72) << 16) | (data.at(0x71) << 8) | data.at(0x70);
-            ui->textBoxEventEC->setText(QString::number(ec, 16));
-            ui->labelEventEC->setVisible(ec > 0);
-            ui->textBoxEventEC->setVisible(ec > 0);
+            ui->textBoxEC->setText(QString::number(ec, 16));
+            ui->labelEC->setVisible(ec > 0);
+            ui->textBoxEC->setVisible(ec > 0);
 
-            ui->checkBoxEventYourID->setChecked(data.at(0xB5) == 3);
-            ui->checkBoxEventEgg->setChecked(data.at(0xD1) == 1);
+            ui->checkBoxYourID->setChecked(data.at(0xB5) == 3);
+            ui->checkBoxEgg->setChecked(data.at(0xD1) == 1);
         }
         else
         {

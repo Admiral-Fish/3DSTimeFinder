@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -86,7 +86,7 @@ void ProfileEditor7::setupModels()
     ui->textBoxProfileTID->setValues(InputType::ID);
     ui->textBoxProfileSID->setValues(InputType::ID);
     ui->textBoxProfileTick->setValues(InputType::Seed32Bit);
-    ui->textBoxProfileOffset->setValues(0, 100);
+    ui->textBoxProfileOffset->setValues(0, 100, 3, 10);
 
     ui->comboBoxProfileVersion->setItemData(0, Game::Sun);
     ui->comboBoxProfileVersion->setItemData(1, Game::Moon);

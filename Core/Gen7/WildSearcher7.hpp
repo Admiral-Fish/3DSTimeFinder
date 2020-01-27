@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019 by Admiral_Fish
+ * Copyright (C) 2019-2020 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,50 +24,36 @@
 #include <Core/Parents/WildFilter.hpp>
 #include <Core/Parents/WildResult.hpp>
 #include <Core/Util/WildType.hpp>
-#include <QMutex>
-#include <QObject>
-#include <QThreadPool>
 #include <QVector>
+#include <mutex>
 
-class WildSearcher7 : public QObject
+class WildSearcher7
 {
-    Q_OBJECT
-signals:
-    void finished();
-    void threadFinished();
-    void updateProgress(const QVector<WildResult> &results, int progress);
-
 public:
-    WildSearcher7(const QDateTime &start, const QDateTime &end, u32 startFrame, u32 endFrame, bool useSynch,
-        int synchNature, WildType type, int gender, const Profile7 &profile, const WildFilter &filter);
-    void startSearch();
-    int maxProgress();
-
-public slots:
+    WildSearcher7(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, bool useSynch, u8 synchNature,
+                  WildType type, u8 gender, const Profile7 &profile, const WildFilter &filter);
+    void startSearch(int threads);
     void cancelSearch();
+    int getProgress() const;
+    int getMaxProgress() const;
+    QVector<WildResult> getResults();
 
 private:
     Profile7 profile;
     WildFilter filter;
     QDateTime startTime, endTime;
     u32 startFrame, endFrame;
-    int synchNature, pidCount, gender;
+    u8 synchNature, pidCount, gender;
     bool useSynch;
     WildType type;
 
     QVector<WildResult> results;
-    QThreadPool threadPool;
-    QMutex resultMutex, threadMutex;
-    int progress, threads, threadsFinished;
-    bool searching, cancel;
+    std::mutex resultMutex, progressMutex;
+    int progress;
+    bool searching;
 
     void search(u64 epochStart, u64 epochEnd);
-    void update();
-    QVector<WildResult> getResults();
     u8 getSlot(u8 value);
-
-private slots:
-    void checkFinish();
 };
 
 #endif // WILDSEARCHER7_HPP
