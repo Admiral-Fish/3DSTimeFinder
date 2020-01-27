@@ -157,7 +157,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBoxStationaryRNGInfo">
+    <widget class="QGroupBox" name="groupBoxRNGInfo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
@@ -169,63 +169,63 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_8">
       <item row="0" column="0">
-       <widget class="QLabel" name="labelStationaryStartDate">
+       <widget class="QLabel" name="labelStartDate">
         <property name="text">
          <string>Start Date:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="labelStationaryEndDate">
+       <widget class="QLabel" name="labelEndDate">
         <property name="text">
          <string>End Date:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="labelStationaryFrame">
+       <widget class="QLabel" name="labelFrame">
         <property name="text">
          <string>Frame:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" colspan="4">
-       <widget class="QDateTimeEdit" name="dateTimeEditStationaryEndDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditEndDate">
         <property name="displayFormat">
          <string>yyyy-MM-dd hh:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1" colspan="2">
-       <widget class="TextBox" name="textBoxStationaryStartFrame">
+       <widget class="TextBox" name="textBoxStartFrame">
         <property name="text">
          <string notr="true">478</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1" colspan="4">
-       <widget class="QDateTimeEdit" name="dateTimeEditStationaryStartDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditStartDate">
         <property name="displayFormat">
          <string>yyyy-MM-dd hh:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="5">
-       <widget class="QPushButton" name="pushButtonStationarySearch">
+       <widget class="QPushButton" name="pushButtonSearch">
         <property name="text">
          <string>Search</string>
         </property>
        </widget>
       </item>
       <item row="2" column="3" colspan="2">
-       <widget class="TextBox" name="textBoxStationaryEndFrame">
+       <widget class="TextBox" name="textBoxEndFrame">
         <property name="text">
          <string notr="true">10000</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="5">
-       <widget class="QPushButton" name="pushButtonStationaryCancel">
+       <widget class="QPushButton" name="pushButtonCancel">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -238,7 +238,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBoxStationarySettings">
+    <widget class="QGroupBox" name="groupBoxSettings">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>2</horstretch>
@@ -265,45 +265,45 @@
       <item row="0" column="0" colspan="3">
        <layout class="QGridLayout" name="gridLayout_12">
         <item row="0" column="0">
-         <widget class="QLabel" name="labelStationarySynchNature">
+         <widget class="QLabel" name="labelSynchNature">
           <property name="text">
            <string>Synch Nature</string>
           </property>
          </widget>
         </item>
         <item row="0" column="3">
-         <widget class="QComboBox" name="comboBoxStationaryGenderRatio"/>
+         <widget class="ComboBox" name="comboBoxGenderRatio"/>
         </item>
         <item row="0" column="2">
-         <widget class="QLabel" name="labelStationaryGenderRatio">
+         <widget class="QLabel" name="labelGenderRatio">
           <property name="text">
            <string>Gender Ratio</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboBoxStationarySynchNature"/>
+         <widget class="QComboBox" name="comboBoxSynchNature"/>
         </item>
        </layout>
       </item>
       <item row="1" column="0" colspan="3">
        <layout class="QGridLayout" name="gridLayout_13">
         <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBoxStationaryAlwaysSynch">
+         <widget class="QCheckBox" name="checkBoxAlwaysSynch">
           <property name="text">
            <string>Always Synched</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QCheckBox" name="checkBoxStationary3IVs">
+         <widget class="QCheckBox" name="checkBox3IVs">
           <property name="text">
            <string>3 IVs</string>
           </property>
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QCheckBox" name="checkBoxStationaryShinyLock">
+         <widget class="QCheckBox" name="checkBoxShinyLock">
           <property name="text">
            <string>Shiny Locked</string>
           </property>
@@ -312,14 +312,14 @@
        </layout>
       </item>
       <item row="2" column="0">
-       <widget class="QCheckBox" name="checkBoxStationaryAbilityLock">
+       <widget class="QCheckBox" name="checkBoxAbilityLock">
         <property name="text">
          <string>Ability Locked</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="comboBoxStationaryAbilityLock">
+       <widget class="QComboBox" name="comboBoxAbilityLock">
         <item>
          <property name="text">
           <string notr="true">1</string>
@@ -341,7 +341,7 @@
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="QGroupBox" name="groupBoxStationaryFilter">
+    <widget class="QGroupBox" name="groupBoxFilter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>3</horstretch>
@@ -353,10 +353,10 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_11">
       <item row="0" column="0" rowspan="5">
-       <widget class="IVFilter" name="ivFilterStationary" native="true"/>
+       <widget class="IVFilter" name="ivFilter" native="true"/>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="labelStationaryNature">
+       <widget class="QLabel" name="labelNature">
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -366,41 +366,41 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="CheckList" name="comboBoxStationaryNature"/>
+       <widget class="CheckList" name="comboBoxNature"/>
       </item>
       <item row="0" column="3">
-       <widget class="QPushButton" name="pushButtonStationaryAnyNature">
+       <widget class="QPushButton" name="pushButtonAnyNature">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="labelStationaryHiddenPower">
+       <widget class="QLabel" name="labelHiddenPower">
         <property name="text">
          <string>Hidden Power</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="CheckList" name="comboBoxStationaryHiddenPower"/>
+       <widget class="CheckList" name="comboBoxHiddenPower"/>
       </item>
       <item row="1" column="3">
-       <widget class="QPushButton" name="pushButtonStationaryAnyHiddenPower">
+       <widget class="QPushButton" name="pushButtonAnyHiddenPower">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="labelStationaryAbility">
+       <widget class="QLabel" name="labelAbility">
         <property name="text">
          <string>Ability</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QComboBox" name="comboBoxStationaryAbility">
+       <widget class="ComboBox" name="comboBoxAbility">
         <item>
          <property name="text">
           <string>Any</string>
@@ -424,14 +424,14 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="labelStationaryGender">
+       <widget class="QLabel" name="labelGender">
         <property name="text">
          <string>Gender</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QComboBox" name="comboBoxStationaryGender">
+       <widget class="ComboBox" name="comboBoxGender">
         <item>
          <property name="text">
           <string>Any</string>
@@ -450,14 +450,14 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLabel" name="labelStationaryShiny">
+       <widget class="QLabel" name="labelShiny">
         <property name="text">
          <string>Shiny</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QCheckBox" name="checkBoxStationaryShiny">
+       <widget class="QCheckBox" name="checkBoxShiny">
         <property name="text">
          <string/>
         </property>
@@ -467,14 +467,14 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
-    <widget class="QProgressBar" name="progressBarStationary">
+    <widget class="QProgressBar" name="progressBar">
      <property name="value">
       <number>0</number>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="3">
-    <widget class="TableView" name="tableViewStationary">
+    <widget class="TableView" name="tableView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -516,38 +516,43 @@
     <slot>resetChecks()</slot>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>Forms/Controls/ComboBox.hpp</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>comboBoxProfiles</tabstop>
   <tabstop>pushButtonProfileManager</tabstop>
-  <tabstop>dateTimeEditStationaryStartDate</tabstop>
-  <tabstop>dateTimeEditStationaryEndDate</tabstop>
-  <tabstop>textBoxStationaryStartFrame</tabstop>
-  <tabstop>textBoxStationaryEndFrame</tabstop>
-  <tabstop>pushButtonStationarySearch</tabstop>
-  <tabstop>pushButtonStationaryCancel</tabstop>
-  <tabstop>comboBoxStationarySynchNature</tabstop>
-  <tabstop>comboBoxStationaryGenderRatio</tabstop>
-  <tabstop>checkBoxStationaryAlwaysSynch</tabstop>
-  <tabstop>checkBoxStationary3IVs</tabstop>
-  <tabstop>checkBoxStationaryShinyLock</tabstop>
-  <tabstop>checkBoxStationaryAbilityLock</tabstop>
-  <tabstop>comboBoxStationaryAbilityLock</tabstop>
-  <tabstop>comboBoxStationaryNature</tabstop>
-  <tabstop>pushButtonStationaryAnyNature</tabstop>
-  <tabstop>comboBoxStationaryHiddenPower</tabstop>
-  <tabstop>pushButtonStationaryAnyHiddenPower</tabstop>
-  <tabstop>comboBoxStationaryAbility</tabstop>
-  <tabstop>comboBoxStationaryGender</tabstop>
-  <tabstop>checkBoxStationaryShiny</tabstop>
-  <tabstop>tableViewStationary</tabstop>
+  <tabstop>dateTimeEditStartDate</tabstop>
+  <tabstop>dateTimeEditEndDate</tabstop>
+  <tabstop>textBoxStartFrame</tabstop>
+  <tabstop>textBoxEndFrame</tabstop>
+  <tabstop>pushButtonSearch</tabstop>
+  <tabstop>pushButtonCancel</tabstop>
+  <tabstop>comboBoxSynchNature</tabstop>
+  <tabstop>comboBoxGenderRatio</tabstop>
+  <tabstop>checkBoxAlwaysSynch</tabstop>
+  <tabstop>checkBox3IVs</tabstop>
+  <tabstop>checkBoxShinyLock</tabstop>
+  <tabstop>checkBoxAbilityLock</tabstop>
+  <tabstop>comboBoxAbilityLock</tabstop>
+  <tabstop>comboBoxNature</tabstop>
+  <tabstop>pushButtonAnyNature</tabstop>
+  <tabstop>comboBoxHiddenPower</tabstop>
+  <tabstop>pushButtonAnyHiddenPower</tabstop>
+  <tabstop>comboBoxAbility</tabstop>
+  <tabstop>comboBoxGender</tabstop>
+  <tabstop>checkBoxShiny</tabstop>
+  <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButtonStationaryAnyNature</sender>
+   <sender>pushButtonAnyNature</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxStationaryNature</receiver>
+   <receiver>comboBoxNature</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -561,9 +566,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButtonStationaryAnyHiddenPower</sender>
+   <sender>pushButtonAnyHiddenPower</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxStationaryHiddenPower</receiver>
+   <receiver>comboBoxHiddenPower</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">

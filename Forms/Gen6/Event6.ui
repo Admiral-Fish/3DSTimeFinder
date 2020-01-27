@@ -21,7 +21,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBoxEventRNGInfo">
+    <widget class="QGroupBox" name="groupBoxRNGInfo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
@@ -33,63 +33,63 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_9">
       <item row="0" column="0">
-       <widget class="QLabel" name="labelEventStartDate">
+       <widget class="QLabel" name="labelStartDate">
         <property name="text">
          <string>Start Date:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEditEventStartDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditStartDate">
         <property name="displayFormat">
          <string>yyyy-MM-dd hh:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="labelEventEndDate">
+       <widget class="QLabel" name="labelEndDate">
         <property name="text">
          <string>End Date:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEditEventEndDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditEndDate">
         <property name="displayFormat">
          <string>yyyy-MM-dd hh:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="labelEventFrame">
+       <widget class="QLabel" name="labelFrame">
         <property name="text">
          <string>Frame:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="TextBox" name="textBoxEventStartFrame">
+       <widget class="TextBox" name="textBoxStartFrame">
         <property name="text">
          <string notr="true">478</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="TextBox" name="textBoxEventEndFrame">
+       <widget class="TextBox" name="textBoxEndFrame">
         <property name="text">
          <string notr="true">10000</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonEventSearch">
+       <widget class="QPushButton" name="pushButtonSearch">
         <property name="text">
          <string>Search</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonEventCancel">
+       <widget class="QPushButton" name="pushButtonCancel">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -102,7 +102,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBoxEventSettings">
+    <widget class="QGroupBox" name="groupBoxSettings">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>2</horstretch>
@@ -116,84 +116,84 @@
       <item row="0" column="0" rowspan="6">
        <layout class="QGridLayout" name="gridLayout_17">
         <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBoxEventHP">
+         <widget class="QCheckBox" name="checkBoxHP">
           <property name="text">
            <string>HP</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QSpinBox" name="spinBoxEventHP">
+         <widget class="QSpinBox" name="spinBoxHP">
           <property name="maximum">
            <number>31</number>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QCheckBox" name="checkBoxEventAtk">
+         <widget class="QCheckBox" name="checkBoxAtk">
           <property name="text">
            <string>Atk</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBoxEventAtk">
+         <widget class="QSpinBox" name="spinBoxAtk">
           <property name="maximum">
            <number>31</number>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QCheckBox" name="checkBoxEventDef">
+         <widget class="QCheckBox" name="checkBoxDef">
           <property name="text">
            <string>Def</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="spinBoxEventDef">
+         <widget class="QSpinBox" name="spinBoxDef">
           <property name="maximum">
            <number>31</number>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
-         <widget class="QCheckBox" name="checkBoxEventSpA">
+         <widget class="QCheckBox" name="checkBoxSpA">
           <property name="text">
            <string>SpA</string>
           </property>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QSpinBox" name="spinBoxEventSpA">
+         <widget class="QSpinBox" name="spinBoxSpA">
           <property name="maximum">
            <number>31</number>
           </property>
          </widget>
         </item>
         <item row="4" column="0">
-         <widget class="QCheckBox" name="checkBoxEventSpD">
+         <widget class="QCheckBox" name="checkBoxSpD">
           <property name="text">
            <string>SpD</string>
           </property>
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QSpinBox" name="spinBoxEventSpD">
+         <widget class="QSpinBox" name="spinBoxSpD">
           <property name="maximum">
            <number>31</number>
           </property>
          </widget>
         </item>
         <item row="5" column="0">
-         <widget class="QCheckBox" name="checkBoxEventSpe">
+         <widget class="QCheckBox" name="checkBoxSpe">
           <property name="text">
            <string>Spe</string>
           </property>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QSpinBox" name="spinBoxEventSpe">
+         <widget class="QSpinBox" name="spinBoxSpe">
           <property name="maximum">
            <number>31</number>
           </property>
@@ -202,52 +202,52 @@
        </layout>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="labelEventRandomIVs">
+       <widget class="QLabel" name="labelRandomIVs">
         <property name="text">
          <string># of Random 31 IVs</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QSpinBox" name="spinBoxEventRandomIVs"/>
+       <widget class="QSpinBox" name="spinBoxRandomIVs"/>
       </item>
       <item row="0" column="3" colspan="2">
-       <widget class="QPushButton" name="pushButtonEventImport">
+       <widget class="QPushButton" name="pushButtonImport">
         <property name="text">
          <string>Import</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="checkBoxEventYourID">
+       <widget class="QCheckBox" name="checkBoxYourID">
         <property name="text">
          <string>Your ID</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QCheckBox" name="checkBoxEventEgg">
+       <widget class="QCheckBox" name="checkBoxEgg">
         <property name="text">
          <string>Egg</string>
         </property>
        </widget>
       </item>
       <item row="1" column="3" rowspan="2" colspan="2">
-       <widget class="QCheckBox" name="checkBoxEventOtherInfo">
+       <widget class="QCheckBox" name="checkBoxOtherInfo">
         <property name="text">
          <string>Other Info</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="labelEventPIDType">
+       <widget class="QLabel" name="labelPIDType">
         <property name="text">
          <string>PID Type</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QComboBox" name="comboBoxEventPIDType">
+       <widget class="ComboBox" name="comboBoxPIDType">
         <item>
          <property name="text">
           <string>Random</string>
@@ -271,14 +271,14 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QCheckBox" name="checkBoxEventAbilityLock">
+       <widget class="QCheckBox" name="checkBoxAbilityLock">
         <property name="text">
          <string>Ability Locked</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QComboBox" name="comboBoxEventAbilityLocked">
+       <widget class="QComboBox" name="comboBoxAbilityLocked">
         <item>
          <property name="text">
           <string>1/2</string>
@@ -292,14 +292,14 @@
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="QLabel" name="labelEventTID">
+       <widget class="QLabel" name="labelTID">
         <property name="text">
          <string>TID</string>
         </property>
        </widget>
       </item>
       <item row="3" column="4">
-       <widget class="TextBox" name="textBoxEventTID">
+       <widget class="TextBox" name="textBoxTID">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -309,24 +309,24 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QCheckBox" name="checkBoxEventNatureLocked">
+       <widget class="QCheckBox" name="checkBoxNatureLocked">
         <property name="text">
          <string>Nature Locked</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QComboBox" name="comboBoxEventNatureLocked"/>
+       <widget class="QComboBox" name="comboBoxNatureLocked"/>
       </item>
       <item row="4" column="3">
-       <widget class="QLabel" name="labelEventSID">
+       <widget class="QLabel" name="labelSID">
         <property name="text">
          <string>SID</string>
         </property>
        </widget>
       </item>
       <item row="4" column="4">
-       <widget class="TextBox" name="textBoxEventSID">
+       <widget class="TextBox" name="textBoxSID">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -336,14 +336,14 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QCheckBox" name="checkBoxEventGenderLocked">
+       <widget class="QCheckBox" name="checkBoxGenderLocked">
         <property name="text">
          <string>Gender Locked</string>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QComboBox" name="comboBoxEventGenderLocked">
+       <widget class="QComboBox" name="comboBoxGenderLocked">
         <item>
          <property name="text">
           <string notr="true">-</string>
@@ -362,14 +362,14 @@
        </widget>
       </item>
       <item row="5" column="3">
-       <widget class="QLabel" name="labelEventPID">
+       <widget class="QLabel" name="labelPID">
         <property name="text">
          <string>PID</string>
         </property>
        </widget>
       </item>
       <item row="5" column="4">
-       <widget class="TextBox" name="textBoxEventPID">
+       <widget class="TextBox" name="textBoxPID">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -379,14 +379,14 @@
        </widget>
       </item>
       <item row="6" column="3">
-       <widget class="QLabel" name="labelEventEC">
+       <widget class="QLabel" name="labelEC">
         <property name="text">
          <string>EC</string>
         </property>
        </widget>
       </item>
       <item row="6" column="4">
-       <widget class="TextBox" name="textBoxEventEC">
+       <widget class="TextBox" name="textBoxEC">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -399,7 +399,7 @@
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="QGroupBox" name="groupBoxEventFilter">
+    <widget class="QGroupBox" name="groupBoxFilter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>2</horstretch>
@@ -411,10 +411,10 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_10">
       <item row="0" column="0" rowspan="5">
-       <widget class="IVFilter" name="ivFilterEvent" native="true"/>
+       <widget class="IVFilter" name="ivFilter" native="true"/>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="labelEventNature">
+       <widget class="QLabel" name="labelNature">
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
@@ -424,41 +424,41 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="CheckList" name="comboBoxEventNature"/>
+       <widget class="CheckList" name="comboBoxNature"/>
       </item>
       <item row="0" column="3">
-       <widget class="QPushButton" name="pushButtonEventAnyNature">
+       <widget class="QPushButton" name="pushButtonAnyNature">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="labelEventHiddenPower">
+       <widget class="QLabel" name="labelHiddenPower">
         <property name="text">
          <string>Hidden Power</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="CheckList" name="comboBoxEventHiddenPower"/>
+       <widget class="CheckList" name="comboBoxHiddenPower"/>
       </item>
       <item row="1" column="3">
-       <widget class="QPushButton" name="pushButtonEventAnyHiddenPower">
+       <widget class="QPushButton" name="pushButtonAnyHiddenPower">
         <property name="text">
          <string>Any</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLabel" name="labelEventAbility">
+       <widget class="QLabel" name="labelAbility">
         <property name="text">
          <string>Ability</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QComboBox" name="comboBoxEventAbility">
+       <widget class="ComboBox" name="comboBoxAbility">
         <item>
          <property name="text">
           <string>Any</string>
@@ -482,14 +482,14 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLabel" name="labelEventGender">
+       <widget class="QLabel" name="labelGender">
         <property name="text">
          <string>Gender</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QComboBox" name="comboBoxEventGender">
+       <widget class="ComboBox" name="comboBoxGender">
         <item>
          <property name="text">
           <string>Any</string>
@@ -508,14 +508,14 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLabel" name="labelEventShiny">
+       <widget class="QLabel" name="labelShiny">
         <property name="text">
          <string>Shiny</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QCheckBox" name="checkBoxEventShiny">
+       <widget class="QCheckBox" name="checkBoxShiny">
         <property name="text">
          <string/>
         </property>
@@ -525,14 +525,14 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
-    <widget class="QProgressBar" name="progressBarEvent">
+    <widget class="QProgressBar" name="progressBar">
      <property name="value">
       <number>0</number>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="3">
-    <widget class="TableView" name="tableViewEvent">
+    <widget class="TableView" name="tableView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -710,59 +710,64 @@
     <slot>resetChecks()</slot>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>Forms/Controls/ComboBox.hpp</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>comboBoxProfiles</tabstop>
   <tabstop>pushButtonProfileManager</tabstop>
-  <tabstop>dateTimeEditEventStartDate</tabstop>
-  <tabstop>dateTimeEditEventEndDate</tabstop>
-  <tabstop>textBoxEventStartFrame</tabstop>
-  <tabstop>textBoxEventEndFrame</tabstop>
-  <tabstop>pushButtonEventSearch</tabstop>
-  <tabstop>pushButtonEventCancel</tabstop>
-  <tabstop>checkBoxEventHP</tabstop>
-  <tabstop>spinBoxEventHP</tabstop>
-  <tabstop>checkBoxEventAtk</tabstop>
-  <tabstop>spinBoxEventAtk</tabstop>
-  <tabstop>checkBoxEventDef</tabstop>
-  <tabstop>spinBoxEventDef</tabstop>
-  <tabstop>checkBoxEventSpA</tabstop>
-  <tabstop>spinBoxEventSpA</tabstop>
-  <tabstop>checkBoxEventSpD</tabstop>
-  <tabstop>spinBoxEventSpD</tabstop>
-  <tabstop>checkBoxEventSpe</tabstop>
-  <tabstop>spinBoxEventSpe</tabstop>
-  <tabstop>spinBoxEventRandomIVs</tabstop>
-  <tabstop>pushButtonEventImport</tabstop>
-  <tabstop>checkBoxEventYourID</tabstop>
-  <tabstop>checkBoxEventEgg</tabstop>
-  <tabstop>checkBoxEventOtherInfo</tabstop>
-  <tabstop>comboBoxEventPIDType</tabstop>
-  <tabstop>checkBoxEventAbilityLock</tabstop>
-  <tabstop>comboBoxEventAbilityLocked</tabstop>
-  <tabstop>checkBoxEventNatureLocked</tabstop>
-  <tabstop>comboBoxEventNatureLocked</tabstop>
-  <tabstop>checkBoxEventGenderLocked</tabstop>
-  <tabstop>comboBoxEventGenderLocked</tabstop>
-  <tabstop>textBoxEventTID</tabstop>
-  <tabstop>textBoxEventSID</tabstop>
-  <tabstop>textBoxEventPID</tabstop>
-  <tabstop>textBoxEventEC</tabstop>
-  <tabstop>comboBoxEventNature</tabstop>
-  <tabstop>pushButtonEventAnyNature</tabstop>
-  <tabstop>comboBoxEventHiddenPower</tabstop>
-  <tabstop>pushButtonEventAnyHiddenPower</tabstop>
-  <tabstop>comboBoxEventAbility</tabstop>
-  <tabstop>comboBoxEventGender</tabstop>
-  <tabstop>checkBoxEventShiny</tabstop>
-  <tabstop>tableViewEvent</tabstop>
+  <tabstop>dateTimeEditStartDate</tabstop>
+  <tabstop>dateTimeEditEndDate</tabstop>
+  <tabstop>textBoxStartFrame</tabstop>
+  <tabstop>textBoxEndFrame</tabstop>
+  <tabstop>pushButtonSearch</tabstop>
+  <tabstop>pushButtonCancel</tabstop>
+  <tabstop>checkBoxHP</tabstop>
+  <tabstop>spinBoxHP</tabstop>
+  <tabstop>checkBoxAtk</tabstop>
+  <tabstop>spinBoxAtk</tabstop>
+  <tabstop>checkBoxDef</tabstop>
+  <tabstop>spinBoxDef</tabstop>
+  <tabstop>checkBoxSpA</tabstop>
+  <tabstop>spinBoxSpA</tabstop>
+  <tabstop>checkBoxSpD</tabstop>
+  <tabstop>spinBoxSpD</tabstop>
+  <tabstop>checkBoxSpe</tabstop>
+  <tabstop>spinBoxSpe</tabstop>
+  <tabstop>spinBoxRandomIVs</tabstop>
+  <tabstop>pushButtonImport</tabstop>
+  <tabstop>checkBoxYourID</tabstop>
+  <tabstop>checkBoxEgg</tabstop>
+  <tabstop>checkBoxOtherInfo</tabstop>
+  <tabstop>comboBoxPIDType</tabstop>
+  <tabstop>checkBoxAbilityLock</tabstop>
+  <tabstop>comboBoxAbilityLocked</tabstop>
+  <tabstop>checkBoxNatureLocked</tabstop>
+  <tabstop>comboBoxNatureLocked</tabstop>
+  <tabstop>checkBoxGenderLocked</tabstop>
+  <tabstop>comboBoxGenderLocked</tabstop>
+  <tabstop>textBoxTID</tabstop>
+  <tabstop>textBoxSID</tabstop>
+  <tabstop>textBoxPID</tabstop>
+  <tabstop>textBoxEC</tabstop>
+  <tabstop>comboBoxNature</tabstop>
+  <tabstop>pushButtonAnyNature</tabstop>
+  <tabstop>comboBoxHiddenPower</tabstop>
+  <tabstop>pushButtonAnyHiddenPower</tabstop>
+  <tabstop>comboBoxAbility</tabstop>
+  <tabstop>comboBoxGender</tabstop>
+  <tabstop>checkBoxShiny</tabstop>
+  <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButtonEventAnyNature</sender>
+   <sender>pushButtonAnyNature</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxEventNature</receiver>
+   <receiver>comboBoxNature</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -776,9 +781,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButtonEventAnyHiddenPower</sender>
+   <sender>pushButtonAnyHiddenPower</sender>
    <signal>clicked()</signal>
-   <receiver>comboBoxEventHiddenPower</receiver>
+   <receiver>comboBoxHiddenPower</receiver>
    <slot>resetChecks()</slot>
    <hints>
     <hint type="sourcelabel">

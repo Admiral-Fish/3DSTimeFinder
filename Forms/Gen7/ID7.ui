@@ -157,7 +157,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBoxIDRNGInfo">
+    <widget class="QGroupBox" name="groupBoxRNGInfo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>1</horstretch>
@@ -169,49 +169,49 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
       <item row="0" column="0">
-       <widget class="QLabel" name="labelIDStartDate">
+       <widget class="QLabel" name="labelStartDate">
         <property name="text">
          <string>Start Date:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="labelIDEndDate">
+       <widget class="QLabel" name="labelEndDate">
         <property name="text">
          <string>End Date:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="labelIDFrame">
+       <widget class="QLabel" name="labelFrame">
         <property name="text">
          <string>Frame:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="TextBox" name="textBoxIDStartFrame">
+       <widget class="TextBox" name="textBoxStartFrame">
         <property name="text">
          <string notr="true">1132</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="TextBox" name="textBoxIDEndFrame">
+       <widget class="TextBox" name="textBoxEndFrame">
         <property name="text">
          <string notr="true">10000</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonIDSearch">
+       <widget class="QPushButton" name="pushButtonSearch">
         <property name="text">
          <string>Search</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonIDCancel">
+       <widget class="QPushButton" name="pushButtonCancel">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -221,14 +221,14 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEditIDStartDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditStartDate">
         <property name="displayFormat">
          <string>M/d/yyyy H:mm:ss</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1" colspan="2">
-       <widget class="QDateTimeEdit" name="dateTimeEditIDEndDate">
+       <widget class="QDateTimeEdit" name="dateTimeEditEndDate">
         <property name="displayFormat">
          <string>M/d/yyyy H:mm:ss</string>
         </property>
@@ -238,7 +238,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBoxIDFilter">
+    <widget class="QGroupBox" name="groupBoxFilter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>2</horstretch>
@@ -250,17 +250,17 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_7">
       <item row="0" column="2">
-       <widget class="QLabel" name="labelIDTSV">
+       <widget class="QLabel" name="labelTSV">
         <property name="text">
          <string>TSV</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1" rowspan="4">
-       <widget class="QTextEdit" name="textEditIDFilter"/>
+       <widget class="QTextEdit" name="textEditFilter"/>
       </item>
       <item row="0" column="0">
-       <widget class="QRadioButton" name="radioButtonIDTID">
+       <widget class="QRadioButton" name="radioButtonTID">
         <property name="text">
          <string>TID</string>
         </property>
@@ -270,7 +270,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QRadioButton" name="radioButtonIDTIDSID">
+       <widget class="QRadioButton" name="radioButtonTIDSID">
         <property name="text">
          <string>TID/SID</string>
         </property>
@@ -280,14 +280,14 @@
        <widget class="QTextEdit" name="textEditTSVFilter"/>
       </item>
       <item row="1" column="0">
-       <widget class="QRadioButton" name="radioButtonIDSID">
+       <widget class="QRadioButton" name="radioButtonSID">
         <property name="text">
          <string>SID</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QRadioButton" name="radioButtonIDTID7">
+       <widget class="QRadioButton" name="radioButtonTID7">
         <property name="text">
          <string>G7TID</string>
         </property>
@@ -297,14 +297,14 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
-    <widget class="QProgressBar" name="progressBarID">
+    <widget class="QProgressBar" name="progressBar">
      <property name="value">
       <number>0</number>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="TableView" name="tableViewID">
+    <widget class="TableView" name="tableView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -336,19 +336,19 @@
  <tabstops>
   <tabstop>comboBoxProfiles</tabstop>
   <tabstop>pushButtonProfileManager</tabstop>
-  <tabstop>dateTimeEditIDStartDate</tabstop>
-  <tabstop>dateTimeEditIDEndDate</tabstop>
-  <tabstop>textBoxIDStartFrame</tabstop>
-  <tabstop>textBoxIDEndFrame</tabstop>
-  <tabstop>pushButtonIDSearch</tabstop>
-  <tabstop>pushButtonIDCancel</tabstop>
-  <tabstop>radioButtonIDTID</tabstop>
-  <tabstop>radioButtonIDSID</tabstop>
-  <tabstop>radioButtonIDTIDSID</tabstop>
-  <tabstop>radioButtonIDTID7</tabstop>
-  <tabstop>textEditIDFilter</tabstop>
+  <tabstop>dateTimeEditStartDate</tabstop>
+  <tabstop>dateTimeEditEndDate</tabstop>
+  <tabstop>textBoxStartFrame</tabstop>
+  <tabstop>textBoxEndFrame</tabstop>
+  <tabstop>pushButtonSearch</tabstop>
+  <tabstop>pushButtonCancel</tabstop>
+  <tabstop>radioButtonTID</tabstop>
+  <tabstop>radioButtonSID</tabstop>
+  <tabstop>radioButtonTIDSID</tabstop>
+  <tabstop>radioButtonTID7</tabstop>
+  <tabstop>textEditFilter</tabstop>
   <tabstop>textEditTSVFilter</tabstop>
-  <tabstop>tableViewID</tabstop>
+  <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
  <connections/>
