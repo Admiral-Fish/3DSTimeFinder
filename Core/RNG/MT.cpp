@@ -26,11 +26,6 @@ MT::MT(u32 seed, u32 frames)
     advanceFrames(frames);
 }
 
-MT::MT(const MT &rng) : index(rng.index)
-{
-    std::memcpy(mt, rng.mt, sizeof(u32) * 624);
-}
-
 void MT::initialize(u32 seed)
 {
     mt[0] = seed;
