@@ -62,9 +62,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text">
-         <string notr="true">3532EA4</string>
-        </property>
         <property name="maxLength">
          <number>8</number>
         </property>
@@ -84,9 +81,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="text">
-         <string notr="true">54</string>
         </property>
         <property name="maxLength">
          <number>5</number>

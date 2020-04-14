@@ -32,8 +32,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    QStringList header
-        = { tr("Date/Time"), tr("Initial Seed"), tr("Frame"), tr("G7 TID"), tr("TID"), tr("SID"), tr("TSV") };
+    QStringList header = { tr("Date/Time"), tr("Initial Seed"), tr("Frame"), tr("G7 TID"), tr("TID"), tr("SID"), tr("TSV") };
 };
 
 #endif // IDMODEL_HPP

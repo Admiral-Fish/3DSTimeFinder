@@ -70,9 +70,13 @@ void ProfileCalibrater7::setupModels()
     connect(ui->comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ProfileCalibrater7::indexChanged);
     connect(ui->tableView, &QTableView::customContextMenuRequested, this, &ProfileCalibrater7::tableViewContextMenu);
 
+    indexChanged(0);
+
     QSettings setting;
     if (setting.contains("profileCalibrater/geometry"))
+    {
         this->restoreGeometry(setting.value("profileCalibrater/geometry").toByteArray());
+    }
 }
 
 void ProfileCalibrater7::search()
@@ -133,13 +137,13 @@ void ProfileCalibrater7::indexChanged(int index)
 {
     if (index == 0)
     {
-        ui->textBoxBaseOffset->setText("54");
-        ui->textBoxBaseTick->setText("3532EA4");
+        ui->textBoxBaseOffset->setText("55");
+        ui->textBoxBaseTick->setText("3730114");
     }
     else if (index == 1)
     {
-        ui->textBoxBaseOffset->setText("55");
-        ui->textBoxBaseTick->setText("41D9CB9");
+        ui->textBoxBaseOffset->setText("56");
+        ui->textBoxBaseTick->setText("4470937");
     }
 }
 

@@ -32,8 +32,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    QStringList header
-        = { tr("Profile Name"), tr("Version"), tr("TID"), tr("SID"), tr("Shiny Charm"), tr("Tick"), tr("Offset") };
+    QStringList header = { tr("Profile Name"), tr("Version"), tr("TID"), tr("SID"), tr("Shiny Charm"), tr("Tick"), tr("Offset") };
 };
 
 #endif // PROFILEMODEL_HPP

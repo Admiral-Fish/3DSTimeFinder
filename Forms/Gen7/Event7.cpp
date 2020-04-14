@@ -120,7 +120,9 @@ void Event7::setupModel()
 
     QSettings setting;
     if (setting.contains("event7/geometry"))
+    {
         this->restoreGeometry(setting.value("event7/geometry").toByteArray());
+    }
 }
 
 void Event7::search()
