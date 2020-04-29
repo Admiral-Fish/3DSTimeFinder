@@ -1,38 +1,34 @@
 environment:
   matrix:
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTPATH: C:\Qt\5.13\msvc2017_64
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    QTPATH: C:\Qt\5.14\msvc2017_64
     OS: win64
-    VCVARSALLPATH: C:\"Program Files (x86)\Microsoft Visual Studio"\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSALLPATH: C:\"Program Files (x86)\Microsoft Visual Studio"\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSALL: x64
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    QTPATH: C:\Qt\5.14\msvc2017
+    OS: win32
+    VCVARSALLPATH: C:\"Program Files (x86)\Microsoft Visual Studio"\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSALL: x86
   - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1804
     OS: linux
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTPATH: C:\Qt\5.13\msvc2017
-    OS: win32
-    VCVARSALLPATH: C:\"Program Files (x86)\Microsoft Visual Studio"\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSALL: x86
+  - APPVEYOR_BUILD_WORKER_IMAGE: macos
+    OS: macOS
 
 install:
-    - git submodule update --init --recursive    
+    - git submodule update --init --recursive
+    - sh: bash .ci/install.sh
     
 before_build:
-    # Windows
     - cmd: set PATH=%QTPATH%\bin;C:\Qt\Tools\QtCreator\bin;%PATH%
     - cmd: call %VCVARSALLPATH% %VCVARSALL%
-    # Linux
-    - sh: sudo apt-get -qq update
-    - sh: sudo apt-get install -y build-essential qtbase5-dev qt5-qmake qt5-default
     
 build_script:
-    - qmake 3DSTimeFinder.pro
-    # Windows
+    - cmd: qmake 3DSTimeFinder.pro
     - cmd: jom -j %NUMBER_OF_PROCESSORS%
-    # Linux
-    - sh: make -j $(nproc)
-
+    - sh: bash .ci/build.sh
+    
 after_build:
-    # Windows
     - cmd: md 3DSTimeFinder-windows
     - cmd: move release\3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe 
     - cmd: windeployqt --release --no-translations --no-angle --no-plugins --no-opengl-sw 3DSTimeFinder-windows\3DSTimeFinder.exe
@@ -41,13 +37,11 @@ after_build:
     - cmd: xcopy /I %QTPATH%\plugins\styles\qwindowsvistastyle.dll 3DSTimeFinder-windows\styles\
     - cmd: 7z a 3DSTimeFinder-%OS%.zip 3DSTimeFinder-windows\
     - cmd: sha256sum 3DSTimeFinder-%OS%.zip > 3DSTimeFinder-%OS%.zip.sha256
-    # Linux
-    - sh: zip -r 3DSTimeFinder-linux.zip 3DSTimeFinder
-    - sh: sha256sum 3DSTimeFinder-linux.zip > 3DSTimeFinder-linux.zip.sha256
+    - sh: bash .ci/after_build.sh
     
 artifacts:
-    - path: 3DSTimeFinder-%OS%.zip
-    - path: 3DSTimeFinder-%OS%.zip.sha256
+- path: 3DSTimeFinder-%OS%.zip
+- path: 3DSTimeFinder-%OS%.zip.sha256
 
 deploy:
     provider: GitHub
