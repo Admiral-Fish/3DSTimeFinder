@@ -3,8 +3,7 @@
 case $OS in
   linux)
   {
-    source /opt/qt5*/bin/qt5*-env.sh
-    qmake 3DSTimeFinder.pro
+    $HOME/Qt/5.12/gcc_64/bin/qmake 3DSTimeFinder.pro
     make -j $(nproc)
   } ;;  
   macOS)
