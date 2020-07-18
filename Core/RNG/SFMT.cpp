@@ -19,8 +19,6 @@
 
 #include "SFMT.hpp"
 
-constexpr u32 parity[4] = { 0x1, 0x0, 0x0, 0x13c9e684 };
-
 SFMT::SFMT(u32 seed, u32 frames)
 {
     initialize(seed);
@@ -36,39 +34,14 @@ void SFMT::initialize(u32 seed)
         sfmt[index] = (0x6C078965 * (sfmt[index - 1] ^ (sfmt[index - 1] >> 30))) + index;
     }
 
-    periodCertificaion();
-}
+    u32 inner = (sfmt[0] & 1) ^ (sfmt[3] & 0x13c9e684);
+    inner ^= inner >> 16;
+    inner ^= inner >> 8;
+    inner ^= inner >> 4;
+    inner ^= inner >> 2;
+    inner ^= inner >> 1;
 
-void SFMT::periodCertificaion()
-{
-    u32 inner = 0;
-
-    for (u8 i = 0; i < 4; i++)
-    {
-        inner ^= sfmt[i] & parity[i];
-    }
-    for (u8 i = 16; i > 0; i >>= 1)
-    {
-        inner ^= inner >> i;
-    }
-    if ((inner & 1) == 1)
-    {
-        return;
-    }
-
-    for (u8 i = 0; i < 4; i++)
-    {
-        u32 work = 1;
-        for (u8 j = 0; j < 32; j++)
-        {
-            if ((work & parity[i]) != 0)
-            {
-                sfmt[i] ^= work;
-                return;
-            }
-            work <<= 1;
-        }
-    }
+    sfmt[0] ^= ~inner & 1;
 }
 
 void SFMT::advanceFrames(u32 frames)

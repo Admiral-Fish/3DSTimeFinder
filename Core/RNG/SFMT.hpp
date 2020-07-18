@@ -35,7 +35,6 @@ private:
     u16 index;
 
     void initialize(u32 seed);
-    void periodCertificaion();
     void shuffle();
 };
 
