@@ -32,7 +32,8 @@ void MT::initialize(u32 seed)
 
     for (index = 1; index < 624; index++)
     {
-        mt[index] = (0x6C078965 * (mt[index - 1] ^ (mt[index - 1] >> 30))) + index;
+        seed = 0x6C078965 * (seed ^ (seed >> 30)) + index;
+        mt[index] = seed;
     }
 }
 
@@ -45,7 +46,7 @@ void MT::advanceFrames(u32 frames)
     }
 }
 
-u32 MT::nextUInt()
+u32 MT::next()
 {
     if (index >= 624)
     {
@@ -57,23 +58,55 @@ u32 MT::nextUInt()
     y ^= (y << 7) & 0x9D2C5680;
     y ^= (y << 15) & 0xEFC60000;
     y ^= (y >> 18);
+
     return y;
 }
 
 void MT::shuffle()
 {
-    for (u16 i = 0; i < 624; i++)
-    {
-        u32 y = (mt[i] & 0x80000000) | (mt[(i + 1) % 624] & 0x7FFFFFFF);
-        u32 next = y >> 1;
+    u32 mt1 = mt[0], mt2;
 
+    for (u16 i = 0; i < 227; i++)
+    {
+        mt2 = mt[i + 1];
+
+        u32 y = (mt1 & 0x80000000) | (mt2 & 0x7fffffff);
+
+        u32 y1 = y >> 1;
         if (y & 1)
         {
-            next ^= 0x9908B0DF;
+            y1 ^= 0x9908B0DF;
         }
 
-        mt[i] = next ^ mt[(i + 397) % 624];
+        mt[i] = y1 ^ mt[i + 397];
+        mt1 = mt2;
     }
+
+    for (u16 i = 227; i < 623; i++)
+    {
+        mt2 = mt[i + 1];
+
+        u32 y = (mt1 & 0x80000000) | (mt2 & 0x7fffffff);
+
+        u32 y1 = y >> 1;
+        if (y & 1)
+        {
+            y1 ^= 0x9908B0DF;
+        }
+
+        mt[i] = y1 ^ mt[i - 227];
+        mt1 = mt2;
+    }
+
+    u32 y = (mt1 & 0x80000000) | (mt[0] & 0x7fffffff);
+
+    u32 y1 = y >> 1;
+    if (y & 1)
+    {
+        y1 ^= 0x9908B0DF;
+    }
+
+    mt[623] = y1 ^ mt[396];
 
     index -= 624;
 }

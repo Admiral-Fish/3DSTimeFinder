@@ -27,14 +27,16 @@ SFMT::SFMT(u32 seed, u32 frames)
 
 void SFMT::initialize(u32 seed)
 {
+    u32 inner = seed & 1;
     sfmt[0] = seed;
 
     for (index = 1; index < 624; index++)
     {
-        sfmt[index] = (0x6C078965 * (sfmt[index - 1] ^ (sfmt[index - 1] >> 30))) + index;
+        seed = 0x6C078965 * (seed ^ (seed >> 30)) + index;
+        sfmt[index] = seed;
     }
 
-    u32 inner = (sfmt[0] & 1) ^ (sfmt[3] & 0x13c9e684);
+    inner ^= sfmt[3] & 0x13c9e684;
     inner ^= inner >> 16;
     inner ^= inner >> 8;
     inner ^= inner >> 4;
@@ -53,17 +55,7 @@ void SFMT::advanceFrames(u32 frames)
     }
 }
 
-u32 SFMT::nextUInt()
-{
-    if (index >= 624)
-    {
-        shuffle();
-    }
-
-    return sfmt[index++];
-}
-
-u64 SFMT::nextULong()
+u64 SFMT::next()
 {
     if (index >= 624)
     {

@@ -27,7 +27,7 @@ class MT
 public:
     explicit MT(u32 seed, u32 frames = 0);
     void advanceFrames(u32 frames);
-    u32 nextUInt();
+    u32 next();
 
 private:
     u32 mt[624];
