@@ -19,6 +19,7 @@
 
 #include "StationarySearcher6.hpp"
 #include <Core/RNG/MT.hpp>
+#include <Core/RNG/RNGList.hpp>
 #include <Core/Util/Utility.hpp>
 #include <QThreadPool>
 #include <QtConcurrent>
@@ -113,7 +114,6 @@ QVector<StationaryResult> StationarySearcher6::getResults()
 
 void StationarySearcher6::search(u64 epochStart, u64 epochEnd)
 {
-    QVector<u32> rngList(endFrame - startFrame + 120);
     u32 saveVariable = profile.getTimeVariable();
     u32 timeVariable = profile.getSaveVariable();
     u16 tid = profile.getTID();
@@ -121,31 +121,26 @@ void StationarySearcher6::search(u64 epochStart, u64 epochEnd)
 
     for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        QDateTime target
-            = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch)), Qt::UTC);
+        auto target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch)), Qt::UTC);
         u32 initialSeed = static_cast<u32>(saveVariable + epoch + timeVariable);
+
         MT mt(initialSeed, startFrame);
+        RNGList<u32, MT, 110> rngList(mt);
 
-        for (u32 &x : rngList)
-        {
-            x = mt.nextUInt();
-        }
-
-        for (u32 frame = 0; frame <= (endFrame - startFrame); frame++)
+        for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {
             StationaryResult result(initialSeed, tid, sid);
-            u32 index = 1;
 
             if (!alwaysSynch)
             {
-                index += 60;
+                rngList.advanceFrames(60);
             }
 
-            result.setEC(rngList.at(frame + index++));
+            result.setEC(rngList.getValue());
 
             for (u8 i = 0; i < pidCount; i++)
             {
-                result.setPID(rngList.at(frame + index++));
+                result.setPID(rngList.getValue());
                 if (result.getShiny())
                 {
                     if (shinyLocked)
@@ -164,7 +159,7 @@ void StationarySearcher6::search(u64 epochStart, u64 epochEnd)
 
             for (u8 i = 0; i < ivCount;)
             {
-                u8 tmp = static_cast<u64>(rngList.at(frame + index++)) * 6 >> 32;
+                u8 tmp = static_cast<u64>(rngList.getValue()) * 6 >> 32;
                 if (result.getIV(tmp) == 255)
                 {
                     result.setIV(tmp, 31);
@@ -176,21 +171,21 @@ void StationarySearcher6::search(u64 epochStart, u64 epochEnd)
             {
                 if (result.getIV(i) == 255)
                 {
-                    result.setIV(i, rngList.at(frame + index++) >> 27);
+                    result.setIV(i, rngList.getValue() >> 27);
                 }
             }
             result.calcHiddenPower();
 
-            result.setAbility(ability != 255 ? ability : rngList.at(frame + index++) >> 31);
+            result.setAbility(ability != 255 ? ability : rngList.getValue() >> 31);
 
-            result.setNature(alwaysSynch ? synchNature : static_cast<u64>(rngList.at(frame + index++)) * 25 >> 32);
+            result.setNature(alwaysSynch ? synchNature : static_cast<u64>(rngList.getValue()) * 25 >> 32);
 
-            result.setGender((gender > 0 && gender < 254) ? (static_cast<u64>(rngList.at(frame + index++)) * 252 >> 32 < gender) : gender);
+            result.setGender((gender > 0 && gender < 254) ? (static_cast<u64>(rngList.getValue()) * 252 >> 32 < gender) : gender);
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
-                result.setFrame(frame + startFrame);
+                result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);

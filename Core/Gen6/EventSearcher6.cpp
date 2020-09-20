@@ -19,6 +19,7 @@
 
 #include "EventSearcher6.hpp"
 #include <Core/RNG/MT.hpp>
+#include <Core/RNG/RNGList.hpp>
 #include <Core/Util/Utility.hpp>
 #include <QThreadPool>
 #include <QtConcurrent>
@@ -136,7 +137,6 @@ QVector<EventResult> EventSearcher6::getResults()
 
 void EventSearcher6::search(u64 epochStart, u64 epochEnd)
 {
-    QVector<u32> rngList(endFrame - startFrame + 2000);
     u32 save = profile.getSaveVariable();
     u32 time = profile.getTimeVariable();
     u16 eventTID = ownID ? profile.getTID() : tid;
@@ -145,39 +145,34 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
 
     for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        QDateTime target
-            = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch)), Qt::UTC);
+        auto target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch)), Qt::UTC);
         u32 initialSeed = save + time + epoch;
+
         MT mt(initialSeed, startFrame);
+        RNGList<u32, MT, 100> rngList(mt);
 
-        for (u32 &x : rngList)
-        {
-            x = mt.nextUInt();
-        }
-
-        for (u32 frame = 0; frame <= (endFrame - startFrame); frame++)
+        for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {
             EventResult result(initialSeed, eventTID, eventSID);
-            u32 index = 1;
 
             for (u8 j = 0; j < counter; j++)
             {
-                result.setEC(ec > 0 ? ec : rngList.at(frame + index++));
+                result.setEC(ec > 0 ? ec : rngList.getValue());
 
                 switch (pidType)
                 {
                 case PIDType::Random:
-                    result.setPID(rngList.at(frame + index++));
+                    result.setPID(rngList.getValue());
                     break;
                 case PIDType::Nonshiny:
-                    result.setPID(rngList.at(frame + index++));
+                    result.setPID(rngList.getValue());
                     if (result.getShiny())
                     {
                         result.setPID(result.getPID() ^ 0x10000000);
                     }
                     break;
                 case PIDType::Shiny:
-                    result.setPID(rngList.at(frame + index++));
+                    result.setPID(rngList.getValue());
                     result.setShiny(true);
                     if (otherInfo)
                     {
@@ -192,7 +187,7 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
                 result.setIVs(ivTemplate);
                 for (u8 i = 0; i < ivCount;)
                 {
-                    u8 tmp = static_cast<u64>(rngList.at(frame + index++)) * 6 >> 32;
+                    u8 tmp = static_cast<u64>(rngList.getValue()) * 6 >> 32;
                     if (result.getIV(tmp) == 255)
                     {
                         result.setIV(tmp, 31);
@@ -204,22 +199,22 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
                 {
                     if (result.getIV(i) == 255)
                     {
-                        result.setIV(i, rngList.at(frame + index++) >> 27);
+                        result.setIV(i, rngList.getValue() >> 27);
                     }
                 }
                 result.calcHiddenPower();
 
-                result.setAbility(abilityLocked ? ability : (static_cast<u64>(rngList.at(frame + index++)) * (ability + 2) >> 32));
+                result.setAbility(abilityLocked ? ability : (static_cast<u64>(rngList.getValue()) * (ability + 2) >> 32));
 
-                result.setNature(natureLocked ? nature : static_cast<u64>(rngList.at(frame + index++)) * 25 >> 32);
+                result.setNature(natureLocked ? nature : static_cast<u64>(rngList.getValue()) * 25 >> 32);
 
-                result.setGender(genderLocked ? gender : (static_cast<u64>(rngList.at(frame + index++)) * 252 >> 32) < gender);
+                result.setGender(genderLocked ? gender : (static_cast<u64>(rngList.getValue()) * 252 >> 32) < gender);
             }
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
-                result.setFrame(frame + startFrame);
+                result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);

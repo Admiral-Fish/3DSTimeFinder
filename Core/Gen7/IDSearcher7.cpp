@@ -112,14 +112,14 @@ void IDSearcher7::search(u64 epochStart, u64 epochEnd)
 
     for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        QDateTime target
-            = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
+        auto target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
+
         SFMT sfmt(initialSeed, startFrame);
 
         for (u32 frame = startFrame; frame <= endFrame; frame++)
         {
-            IDResult id(initialSeed, frame, sfmt.nextULong() & 0xffffffff);
+            IDResult id(initialSeed, frame, sfmt.next() & 0xffffffff);
             if (filter.compare(id))
             {
                 id.setTarget(target);

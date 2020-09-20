@@ -18,6 +18,7 @@
  */
 
 #include "EventSearcher7.hpp"
+#include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
 #include <QThreadPool>
@@ -138,7 +139,6 @@ QVector<EventResult> EventSearcher7::getResults()
 
 void EventSearcher7::search(u64 epochStart, u64 epochEnd)
 {
-    QVector<u64> rngList(endFrame - startFrame + 50);
     u32 tick = profile.getTick();
     u32 offset = profile.getOffset();
     u16 eventTID = ownID ? profile.getTID() : tid;
@@ -146,37 +146,32 @@ void EventSearcher7::search(u64 epochStart, u64 epochEnd)
 
     for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        QDateTime target
-            = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
+        auto target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
+
         SFMT sfmt(initialSeed, startFrame);
+        RNGList<u64, SFMT, 50> rngList(sfmt);
 
-        for (u64 &x : rngList)
-        {
-            x = sfmt.nextULong();
-        }
-
-        for (u32 frame = 0; frame <= (endFrame - startFrame); frame++)
+        for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {
             EventResult result(initialSeed, eventTID, eventSID);
-            u32 index = 0;
 
-            result.setEC(ec > 0 ? ec : rngList.at(frame + index++) & 0xFFFFFFFF);
+            result.setEC(ec > 0 ? ec : rngList.getValue() & 0xFFFFFFFF);
 
             switch (pidType)
             {
             case PIDType::Random:
-                result.setPID(rngList.at(frame + index++) & 0xFFFFFFFF);
+                result.setPID(rngList.getValue() & 0xFFFFFFFF);
                 break;
             case PIDType::Nonshiny:
-                result.setPID(rngList.at(frame + index++) & 0xFFFFFFFF);
+                result.setPID(rngList.getValue() & 0xFFFFFFFF);
                 if (result.getShiny())
                 {
                     result.setPID(result.getPID() ^ 0x10000000);
                 }
                 break;
             case PIDType::Shiny:
-                result.setPID(rngList.at(frame + index++) & 0xFFFFFFFF);
+                result.setPID(rngList.getValue() & 0xFFFFFFFF);
                 result.setShiny(true);
                 if (otherInfo)
                 {
@@ -191,7 +186,7 @@ void EventSearcher7::search(u64 epochStart, u64 epochEnd)
             result.setIVs(ivTemplate);
             for (u8 i = 0; i < ivCount;)
             {
-                u8 tmp = rngList.at(frame + index++) % 6;
+                u8 tmp = rngList.getValue() % 6;
                 if (result.getIV(tmp) == 255)
                 {
                     result.setIV(tmp, 31);
@@ -203,21 +198,21 @@ void EventSearcher7::search(u64 epochStart, u64 epochEnd)
             {
                 if (result.getIV(i) == 255)
                 {
-                    result.setIV(i, rngList.at(frame + index++) & 0x1F);
+                    result.setIV(i, rngList.getValue() & 0x1F);
                 }
             }
             result.calcHiddenPower();
 
-            result.setAbility(abilityLocked ? ability : ability == 0 ? rngList.at(frame + index++) & 1 : rngList.at(frame + index++) % 3);
+            result.setAbility(abilityLocked ? ability : ability == 0 ? rngList.getValue() & 1 : rngList.getValue() % 3);
 
-            result.setNature(natureLocked ? nature : rngList.at(frame + index++) % 25);
+            result.setNature(natureLocked ? nature : rngList.getValue() % 25);
 
-            result.setGender(genderLocked ? gender : (rngList.at(frame + index++) % 252) < gender);
+            result.setGender(genderLocked ? gender : (rngList.getValue() % 252) < gender);
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
-                result.setFrame(frame + startFrame);
+                result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);

@@ -56,6 +56,7 @@ HEADERS += \
     Core/Parents/WildFilter.hpp \
     Core/Parents/WildResult.hpp \
     Core/RNG/MT.hpp \
+    Core/RNG/RNGList.hpp \
     Core/RNG/SFMT.hpp \
     Core/RNG/SHA256.hpp \
     Core/Util/Game.hpp \

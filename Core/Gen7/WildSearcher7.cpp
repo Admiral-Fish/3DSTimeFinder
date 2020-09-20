@@ -18,6 +18,7 @@
  */
 
 #include "WildSearcher7.hpp"
+#include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
 #include <QThreadPool>
@@ -115,7 +116,6 @@ QVector<WildResult> WildSearcher7::getResults()
 
 void WildSearcher7::search(u64 epochStart, u64 epochEnd)
 {
-    QVector<u64> rngList(endFrame - startFrame + 110);
     u32 tick = profile.getTick();
     u32 offset = profile.getOffset();
     u16 tid = profile.getTID();
@@ -123,42 +123,37 @@ void WildSearcher7::search(u64 epochStart, u64 epochEnd)
 
     for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        QDateTime target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
+        auto target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
-        SFMT sfmt(initialSeed);
-        sfmt.advanceFrames(startFrame);
 
-        for (u64 &x : rngList)
-        {
-            x = sfmt.nextULong();
-        }
+        SFMT sfmt(initialSeed, startFrame);
+        RNGList<u64, SFMT, 110> rngList(sfmt);
 
-        for (u32 frame = 0; frame <= (endFrame - startFrame); frame++)
+        for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {
             WildResult result(initialSeed, tid, sid);
-            u32 index = 0;
 
             // Lead eats a call
-            bool synch = (rngList.at(frame + index++) % 100 >= 50) && useSynch;
+            bool synch = (rngList.getValue() % 100 >= 50) && useSynch;
 
-            result.setEncounterSlot(getSlot(rngList.at(frame + index++) % 100));
+            result.setEncounterSlot(getSlot(rngList.getValue() % 100));
 
             // Level eats a call
-            index++;
+            rngList.advanceFrames(1);
 
             // Flute eats a call
-            index++;
+            rngList.advanceFrames(1);
 
             // If Minior eat a call, but I'm going to ignore this
 
             // Advance(60)
-            index += 60;
+            rngList.advanceFrames(60);
 
-            result.setEC(rngList.at(frame + index++) & 0xFFFFFFFF);
+            result.setEC(rngList.getValue() & 0xFFFFFFFF);
 
             for (u8 i = 0; i < pidCount; i++)
             {
-                result.setPID(rngList.at(frame + index++) & 0xffffffff);
+                result.setPID(rngList.getValue() & 0xffffffff);
                 if (result.getShiny())
                 {
                     break;
@@ -167,21 +162,21 @@ void WildSearcher7::search(u64 epochStart, u64 epochEnd)
 
             for (u8 i = 0; i < 6; i++)
             {
-                result.setIV(i, rngList.at(frame + index++) & 0x1f);
+                result.setIV(i, rngList.getValue() & 0x1f);
             }
             result.calcHiddenPower();
 
-            result.setAbility(rngList.at(frame + index++) & 1);
+            result.setAbility(rngList.getValue() & 1);
 
-            result.setNature(synch ? synchNature : rngList.at(frame + index++) % 25);
+            result.setNature(synch ? synchNature : rngList.getValue() % 25);
 
             // This might be wrong, it's probably fine though
-            result.setGender((gender > 0 && gender < 254) ? (rngList.at(frame + index++) % 252 >= gender ? 1 : 2) : gender);
+            result.setGender((gender > 0 && gender < 254) ? (rngList.getValue() % 252 >= gender ? 1 : 2) : gender);
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
-                result.setFrame(frame + startFrame);
+                result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);

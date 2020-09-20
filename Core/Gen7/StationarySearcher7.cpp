@@ -1,23 +1,24 @@
-; /*
-   * This file is part of 3DSTimeFinder
-   * Copyright (C) 2019-2020 by Admiral_Fish
-   *
-   * This program is free software; you can redistribute it and/or
-   * modify it under the terms of the GNU General Public License
-   * as published by the Free Software Foundation; either version 3
-   * of the License, or (at your option) any later version.
-   *
-   * This program is distributed in the hope that it will be useful,
-   * but WITHOUT ANY WARRANTY; without even the implied warranty of
-   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   * GNU General Public License for more details.
-   *
-   * You should have received a copy of the GNU General Public License
-   * along with this program; if not, write to the Free Software
-   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-   */
+/*
+ * This file is part of 3DSTimeFinder
+ * Copyright (C) 2019-2020 by Admiral_Fish
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #include "StationarySearcher7.hpp"
+#include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
 #include <QThreadPool>
@@ -115,7 +116,6 @@ QVector<StationaryResult> StationarySearcher7::getResults()
 
 void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
 {
-    QVector<u64> rngList(endFrame - startFrame + 50);
     u32 tick = profile.getTick();
     u32 offset = profile.getOffset();
     u16 tid = profile.getTID();
@@ -123,20 +123,15 @@ void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
 
     for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
     {
-        QDateTime target
-            = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
+        auto target = QDateTime::fromMSecsSinceEpoch(static_cast<qlonglong>(Utility::getNormalTime(epoch, offset)), Qt::UTC);
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
+
         SFMT sfmt(initialSeed, startFrame);
+        RNGList<u64, SFMT, 50> rngList(sfmt);
 
-        for (u64 &x : rngList)
-        {
-            x = sfmt.nextULong();
-        }
-
-        for (u32 frame = 0; frame <= (endFrame - startFrame); frame++)
+        for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {
             StationaryResult result(initialSeed, tid, sid);
-            u32 index = 0;
 
             // TODO
             /*
@@ -149,11 +144,11 @@ void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
                 Advance(60);
             }*/
 
-            result.setEC(rngList.at(frame + index++) & 0xffffffff);
+            result.setEC(rngList.getValue() & 0xffffffff);
 
             for (u8 i = 0; i < pidCount; i++)
             {
-                result.setPID(rngList.at(frame + index++) & 0xffffffff);
+                result.setPID(rngList.getValue() & 0xffffffff);
                 if (result.getShiny())
                 {
                     if (shinyLocked)
@@ -172,7 +167,7 @@ void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
 
             for (u8 i = 0; i < ivCount;)
             {
-                u8 tmp = rngList.at(frame + index++) % 6;
+                u8 tmp = rngList.getValue() % 6;
                 if (result.getIV(tmp) == 255)
                 {
                     result.setIV(tmp, 31);
@@ -184,21 +179,21 @@ void StationarySearcher7::search(u64 epochStart, u64 epochEnd)
             {
                 if (result.getIV(i) == 255)
                 {
-                    result.setIV(i, rngList.at(frame + index++) & 0x1f);
+                    result.setIV(i, rngList.getValue() & 0x1f);
                 }
             }
             result.calcHiddenPower();
 
-            result.setAbility(ability != 255 ? ability : rngList.at(frame + index++) & 1);
+            result.setAbility(ability != 255 ? ability : rngList.getValue() & 1);
 
-            result.setNature(alwaysSynch ? synchNature : rngList.at(frame + index++) % 25);
+            result.setNature(alwaysSynch ? synchNature : rngList.getValue() % 25);
 
-            result.setGender((gender > 0 && gender < 254) ? (rngList.at(frame + index++) % 252 < gender) : gender);
+            result.setGender((gender > 0 && gender < 254) ? (rngList.getValue() % 252 < gender) : gender);
 
             if (filter.compare(result))
             {
                 result.setTarget(target);
-                result.setFrame(frame + startFrame);
+                result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
                 results.append(result);
