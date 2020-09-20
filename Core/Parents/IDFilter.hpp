@@ -37,9 +37,9 @@ private:
     QVector<u16> sidFilter;
     QVector<u16> tsvFilter;
     QVector<u32> g7Filter;
-    IDType idType {};
-    bool checkID {};
-    bool checkTSV {};
+    IDType idType;
+    bool checkID;
+    bool checkTSV;
 };
 
 #endif // IDFILTER_HPP

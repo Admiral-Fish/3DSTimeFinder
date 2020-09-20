@@ -28,8 +28,8 @@ class Filter
 protected:
     QVector<u8> minIV, maxIV;
     QVector<bool> nature, hiddenPower;
-    u8 ability {}, gender {};
-    bool shiny {};
+    u8 ability, gender;
+    bool shiny;
 };
 
 #endif // FILTER_HPP

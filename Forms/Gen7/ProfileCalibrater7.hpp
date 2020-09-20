@@ -42,8 +42,8 @@ public:
 
 private:
     Ui::ProfileCalibrater7 *ui;
-    QStandardItemModel *model {};
-    QMenu *contextMenu {};
+    QStandardItemModel *model;
+    QMenu *contextMenu;
 
     void setupModels();
 

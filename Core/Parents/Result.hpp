@@ -55,11 +55,11 @@ public:
 
 protected:
     QDateTime target;
-    u32 seed {}, pid {}, ec {}, frame {};
-    u16 psv {}, tsv {};
-    u8 hiddenPower {}, ability {}, nature {}, gender {};
+    u32 seed, pid, ec, frame;
+    u16 psv, tsv;
+    u8 hiddenPower, ability, nature, gender;
     QVector<u8> ivs;
-    bool shiny {};
+    bool shiny;
 };
 
 #endif // RESULT_HPP

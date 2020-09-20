@@ -19,14 +19,9 @@
 
 #include "IDResult.hpp"
 
-IDResult::IDResult(u32 seed, u32 frame, u32 rand)
+IDResult::IDResult(u32 seed, u32 frame, u32 rand) :
+    seed(seed), frame(frame), displayTID(rand % 1000000), tid(rand & 0xffff), sid(rand >> 16), tsv((tid ^ sid) >> 4)
 {
-    this->seed = seed;
-    this->frame = frame;
-    tid = rand & 0xffff;
-    sid = rand >> 16;
-    tsv = (tid ^ sid) >> 4;
-    displayTID = rand % 1000000;
 }
 
 QString IDResult::getDateTime() const

@@ -40,8 +40,8 @@ public:
 
 private:
     QDateTime target;
-    u32 seed {}, frame {}, displayTID {};
-    u16 tid {}, sid {}, tsv {};
+    u32 seed, frame, displayTID;
+    u16 tid, sid, tsv;
 };
 
 #endif // IDRESULT_HPP

@@ -23,27 +23,21 @@
 #include <QSettings>
 #include <QVector>
 
-Profile6::Profile6()
-    : Profile()
+Profile6::Profile6() : Profile(), saveVariable(0), timeVariable(0)
 {
-    saveVariable = 0;
-    timeVariable = 0;
 }
 
-Profile6::Profile6(
-    const QString &name, u32 saveVariable, u32 timeVariable, u16 tid, u16 sid, Game version, bool shinyCharm)
-    : Profile(name, tid, sid, version, shinyCharm)
+Profile6::Profile6(const QString &name, u32 saveVariable, u32 timeVariable, u16 tid, u16 sid, Game version, bool shinyCharm) :
+    Profile(name, tid, sid, version, shinyCharm), saveVariable(saveVariable), timeVariable(timeVariable)
 {
-    this->saveVariable = saveVariable;
-    this->timeVariable = timeVariable;
 }
 
-Profile6::Profile6(QJsonObject data)
-    : Profile(data["name"].toString(), data["tid"].toInt(), data["sid"].toInt(),
-        static_cast<Game>(data["version"].toInt()), data["charm"].toBool())
+Profile6::Profile6(QJsonObject data) :
+    Profile(data["name"].toString(), data["tid"].toInt(), data["sid"].toInt(), static_cast<Game>(data["version"].toInt()),
+            data["charm"].toBool()),
+    saveVariable(data["save"].toString().toUInt(nullptr, 16)),
+    timeVariable(data["time"].toString().toUInt(nullptr, 16))
 {
-    saveVariable = data["save"].toString().toUInt(nullptr, 16);
-    timeVariable = data["time"].toString().toUInt(nullptr, 16);
 }
 
 QJsonObject Profile6::getJson()

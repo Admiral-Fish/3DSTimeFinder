@@ -19,9 +19,8 @@
 
 #include "IDFilter.hpp"
 
-IDFilter::IDFilter(const QString &idList, const QString &tsvList, IDType type)
+IDFilter::IDFilter(const QString &idList, const QString &tsvList, IDType type) : idType(type)
 {
-    idType = type;
     checkID = !idList.isEmpty();
     checkTSV = !tsvList.isEmpty();
 

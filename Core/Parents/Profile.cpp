@@ -19,22 +19,13 @@
 
 #include "Profile.hpp"
 
-Profile::Profile()
+Profile::Profile() : name("None"), tid(12345), sid(54321), version(Game::UltraSun), shinyCharm(false)
 {
-    name = "None";
-    tid = 12345;
-    sid = 54321;
-    version = Game::UltraSun;
-    shinyCharm = false;
 }
 
-Profile::Profile(const QString &name, u16 tid, u16 sid, Game version, bool shinyCharm)
+Profile::Profile(const QString &name, u16 tid, u16 sid, Game version, bool shinyCharm) :
+    name(name), tid(tid), sid(sid), version(version), shinyCharm(shinyCharm)
 {
-    this->name = name;
-    this->tid = tid;
-    this->sid = sid;
-    this->version = version;
-    this->shinyCharm = shinyCharm;
 }
 
 QString Profile::getName() const

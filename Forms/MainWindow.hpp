@@ -48,12 +48,12 @@ private:
     QActionGroup *styleGroup;
     QActionGroup *threadGroup;
     QString currentStyle;
-    Event6 *event6 {};
-    Stationary6 *stationary6 {};
-    Event7 *event7 {};
-    ID7 *id7 {};
-    Stationary7 *stationary7 {};
-    Wild7 *wild7 {};
+    Event6 *event6 = nullptr;
+    Stationary6 *stationary6 = nullptr;
+    Event7 *event7 = nullptr;
+    ID7 *id7 = nullptr;
+    Stationary7 *stationary7 = nullptr;
+    Wild7 *wild7 = nullptr;
 
     void setupModel();
     void setupStyle();

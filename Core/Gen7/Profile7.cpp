@@ -23,12 +23,9 @@
 #include <QSettings>
 #include <QVector>
 
-Profile7::Profile7()
-    : Profile()
+Profile7::Profile7() : Profile(), offset(55), tick(0x41D9CB9)
 {
     version = Game::UltraSun;
-    offset = 55;
-    tick = 0x41D9CB9;
 }
 
 Profile7::Profile7(const QString &name, u32 offset, u32 tick, u16 tid, u16 sid, Game version, bool shinyCharm)
@@ -38,12 +35,12 @@ Profile7::Profile7(const QString &name, u32 offset, u32 tick, u16 tid, u16 sid, 
     this->tick = tick;
 }
 
-Profile7::Profile7(QJsonObject data)
-    : Profile(data["name"].toString(), data["tid"].toInt(), data["sid"].toInt(),
-        static_cast<Game>(data["version"].toInt()), data["charm"].toBool())
+Profile7::Profile7(QJsonObject data) :
+    Profile(data["name"].toString(), data["tid"].toInt(), data["sid"].toInt(), static_cast<Game>(data["version"].toInt()),
+            data["charm"].toBool()),
+    offset(data["offset"].toString().toUInt()),
+    tick(data["tick"].toString().toUInt(nullptr, 16))
 {
-    offset = data["offset"].toString().toUInt();
-    tick = data["tick"].toString().toUInt(nullptr, 16);
 }
 
 QJsonObject Profile7::getJson()

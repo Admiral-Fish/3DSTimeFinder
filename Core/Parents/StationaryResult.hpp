@@ -31,7 +31,7 @@ public:
     void setSynch(const bool &synch);
 
 private:
-    bool synch {};
+    bool synch;
 };
 
 #endif // STATIONARYRESULT_HPP
