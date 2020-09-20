@@ -149,7 +149,7 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
         u32 initialSeed = save + time + epoch;
 
         MT mt(initialSeed, startFrame);
-        RNGList<u32, MT, 100> rngList(mt);
+        RNGList<u32, MT, 128> rngList(mt);
 
         for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {

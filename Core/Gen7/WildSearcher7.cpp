@@ -127,7 +127,7 @@ void WildSearcher7::search(u64 epochStart, u64 epochEnd)
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
 
         SFMT sfmt(initialSeed, startFrame);
-        RNGList<u64, SFMT, 110> rngList(sfmt);
+        RNGList<u64, SFMT, 128> rngList(sfmt);
 
         for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {

@@ -26,8 +26,10 @@ template <typename IntegerType, typename RNGType, u32 size>
 class RNGList
 {
 public:
-    explicit RNGList(RNGType &rng) : rng(rng), head(0), tail(size - 1), pointer(0)
+    explicit RNGList(RNGType &rng) : rng(rng), head(0), pointer(0)
     {
+        static_assert(size && ((size & (size - 1)) == 0), "Number is not a perfect multiple of two");
+
         for (u32 i = 0; i < size; i++)
         {
             list[i] = this->rng.next();
@@ -48,36 +50,20 @@ public:
 
     void advanceState()
     {
-        if (++tail == size)
-        {
-            tail = 0;
-        }
-
+        head &= size - 1;
         list[head++] = rng.next();
-        if (head == size)
-        {
-            head = 0;
-        }
 
         pointer = head;
     }
 
     void advanceFrames(u32 frames)
     {
-        pointer += frames;
-        if (pointer >= size)
-        {
-            pointer -= size;
-        }
+        pointer = (pointer + frames) & (size - 1);
     }
 
     IntegerType getValue()
     {
-        if (pointer == size)
-        {
-            pointer = 0;
-        }
-
+        pointer &= size - 1;
         return list[pointer++];
     }
 
@@ -89,7 +75,7 @@ public:
 private:
     RNGType rng;
     IntegerType list[size];
-    u32 head, tail, pointer;
+    u32 head, pointer;
 };
 
 #endif // RNGLIST_HPP

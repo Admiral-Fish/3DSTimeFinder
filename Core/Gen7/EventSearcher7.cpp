@@ -150,7 +150,7 @@ void EventSearcher7::search(u64 epochStart, u64 epochEnd)
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
 
         SFMT sfmt(initialSeed, startFrame);
-        RNGList<u64, SFMT, 50> rngList(sfmt);
+        RNGList<u64, SFMT, 64> rngList(sfmt);
 
         for (u32 frame = startFrame; frame <= endFrame; frame++, rngList.advanceState())
         {
