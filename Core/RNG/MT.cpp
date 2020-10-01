@@ -18,7 +18,6 @@
  */
 
 #include "MT.hpp"
-#include <cstring>
 
 MT::MT(u32 seed, u32 frames)
 {
