@@ -19,6 +19,10 @@
 
 #include "SFMT.hpp"
 
+#ifdef __SSE2__
+#include <emmintrin.h>
+#endif
+
 SFMT::SFMT(u32 seed, u32 frames)
 {
     initialize(seed);
@@ -69,6 +73,48 @@ u64 SFMT::next()
 
 void SFMT::shuffle()
 {
+#ifdef __SSE2__
+    __m128i a, b, c, d;
+
+    c = _mm_loadu_si128((const __m128i *)&sfmt[616]);
+    d = _mm_loadu_si128((const __m128i *)&sfmt[620]);
+
+    auto mm_recursion = [](__m128i &a, const __m128i &b, const __m128i &c, const __m128i &d) {
+        __m128i x, b1, y, d1;
+
+        x = _mm_slli_si128(a, 1);
+        y = _mm_srli_si128(c, 1);
+
+        b1 = _mm_and_si128(_mm_srli_epi32(b, 11), _mm_set_epi32(0xbffffff6, 0xbffaffff, 0xddfecb7f, 0xdfffffef));
+        d1 = _mm_slli_epi32(d, 18);
+
+        a = _mm_xor_si128(_mm_xor_si128(_mm_xor_si128(_mm_xor_si128(a, x), b1), y), d1);
+    };
+
+    for (int i = 0; i < 136; i += 4)
+    {
+        a = _mm_loadu_si128((const __m128i *)&sfmt[i]);
+        b = _mm_loadu_si128((const __m128i *)&sfmt[i + 488]);
+
+        mm_recursion(a, b, c, d);
+        _mm_storeu_si128((__m128i *)&sfmt[i], a);
+
+        c = d;
+        d = a;
+    }
+
+    for (int i = 136; i < 624; i += 4)
+    {
+        a = _mm_loadu_si128((const __m128i *)&sfmt[i]);
+        b = _mm_loadu_si128((const __m128i *)&sfmt[i - 136]);
+
+        mm_recursion(a, b, c, d);
+        _mm_storeu_si128((__m128i *)&sfmt[i], a);
+
+        c = d;
+        d = a;
+    }
+#else
     u16 a = 0;
     u16 b = 488;
     u16 c = 616;
@@ -76,22 +122,36 @@ void SFMT::shuffle()
 
     do
     {
-        sfmt[a + 3] = sfmt[a + 3] ^ (sfmt[a + 3] << 8) ^ (sfmt[a + 2] >> 24) ^ (sfmt[c + 3] >> 8) ^ ((sfmt[b + 3] >> 11) & 0xbffffff6)
-            ^ (sfmt[d + 3] << 18);
-        sfmt[a + 2] = sfmt[a + 2] ^ (sfmt[a + 2] << 8) ^ (sfmt[a + 1] >> 24) ^ (sfmt[c + 3] << 24) ^ (sfmt[c + 2] >> 8)
-            ^ ((sfmt[b + 2] >> 11) & 0xbffaffff) ^ (sfmt[d + 2] << 18);
-        sfmt[a + 1] = sfmt[a + 1] ^ (sfmt[a + 1] << 8) ^ (sfmt[a] >> 24) ^ (sfmt[c + 2] << 24) ^ (sfmt[c + 1] >> 8)
-            ^ ((sfmt[b + 1] >> 11) & 0xddfecb7f) ^ (sfmt[d + 1] << 18);
-        sfmt[a] = sfmt[a] ^ (sfmt[a] << 8) ^ (sfmt[c + 1] << 24) ^ (sfmt[c] >> 8) ^ ((sfmt[b] >> 11) & 0xdfffffef) ^ (sfmt[d] << 18);
+        // clang-format off
+            sfmt[a + 3] ^= (sfmt[a + 3] << 8) ^ (sfmt[a + 2] >> 24) ^ (sfmt[c + 3] >> 8) ^ ((sfmt[b + 3] >> 11) & 0xbffffff6) ^ (sfmt[d + 3] << 18);
+            sfmt[a + 2] ^= (sfmt[a + 2] << 8) ^ (sfmt[a + 1] >> 24) ^ (sfmt[c + 3] << 24) ^ (sfmt[c + 2] >> 8) ^ ((sfmt[b + 2] >> 11) & 0xbffaffff) ^ (sfmt[d + 2] << 18);
+            sfmt[a + 1] ^= (sfmt[a + 1] << 8) ^ (sfmt[a] >> 24) ^ (sfmt[c + 2] << 24) ^ (sfmt[c + 1] >> 8) ^ ((sfmt[b + 1] >> 11) & 0xddfecb7f) ^ (sfmt[d + 1] << 18);
+            sfmt[a] ^= (sfmt[a] << 8) ^ (sfmt[c + 1] << 24) ^ (sfmt[c] >> 8) ^ ((sfmt[b] >> 11) & 0xdfffffef) ^ (sfmt[d] << 18);
+        // clang-format on
+
         c = d;
         d = a;
         a += 4;
         b += 4;
-        if (b >= 624)
-        {
-            b = 0;
-        }
+    } while (a < 136);
+
+    b = 0;
+
+    do
+    {
+        // clang-format off
+            sfmt[a + 3] ^= (sfmt[a + 3] << 8) ^ (sfmt[a + 2] >> 24) ^ (sfmt[c + 3] >> 8) ^ ((sfmt[b + 3] >> 11) & 0xbffffff6) ^ (sfmt[d + 3] << 18);
+            sfmt[a + 2] ^= (sfmt[a + 2] << 8) ^ (sfmt[a + 1] >> 24) ^ (sfmt[c + 3] << 24) ^ (sfmt[c + 2] >> 8) ^ ((sfmt[b + 2] >> 11) & 0xbffaffff) ^ (sfmt[d + 2] << 18);
+            sfmt[a + 1] ^= (sfmt[a + 1] << 8) ^ (sfmt[a] >> 24) ^ (sfmt[c + 2] << 24) ^ (sfmt[c + 1] >> 8) ^ ((sfmt[b + 1] >> 11) & 0xddfecb7f) ^ (sfmt[d + 1] << 18);
+            sfmt[a] ^= (sfmt[a] << 8) ^ (sfmt[c + 1] << 24) ^ (sfmt[c] >> 8) ^ ((sfmt[b] >> 11) & 0xdfffffef) ^ (sfmt[d] << 18);
+        // clang-format on
+
+        c = d;
+        d = a;
+        a += 4;
+        b += 4;
     } while (a < 624);
+#endif
 
     index -= 624;
 }

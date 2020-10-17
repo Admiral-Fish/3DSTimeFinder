@@ -3,6 +3,7 @@ equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 9): error("You need at le
 
 QT += concurrent widgets
 CONFIG += c++1z
+QMAKE_CXXFLAGS += -msse4.1
 
 TARGET = 3DSTimeFinder
 TEMPLATE = app
