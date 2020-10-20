@@ -18,10 +18,7 @@
  */
 
 #include "MT.hpp"
-
-#ifdef __SSE2__
 #include <smmintrin.h>
-#endif
 
 MT::MT(u32 seed, u32 frames)
 {
@@ -67,7 +64,6 @@ u32 MT::next()
 
 void MT::shuffle()
 {
-#ifdef __SSE2__
     __m128i upperMask = _mm_set1_epi32(0x80000000);
     __m128i lowerMask = _mm_set1_epi32(0x7fffffff);
     __m128i matrix = _mm_set1_epi32(0x9908b0df);
@@ -76,8 +72,8 @@ void MT::shuffle()
     for (int i = 0; i < 224; i += 4)
     {
         __m128i m0 = _mm_loadu_si128((const __m128i *)&mt[i]);
-        __m128i m1 = _mm_loadu_si128((const __m128i_u *)&mt[i + 1]);
-        __m128i m2 = _mm_loadu_si128((const __m128i_u *)&mt[i + 397]);
+        __m128i m1 = _mm_loadu_si128((const __m128i *)&mt[i + 1]);
+        __m128i m2 = _mm_loadu_si128((const __m128i *)&mt[i + 397]);
 
         __m128i y = _mm_or_si128(_mm_and_si128(m0, upperMask), _mm_and_si128(m1, lowerMask));
         __m128i y1 = _mm_srli_epi32(y, 1);
@@ -106,8 +102,8 @@ void MT::shuffle()
     for (int i = 228; i < 620; i += 4)
     {
         __m128i m0 = _mm_loadu_si128((const __m128i *)&mt[i]);
-        __m128i m1 = _mm_loadu_si128((const __m128i_u *)&mt[i + 1]);
-        __m128i m2 = _mm_loadu_si128((const __m128i_u *)&mt[i - 227]);
+        __m128i m1 = _mm_loadu_si128((const __m128i *)&mt[i + 1]);
+        __m128i m2 = _mm_loadu_si128((const __m128i *)&mt[i - 227]);
 
         __m128i y = _mm_or_si128(_mm_and_si128(m0, upperMask), _mm_and_si128(m1, lowerMask));
         __m128i y1 = _mm_srli_epi32(y, 1);
@@ -126,51 +122,6 @@ void MT::shuffle()
 
         _mm_storeu_si128((__m128i *)&mt[620], _mm_xor_si128(_mm_xor_si128(y1, mag01), m2));
     }
-#else
-    u32 mt1 = mt[0], mt2;
-
-    for (u16 i = 0; i < 227; i++)
-    {
-        mt2 = mt[i + 1];
-
-        u32 y = (mt1 & 0x80000000) | (mt2 & 0x7fffffff);
-
-        u32 y1 = y >> 1;
-        if (y & 1)
-        {
-            y1 ^= 0x9908b0df;
-        }
-
-        mt[i] = y1 ^ mt[i + 397];
-        mt1 = mt2;
-    }
-
-    for (u16 i = 227; i < 623; i++)
-    {
-        mt2 = mt[i + 1];
-
-        u32 y = (mt1 & 0x80000000) | (mt2 & 0x7fffffff);
-
-        u32 y1 = y >> 1;
-        if (y & 1)
-        {
-            y1 ^= 0x9908b0df;
-        }
-
-        mt[i] = y1 ^ mt[i - 227];
-        mt1 = mt2;
-    }
-
-    u32 y = (mt1 & 0x80000000) | (mt[0] & 0x7fffffff);
-
-    u32 y1 = y >> 1;
-    if (y & 1)
-    {
-        y1 ^= 0x9908b0df;
-    }
-
-    mt[623] = y1 ^ mt[396];
-#endif
 
     index -= 624;
 }
