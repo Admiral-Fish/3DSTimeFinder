@@ -17,7 +17,7 @@ if (UNIX)
 	add_compile_options(-msse4.1)
 endif ()
 
-find_package(Qt5 COMPONENTS Core LinguistTools Network Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 	
 set(PROJECT_QRC
     QDarkStyleSheet/qdarkstyle/style.qrc
