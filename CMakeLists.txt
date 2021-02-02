@@ -13,8 +13,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 if (UNIX)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-	add_compile_options(-msse4.1)
+    add_compile_options(-msse4.1)
 endif ()
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
@@ -145,11 +144,30 @@ set(PROJECT_SOURCES
     main.cpp
 )
 
-add_executable(3DSTimeFinder
-    ${PROJECT_QRC}
-    ${PROJECT_UI}
-    ${PROJECT_HEADERS}
-    ${PROJECT_SOURCES}
-)
+if (WIN32)
+    add_executable(PokeFinder
+        WIN32
+        ${PROJECT_QRC}
+        ${PROJECT_UI}
+        ${PROJECT_HEADERS}
+        ${PROJECT_SOURCES}
+    )
+else ()
+    add_executable(PokeFinder
+        MACOSX_BUNDLE
+        ${PROJECT_QRC}
+        ${PROJECT_UI}
+        ${PROJECT_HEADERS}
+        ${PROJECT_SOURCES}
+    )
+else ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+    add_executable(PokeFinder
+        ${PROJECT_QRC}
+        ${PROJECT_UI}
+        ${PROJECT_HEADERS}
+        ${PROJECT_SOURCES}
+    )
+endif ()
 
 target_link_libraries(3DSTimeFinder PRIVATE Qt5::Core Qt5::Widgets)
