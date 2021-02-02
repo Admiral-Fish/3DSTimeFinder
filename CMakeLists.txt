@@ -13,10 +13,11 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 if (UNIX)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 	add_compile_options(-msse4.1)
 endif ()
 
-find_package(Qt6 COMPONENTS Core LinguistTools Network Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core LinguistTools Network Widgets REQUIRED)
 	
 set(PROJECT_QRC
     QDarkStyleSheet/qdarkstyle/style.qrc
@@ -144,29 +145,11 @@ set(PROJECT_SOURCES
     main.cpp
 )
 
-if (WIN32)
-    add_executable(3DSTimeFinder
-        WIN32
-        ${PROJECT_QRC}
-        ${PROJECT_UI}
-		${PROJECT_HEADERS}
-        ${PROJECT_SOURCES}
-    )
-elseif (APPLE)
-    add_executable(3DSTimeFinder
-        ${PROJECT_QRC}
-        ${PROJECT_UI}
-		${PROJECT_HEADERS}
-        ${PROJECT_SOURCES}
-    )
-else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-    add_executable(3DSTimeFinder
-        ${PROJECT_QRC}
-        ${PROJECT_UI}
-		${PROJECT_HEADERS}
-        ${PROJECT_SOURCES}
-    )
-endif ()
+add_executable(3DSTimeFinder
+    ${PROJECT_QRC}
+    ${PROJECT_UI}
+    ${PROJECT_HEADERS}
+    ${PROJECT_SOURCES}
+)
 
-target_link_libraries(3DSTimeFinder PRIVATE Qt6::Core Qt6::Network Qt6::Widgets)
+target_link_libraries(3DSTimeFinder PRIVATE Qt::Core Qt::Widgets)
