@@ -152,4 +152,4 @@ add_executable(3DSTimeFinder
     ${PROJECT_SOURCES}
 )
 
-target_link_libraries(3DSTimeFinder PRIVATE Qt::Core Qt::Widgets)
+target_link_libraries(3DSTimeFinder PRIVATE Qt5::Core Qt5::Widgets)
