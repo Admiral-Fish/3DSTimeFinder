@@ -23,6 +23,7 @@
 #include <Core/Global.hpp>
 #include <Core/Util/Game.hpp>
 #include <QString>
+#include <vector>
 
 class Profile
 {
