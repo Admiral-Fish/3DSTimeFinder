@@ -8,7 +8,7 @@ environment:
     VCVARSALL: x64
   - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
     OS: linux
-  - APPVEYOR_BUILD_WORKER_IMAGE: macos
+  - APPVEYOR_BUILD_WORKER_IMAGE: macos-mojave
     OS: macOS
 
 install:
@@ -20,13 +20,15 @@ before_build:
     - cmd: call %VCVARSALLPATH% %VCVARSALL%
     
 build_script:
-    - cmd: qmake 3DSTimeFinder.pro
-    - cmd: jom -j %NUMBER_OF_PROCESSORS%
-    - sh: bash .ci/build.sh
+    - mkdir build
+    - cd build
+    - cmd: cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE ../
+    - sh: bash ../.ci/build.sh
+    - cmake --build .
     
 after_build:
     - cmd: md 3DSTimeFinder-windows
-    - cmd: move release\3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe 
+    - cmd: move 3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe 
     - cmd: windeployqt --no-translations --no-angle --no-plugins --no-opengl-sw 3DSTimeFinder-windows\3DSTimeFinder.exe
     - cmd: del 3DSTimeFinder-windows\vc_redist*.exe
     - cmd: xcopy /I %QTPATH%\plugins\platforms\qwindows.dll 3DSTimeFinder-windows\platforms\
@@ -36,13 +38,14 @@ after_build:
     - sh: bash .ci/after_build.sh
     
 artifacts:
-- path: 3DSTimeFinder-%OS%.zip
-- path: 3DSTimeFinder-%OS%.zip.sha256
+- path: build\3DSTimeFinder-%OS%.zip
+- path: build\3DSTimeFinder-%OS%.zip.sha256
 
 deploy:
     provider: GitHub
+    description: ''
     auth_token:
         secure: u3c5wUq11csZ77TpgKMImu9U+ibNiviMcEpTuQXmqp1YGSHA/+u5FhqZ3KRZBAQX
-    artifact: 3DSTimeFinder-%OS%.zip,3DSTimeFinder-%OS%.zip.sha256
+    artifact: build\3DSTimeFinder-%OS%.zip,build\3DSTimeFinder-%OS%.zip.sha256
     on:
         APPVEYOR_REPO_TAG: true
