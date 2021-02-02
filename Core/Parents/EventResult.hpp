@@ -26,7 +26,10 @@ class EventResult : public Result
 {
 public:
     EventResult() = default;
-    EventResult(u32 seed, u16 tid, u16 sid);
+
+    EventResult(u32 seed, u16 tid, u16 sid) : Result(seed, tid, sid)
+    {
+    }
 };
 
 #endif // EVENTRESULT_HPP

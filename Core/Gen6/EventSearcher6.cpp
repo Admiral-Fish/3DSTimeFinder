@@ -21,8 +21,7 @@
 #include <Core/RNG/MT.hpp>
 #include <Core/RNG/RNGList.hpp>
 #include <Core/Util/Utility.hpp>
-#include <QThreadPool>
-#include <QtConcurrent>
+#include <future>
 
 EventSearcher6::EventSearcher6(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, u8 ivCount,
                                PIDType pidType, const Profile6 &profile, const EventFilter &filter) :
@@ -63,7 +62,7 @@ void EventSearcher6::setHidden(u32 pid, u32 ec)
     this->ec = ec;
 }
 
-void EventSearcher6::setIVTemplate(const QVector<u8> &ivs)
+void EventSearcher6::setIVTemplate(const std::array<u8, 6> &ivs)
 {
     ivTemplate = ivs;
 }
@@ -71,7 +70,6 @@ void EventSearcher6::setIVTemplate(const QVector<u8> &ivs)
 void EventSearcher6::startSearch(int threads)
 {
     searching = true;
-    QThreadPool pool;
 
     u64 epochStart = Utility::getCitraTime(startTime);
     u64 epochEnd = Utility::getCitraTime(endTime);
@@ -81,31 +79,26 @@ void EventSearcher6::startSearch(int threads)
 
     if (epochSplit < 1000)
     {
-        pool.setMaxThreadCount(1);
-        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
-        future.waitForFinished();
-
-        return;
+        threads = 1;
     }
 
-    pool.setMaxThreadCount(threads);
-    QVector<QFuture<void>> threadContainer;
+    std::vector<std::future<void>> threadContainer;
     for (int i = 0; i < threads; i++)
     {
         if (i == threads - 1)
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochEnd); }));
         }
         else
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochStart + epochSplit); }));
         }
         epochStart += epochSplit;
     }
 
     for (int i = 0; i < threads; i++)
     {
-        threadContainer[i].waitForFinished();
+        threadContainer[i].wait();
     }
 }
 
@@ -125,7 +118,7 @@ int EventSearcher6::getMaxProgress() const
     return val + 1;
 }
 
-QVector<EventResult> EventSearcher6::getResults()
+std::vector<EventResult> EventSearcher6::getResults()
 {
     std::lock_guard<std::mutex> lock(resultMutex);
 
@@ -217,7 +210,7 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
                 result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
-                results.append(result);
+                results.emplace_back(result);
             }
         }
 

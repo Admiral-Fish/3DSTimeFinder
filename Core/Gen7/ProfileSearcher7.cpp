@@ -19,11 +19,11 @@
 
 #include "ProfileSearcher7.hpp"
 #include <Core/Util/Utility.hpp>
-#include <QtConcurrent>
+#include <future>
 
 ProfileSearcher7::ProfileSearcher7(const QDateTime &startDate, u32 initialSeed, u32 baseTick, u32 baseOffset, u32 tickRange,
                                    u32 offsetRange) :
-    startDate(startDate),
+    epochBase(startDate.toMSecsSinceEpoch()),
     initialSeed(initialSeed),
     baseTick(baseTick),
     baseOffset(baseOffset),
@@ -37,8 +37,7 @@ ProfileSearcher7::ProfileSearcher7(const QDateTime &startDate, u32 initialSeed, 
 void ProfileSearcher7::startSearch()
 {
     searching = true;
-
-    QtConcurrent::run([=] { search(); });
+    search();
 }
 
 void ProfileSearcher7::cancelSearch()
@@ -56,7 +55,7 @@ int ProfileSearcher7::getMaxProgress() const
     return static_cast<int>(tickRange + 1);
 }
 
-QVector<QPair<u32, u32>> ProfileSearcher7::getResults()
+std::vector<std::pair<u32, u32>> ProfileSearcher7::getResults()
 {
     std::lock_guard<std::mutex> lock(mutex);
 
@@ -78,21 +77,21 @@ void ProfileSearcher7::search()
             }
 
             // Plus offset
-            u64 epochPlus = Utility::getCitraTime(startDate, baseOffset + offset);
+            u64 epochPlus = epochBase + baseOffset + offset;
             u32 seedPlus = Utility::calcInitialSeed(baseTick + tick, epochPlus);
             if (seedPlus == initialSeed)
             {
                 std::lock_guard<std::mutex> lock(mutex);
-                results.append(QPair<u32, u32>(baseTick + tick, baseOffset + offset));
+                results.emplace_back(baseTick + tick, baseOffset + offset);
             }
 
             // Minus offset
-            u64 epochMinus = Utility::getCitraTime(startDate, baseOffset - offset);
+            u64 epochMinus = epochBase + baseOffset - offset;
             u32 seedMinus = Utility::calcInitialSeed(baseTick - tick, epochMinus);
             if (seedMinus == initialSeed)
             {
                 std::lock_guard<std::mutex> lock(mutex);
-                results.append(QPair<u32, u32>(baseTick - tick, baseOffset - offset));
+                results.emplace_back(baseTick - tick, baseOffset - offset);
             }
         }
 

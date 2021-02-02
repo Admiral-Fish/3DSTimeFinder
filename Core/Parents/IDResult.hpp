@@ -27,8 +27,8 @@
 class IDResult
 {
 public:
-    IDResult(u32 seed, u32 frame, u32 rand);
     IDResult() = default;
+    IDResult(u32 seed, u32 frame, u32 rand);
     QString getDateTime() const;
     u32 getSeed() const;
     u32 getFrame() const;

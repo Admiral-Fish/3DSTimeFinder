@@ -31,20 +31,20 @@ IDFilter::IDFilter(const QString &idList, const QString &tsvList, IDType type) :
             switch (idType)
             {
             case IDType::TID:
-                tidFilter.append(in.toUShort());
+                tidFilter.emplace_back(in.toUShort());
                 break;
             case IDType::SID:
-                sidFilter.append(in.toUShort());
+                sidFilter.emplace_back(in.toUShort());
                 break;
             case IDType::TIDSID:
             {
                 QStringList split = in.split("/");
-                tidFilter.append(split.at(0).toUShort());
-                sidFilter.append(split.at(1).toUShort());
+                tidFilter.emplace_back(split.at(0).toUShort());
+                sidFilter.emplace_back(split.at(1).toUShort());
                 break;
             }
             case IDType::G7TID:
-                g7Filter.append(in.toUInt());
+                g7Filter.emplace_back(in.toUInt());
                 break;
             }
         }
@@ -54,7 +54,7 @@ IDFilter::IDFilter(const QString &idList, const QString &tsvList, IDType type) :
     {
         for (const QString &in : tsvList.split("\n"))
         {
-            tsvFilter.append(in.toUInt());
+            tsvFilter.emplace_back(in.toUInt());
         }
     }
 }
@@ -66,25 +66,26 @@ bool IDFilter::compare(const IDResult &frame)
         switch (idType)
         {
         case IDType::TID:
-            if (!tidFilter.contains(frame.getTID()))
+            if (std::find(tidFilter.begin(), tidFilter.end(), frame.getTID()) == tidFilter.end())
             {
                 return false;
             }
             break;
         case IDType::SID:
-            if (!sidFilter.contains(frame.getSID()))
+            if (std::find(sidFilter.begin(), sidFilter.end(), frame.getSID()) == sidFilter.end())
             {
                 return false;
             }
             break;
         case IDType::TIDSID:
-            if (!tidFilter.contains(frame.getTID()) || !sidFilter.contains(frame.getSID()))
+            if (std::find(tidFilter.begin(), tidFilter.end(), frame.getTID()) == tidFilter.end()
+                || std::find(sidFilter.begin(), sidFilter.end(), frame.getSID()) == sidFilter.end())
             {
                 return false;
             }
             break;
         case IDType::G7TID:
-            if (!g7Filter.contains(frame.getDisplayTID()))
+            if (std::find(g7Filter.begin(), g7Filter.end(), frame.getDisplayTID()) == g7Filter.end())
             {
                 return false;
             }
@@ -94,7 +95,7 @@ bool IDFilter::compare(const IDResult &frame)
 
     if (checkTSV)
     {
-        if (!tsvFilter.contains(frame.getTSV()))
+        if (std::find(tsvFilter.begin(), tsvFilter.end(), frame.getTSV()) == tsvFilter.end())
         {
             return false;
         }

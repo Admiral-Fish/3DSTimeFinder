@@ -26,13 +26,12 @@
 class WildFilter : public Filter
 {
 public:
-    WildFilter() = default;
-    WildFilter(const QVector<u8> &minIV, const QVector<u8> &maxIV, const QVector<bool> &nature,
-        const QVector<bool> &hiddenPower, const QVector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender);
+    WildFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
+               const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender);
     bool compare(const WildResult &frame);
 
 private:
-    QVector<bool> encounterSlots;
+    std::vector<bool> encounterSlots;
 };
 
 #endif // WILDFILTER_HPP

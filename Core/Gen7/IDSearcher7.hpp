@@ -23,7 +23,6 @@
 #include <Core/Gen7/Profile7.hpp>
 #include <Core/Parents/IDFilter.hpp>
 #include <Core/Parents/IDResult.hpp>
-#include <QVector>
 #include <mutex>
 
 class IDSearcher7
@@ -35,7 +34,7 @@ public:
     void cancelSearch();
     int getProgress() const;
     int getMaxProgress() const;
-    QVector<IDResult> getResults();
+    std::vector<IDResult> getResults();
 
 private:
     QDateTime startTime, endTime;
@@ -43,7 +42,7 @@ private:
     IDFilter filter;
     Profile7 profile;
 
-    QVector<IDResult> results;
+    std::vector<IDResult> results;
     std::mutex resultMutex, progressMutex;
     int progress;
     bool searching;

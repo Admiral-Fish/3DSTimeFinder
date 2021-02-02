@@ -159,8 +159,8 @@ void Event6::search()
     ui->pushButtonSearch->setEnabled(false);
     ui->pushButtonCancel->setEnabled(true);
 
-    QVector<u8> min = ui->ivFilter->getLower();
-    QVector<u8> max = ui->ivFilter->getUpper();
+    std::array<u8, 6> min = ui->ivFilter->getLower();
+    std::array<u8, 6> max = ui->ivFilter->getUpper();
 
     u8 ivCount = static_cast<u8>(ui->spinBoxRandomIVs->value());
     auto type = static_cast<PIDType>(ui->comboBoxPIDType->getCurrentByte());
@@ -168,13 +168,13 @@ void Event6::search()
     EventFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
                        ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(), ui->comboBoxGender->getCurrentByte());
 
-    QVector<u8> ivTemplate;
-    ivTemplate.append(ui->checkBoxHP->isChecked() ? static_cast<u8>(ui->spinBoxHP->value()) : 255);
-    ivTemplate.append(ui->checkBoxAtk->isChecked() ? static_cast<u8>(ui->spinBoxAtk->value()) : 255);
-    ivTemplate.append(ui->checkBoxDef->isChecked() ? static_cast<u8>(ui->spinBoxDef->value()) : 255);
-    ivTemplate.append(ui->checkBoxSpA->isChecked() ? static_cast<u8>(ui->spinBoxSpA->value()) : 255);
-    ivTemplate.append(ui->checkBoxSpD->isChecked() ? static_cast<u8>(ui->spinBoxSpD->value()) : 255);
-    ivTemplate.append(ui->checkBoxSpe->isChecked() ? static_cast<u8>(ui->spinBoxSpe->value()) : 255);
+    std::array<u8, 6> ivTemplate;
+    ivTemplate[0] = ui->checkBoxHP->isChecked() ? static_cast<u8>(ui->spinBoxHP->value()) : 255;
+    ivTemplate[1] = ui->checkBoxAtk->isChecked() ? static_cast<u8>(ui->spinBoxAtk->value()) : 255;
+    ivTemplate[2] = ui->checkBoxDef->isChecked() ? static_cast<u8>(ui->spinBoxDef->value()) : 255;
+    ivTemplate[3] = ui->checkBoxSpA->isChecked() ? static_cast<u8>(ui->spinBoxSpA->value()) : 255;
+    ivTemplate[4] = ui->checkBoxSpD->isChecked() ? static_cast<u8>(ui->spinBoxSpD->value()) : 255;
+    ivTemplate[5] = ui->checkBoxSpe->isChecked() ? static_cast<u8>(ui->spinBoxSpe->value()) : 255;
 
     auto *searcher
         = new EventSearcher6(start, end, frameStart, frameEnd, ivCount, type, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);

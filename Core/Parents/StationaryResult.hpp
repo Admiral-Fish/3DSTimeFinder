@@ -26,9 +26,20 @@ class StationaryResult : public Result
 {
 public:
     StationaryResult() = default;
-    StationaryResult(u32 seed, u16 tid, u16 sid);
-    bool getSynch() const;
-    void setSynch(const bool &synch);
+
+    StationaryResult(u32 seed, u16 tid, u16 sid) : Result(seed, tid, sid)
+    {
+    }
+
+    bool getSynch() const
+    {
+        return synch;
+    }
+
+    void setSynch(bool synch)
+    {
+        this->synch = synch;
+    };
 
 private:
     bool synch;

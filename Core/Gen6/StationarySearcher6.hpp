@@ -23,7 +23,6 @@
 #include <Core/Gen6/Profile6.hpp>
 #include <Core/Parents/StationaryFilter.hpp>
 #include <Core/Parents/StationaryResult.hpp>
-#include <QVector>
 #include <mutex>
 
 class StationarySearcher6
@@ -36,7 +35,7 @@ public:
     void cancelSearch();
     int getProgress() const;
     int getMaxProgress() const;
-    QVector<StationaryResult> getResults();
+    std::vector<StationaryResult> getResults();
 
 private:
     Profile6 profile;
@@ -46,7 +45,7 @@ private:
     u8 ivCount, ability, synchNature, pidCount, gender;
     bool alwaysSynch, shinyLocked;
 
-    QVector<StationaryResult> results;
+    std::vector<StationaryResult> results;
     std::mutex resultMutex, progressMutex;
     int progress;
     bool searching;

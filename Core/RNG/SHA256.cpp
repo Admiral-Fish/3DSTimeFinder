@@ -40,7 +40,6 @@ inline u32 changeEndian(u32 num)
 
 u32 SHA256::hash(u32 tick, u32 epochLow, u32 epochHigh)
 {
-
     u32 w[64] = { changeEndian(tick), 0, changeEndian(epochLow), changeEndian(epochHigh), 0x80000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x80 };
 
     // w[16] is always changeEndian(tick) as long as w[1] == 0 is true, precompute

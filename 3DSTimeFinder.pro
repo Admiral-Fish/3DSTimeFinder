@@ -1,7 +1,7 @@
 lessThan(QT_MAJOR_VERSION, 5): error("You need at least Qt 5.9 to build 3DSTimeFinder")
 equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 9): error("You need at least Qt 5.9 to build 3DSTimeFinder")
 
-QT += concurrent widgets
+QT += widgets
 CONFIG += c++1z
 gcc:QMAKE_CXXFLAGS += -msse4.1
 
@@ -102,15 +102,12 @@ SOURCES += \
     Core/Gen7/StationarySearcher7.cpp \
     Core/Gen7/WildSearcher7.cpp \
     Core/Parents/EventFilter.cpp \
-    Core/Parents/EventResult.cpp \
     Core/Parents/IDFilter.cpp \
     Core/Parents/IDResult.cpp \
     Core/Parents/Profile.cpp \
     Core/Parents/Result.cpp \
     Core/Parents/StationaryFilter.cpp \
-    Core/Parents/StationaryResult.cpp \
     Core/Parents/WildFilter.cpp \
-    Core/Parents/WildResult.cpp \
     Core/RNG/MT.cpp \
     Core/RNG/SFMT.cpp \
     Core/RNG/SHA256.cpp \

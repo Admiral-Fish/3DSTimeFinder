@@ -18,17 +18,10 @@
  */
 #include "WildFilter.hpp"
 
-WildFilter::WildFilter(const QVector<u8> &minIV, const QVector<u8> &maxIV, const QVector<bool> &nature,
-    const QVector<bool> &hiddenPower, const QVector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender)
+WildFilter::WildFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
+                       const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender) :
+    Filter(minIV, maxIV, nature, hiddenPower, ability, shiny, gender), encounterSlots(encounterSlots)
 {
-    this->minIV = minIV;
-    this->maxIV = maxIV;
-    this->nature = nature;
-    this->hiddenPower = hiddenPower;
-    this->encounterSlots = encounterSlots;
-    this->ability = ability;
-    this->shiny = shiny;
-    this->gender = gender;
 }
 
 bool WildFilter::compare(const WildResult &frame)
@@ -48,17 +41,17 @@ bool WildFilter::compare(const WildResult &frame)
         return false;
     }
 
-    if (!nature.at(frame.getNature()))
+    if (!nature[frame.getNature()])
     {
         return false;
     }
 
-    if (!hiddenPower.at(frame.getHiddenPower()))
+    if (!hiddenPower[frame.getHiddenPower()])
     {
         return false;
     }
 
-    if (!encounterSlots.at(frame.getEncounterSlot() - 1))
+    if (!encounterSlots[frame.getEncounterSlot() - 1])
     {
         return false;
     }
@@ -66,7 +59,7 @@ bool WildFilter::compare(const WildResult &frame)
     for (u8 i = 0; i < 6; i++)
     {
         u8 iv = frame.getIV(i);
-        if (iv < minIV.at(i) || iv > maxIV.at(i))
+        if (iv < minIV[i] || iv > maxIV[i])
         {
             return false;
         }

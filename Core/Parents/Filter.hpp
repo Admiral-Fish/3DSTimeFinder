@@ -21,13 +21,21 @@
 #define FILTER_HPP
 
 #include <Core/Global.hpp>
-#include <QVector>
+#include <array>
+#include <vector>
 
 class Filter
 {
+public:
+    Filter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
+           const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender) :
+        minIV(minIV), maxIV(maxIV), nature(nature), hiddenPower(hiddenPower), ability(ability), gender(gender), shiny(shiny)
+    {
+    }
+
 protected:
-    QVector<u8> minIV, maxIV;
-    QVector<bool> nature, hiddenPower;
+    std::array<u8, 6> minIV, maxIV;
+    std::vector<bool> nature, hiddenPower;
     u8 ability, gender;
     bool shiny;
 };

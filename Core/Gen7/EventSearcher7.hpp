@@ -24,7 +24,6 @@
 #include <Core/Parents/EventFilter.hpp>
 #include <Core/Parents/EventResult.hpp>
 #include <Core/Util/PIDType.hpp>
-#include <QMutex>
 #include <mutex>
 
 class EventSearcher7
@@ -35,12 +34,12 @@ public:
     void setLocks(bool abilityLocked, u8 ability, bool natureLocked, u8 nature, bool genderLocked, u8 gender);
     void setIDs(bool checkInfo, u16 tid, u16 sid, bool ownID);
     void setHidden(u32 pid, u32 ec);
-    void setIVTemplate(const QVector<u8> &ivs);
+    void setIVTemplate(const std::array<u8, 6> &ivs);
     void startSearch(int threads);
     void cancelSearch();
     int getProgress() const;
     int getMaxProgress() const;
-    QVector<EventResult> getResults();
+    std::vector<EventResult> getResults();
 
 private:
     Profile7 profile;
@@ -52,9 +51,9 @@ private:
     PIDType pidType;
     u32 ec, pid;
     u16 tid, sid;
-    QVector<u8> ivTemplate;
+    std::array<u8, 6> ivTemplate;
 
-    QVector<EventResult> results;
+    std::vector<EventResult> results;
     std::mutex resultMutex, progressMutex;
     int progress;
     bool searching;

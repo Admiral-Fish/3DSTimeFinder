@@ -32,8 +32,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    QStringList header = { tr("Date/Time"), tr("Initial Seed"), tr("Frame"),  tr("HP"),  tr("Atk"),    tr("Def"),     tr("SpA"), tr("SpD"),
-                           tr("Spe"),       tr("Nature"),       tr("Hidden"), tr("PSV"), tr("Gender"), tr("Ability"), tr("Slot") };
+    QStringList header = { "Date/Time", "Initial Seed", "Frame",  "HP",  "Atk",    "Def",     "SpA", "SpD",
+                           "Spe",       "Nature",       "Hidden", "PSV", "Gender", "Ability", "Slot" };
 };
 
 #endif // WILDMODEL_HPP

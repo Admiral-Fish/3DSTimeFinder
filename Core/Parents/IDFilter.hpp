@@ -22,8 +22,7 @@
 
 #include <Core/Parents/IDResult.hpp>
 #include <Core/Util/IDType.hpp>
-#include <QPair>
-#include <QVector>
+#include <vector>
 
 class IDFilter
 {
@@ -33,10 +32,10 @@ public:
     bool compare(const IDResult &frame);
 
 private:
-    QVector<u16> tidFilter;
-    QVector<u16> sidFilter;
-    QVector<u16> tsvFilter;
-    QVector<u32> g7Filter;
+    std::vector<u16> tidFilter;
+    std::vector<u16> sidFilter;
+    std::vector<u16> tsvFilter;
+    std::vector<u32> g7Filter;
     IDType idType;
     bool checkID;
     bool checkTSV;

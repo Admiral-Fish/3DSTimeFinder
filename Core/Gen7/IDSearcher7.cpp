@@ -20,8 +20,7 @@
 #include "IDSearcher7.hpp"
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
-#include <QThreadPool>
-#include <QtConcurrent>
+#include <future>
 
 IDSearcher7::IDSearcher7(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, const Profile7 &profile,
                          const IDFilter &filter) :
@@ -39,7 +38,6 @@ IDSearcher7::IDSearcher7(const QDateTime &startTime, const QDateTime &endTime, u
 void IDSearcher7::startSearch(int threads)
 {
     searching = true;
-    QThreadPool pool;
 
     u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
     u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
@@ -49,31 +47,26 @@ void IDSearcher7::startSearch(int threads)
 
     if (epochSplit < 1000)
     {
-        pool.setMaxThreadCount(1);
-        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
-        future.waitForFinished();
-
-        return;
+        threads = 1;
     }
 
-    pool.setMaxThreadCount(threads);
-    QVector<QFuture<void>> threadContainer;
+    std::vector<std::future<void>> threadContainer;
     for (int i = 0; i < threads; i++)
     {
         if (i == threads - 1)
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochEnd); }));
         }
         else
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochStart + epochSplit); }));
         }
         epochStart += epochSplit;
     }
 
     for (int i = 0; i < threads; i++)
     {
-        threadContainer[i].waitForFinished();
+        threadContainer[i].wait();
     }
 }
 
@@ -95,7 +88,7 @@ int IDSearcher7::getMaxProgress() const
     return val + 1;
 }
 
-QVector<IDResult> IDSearcher7::getResults()
+std::vector<IDResult> IDSearcher7::getResults()
 {
     std::lock_guard<std::mutex> lock(resultMutex);
 
@@ -125,7 +118,7 @@ void IDSearcher7::search(u64 epochStart, u64 epochEnd)
                 id.setTarget(target);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
-                results.append(id);
+                results.emplace_back(id);
             }
         }
 

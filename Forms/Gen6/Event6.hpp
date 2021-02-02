@@ -45,7 +45,7 @@ public:
 private:
     Ui::Event6 *ui;
     EventModel *model;
-    QVector<Profile6> profiles;
+    std::vector<Profile6> profiles;
 
     void setupModels();
 

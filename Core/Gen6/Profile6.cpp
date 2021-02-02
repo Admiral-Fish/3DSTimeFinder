@@ -63,9 +63,9 @@ u32 Profile6::getTimeVariable() const
     return timeVariable;
 }
 
-QVector<Profile6> Profile6::loadProfileList()
+std::vector<Profile6> Profile6::loadProfileList()
 {
-    QVector<Profile6> profileList;
+    std::vector<Profile6> profileList;
     QSettings setting;
 
     QJsonObject profiles(QJsonDocument::fromJson(setting.value("profiles").toByteArray()).object());
@@ -74,7 +74,7 @@ QVector<Profile6> Profile6::loadProfileList()
     for (const auto &&i : gen6)
     {
         auto data = i.toObject();
-        profileList.append(Profile6(data));
+        profileList.emplace_back(Profile6(data));
     }
 
     return profileList;

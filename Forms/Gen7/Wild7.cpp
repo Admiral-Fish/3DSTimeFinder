@@ -143,8 +143,8 @@ void Wild7::search()
     ui->pushButtonSearch->setEnabled(false);
     ui->pushButtonCancel->setEnabled(true);
 
-    QVector<u8> min = ui->ivFilter->getLower();
-    QVector<u8> max = ui->ivFilter->getUpper();
+    std::array<u8, 6> min = ui->ivFilter->getLower();
+    std::array<u8, 6> max = ui->ivFilter->getUpper();
 
     WildFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
                       ui->comboBoxEncounterSlot->getChecked(), ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(),

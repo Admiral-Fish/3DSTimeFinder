@@ -52,9 +52,9 @@ void CheckList::setup(const QStringList &items)
     }
 }
 
-QVector<bool> CheckList::getChecked()
+std::vector<bool> CheckList::getChecked()
 {
-    QVector<bool> result(model->rowCount());
+    std::vector<bool> result(model->rowCount());
 
     if (checkState() == Qt::PartiallyChecked)
     {
@@ -65,7 +65,7 @@ QVector<bool> CheckList::getChecked()
     }
     else
     {
-        result.fill(true);
+        std::fill(result.begin(), result.end(), true);
     }
 
     return result;

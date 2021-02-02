@@ -66,9 +66,9 @@ u32 Profile7::getTick() const
     return tick;
 }
 
-QVector<Profile7> Profile7::loadProfileList()
+std::vector<Profile7> Profile7::loadProfileList()
 {
-    QVector<Profile7> profileList;
+    std::vector<Profile7> profileList;
     QSettings setting;
 
     QJsonObject profiles(QJsonDocument::fromJson(setting.value("profiles").toByteArray()).object());
@@ -77,7 +77,7 @@ QVector<Profile7> Profile7::loadProfileList()
     for (const auto &&i : gen7)
     {
         auto data = i.toObject();
-        profileList.append(Profile7(data));
+        profileList.emplace_back(Profile7(data));
     }
 
     return profileList;

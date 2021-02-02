@@ -24,7 +24,6 @@
 #include <Core/Parents/WildFilter.hpp>
 #include <Core/Parents/WildResult.hpp>
 #include <Core/Util/WildType.hpp>
-#include <QVector>
 #include <mutex>
 
 class WildSearcher7
@@ -36,7 +35,7 @@ public:
     void cancelSearch();
     int getProgress() const;
     int getMaxProgress() const;
-    QVector<WildResult> getResults();
+    std::vector<WildResult> getResults();
 
 private:
     Profile7 profile;
@@ -47,7 +46,7 @@ private:
     bool useSynch;
     WildType type;
 
-    QVector<WildResult> results;
+    std::vector<WildResult> results;
     std::mutex resultMutex, progressMutex;
     int progress;
     bool searching;

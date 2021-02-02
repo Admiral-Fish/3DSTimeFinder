@@ -26,9 +26,8 @@
 class StationaryFilter : public Filter
 {
 public:
-    StationaryFilter() = default;
-    StationaryFilter(const QVector<u8> &minIV, const QVector<u8> &maxIV, const QVector<bool> &nature,
-        const QVector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender);
+    StationaryFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
+                     const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender);
     bool compare(const StationaryResult &frame);
 };
 

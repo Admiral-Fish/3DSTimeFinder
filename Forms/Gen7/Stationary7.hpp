@@ -45,7 +45,7 @@ public:
 private:
     Ui::Stationary7 *ui;
     StationaryModel *model;
-    QVector<Profile7> profiles;
+    std::vector<Profile7> profiles;
 
     void setupModel();
 

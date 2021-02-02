@@ -30,7 +30,7 @@ public:
     u32 next();
 
 private:
-    u32 mt[624];
+    alignas(16) u32 mt[624];
     u16 index;
 
     void initialize(u32 seed);

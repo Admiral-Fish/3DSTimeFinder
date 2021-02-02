@@ -52,7 +52,7 @@ QString Utility::getNature(u8 nature)
 
 QString Utility::getHiddenPower(u8 hiddenPower)
 {
-    return hiddenPowers.at(hiddenPower);
+    return hiddenPowers[hiddenPower];
 }
 
 QStringList Utility::getNatures()

@@ -45,7 +45,7 @@ public:
 private:
     Ui::Wild7 *ui;
     WildModel *model;
-    QVector<Profile7> profiles;
+    std::vector<Profile7> profiles;
 
     void setupModel();
 

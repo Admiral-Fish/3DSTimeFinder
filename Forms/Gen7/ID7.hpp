@@ -45,7 +45,7 @@ public:
 private:
     Ui::ID7 *ui;
     IDModel *model;
-    QVector<Profile7> profiles;
+    std::vector<Profile7> profiles;
 
     void setupModel();
 

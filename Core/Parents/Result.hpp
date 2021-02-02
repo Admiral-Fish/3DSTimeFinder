@@ -22,11 +22,13 @@
 
 #include <Core/Global.hpp>
 #include <QDateTime>
-#include <QVector>
+#include <array>
 
 class Result
 {
 public:
+    Result() = default;
+    Result(u32 seed, u16 tid, u16 sid);
     QString getDateTime() const;
     void setTarget(const QDateTime &target);
     u32 getSeed() const;
@@ -49,7 +51,7 @@ public:
     void setGender(const u8 &gender);
     u8 getIV(u8 index) const;
     void setIV(const u8 &index, const u8 &iv);
-    void setIVs(const QVector<u8> &ivs);
+    void setIVs(const std::array<u8, 6> &ivs);
     bool getShiny() const;
     void setShiny(const bool &shiny);
 
@@ -58,7 +60,7 @@ protected:
     u32 seed, pid, ec, frame;
     u16 psv, tsv;
     u8 hiddenPower, ability, nature, gender;
-    QVector<u8> ivs;
+    std::array<u8, 6> ivs;
     bool shiny;
 };
 

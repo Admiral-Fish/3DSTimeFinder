@@ -22,7 +22,6 @@
 
 #include <Core/Global.hpp>
 #include <QDateTime>
-#include <QVector>
 #include <mutex>
 
 class ProfileSearcher7
@@ -33,15 +32,15 @@ public:
     void cancelSearch();
     int getProgress() const;
     int getMaxProgress() const;
-    QVector<QPair<u32, u32>> getResults();
+    std::vector<std::pair<u32, u32>> getResults();
 
 private:
-    QDateTime startDate;
+    u64 epochBase;
     u32 initialSeed;
     u32 baseTick, baseOffset;
     u32 tickRange, offsetRange;
 
-    QVector<QPair<u32, u32>> results;
+    std::vector<std::pair<u32, u32>> results;
     std::mutex mutex;
     int progress;
     bool searching;

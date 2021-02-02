@@ -14,10 +14,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110255301, USA.
  */
 
 #include "Result.hpp"
+
+Result::Result(u32 seed, u16 tid, u16 sid) : seed(seed), tsv((tid ^ sid) >> 4), ivs { 255, 255, 255, 255, 255, 255 }
+{
+}
 
 QString Result::getDateTime() const
 {
@@ -131,7 +135,7 @@ void Result::setGender(const u8 &gender)
 
 u8 Result::getIV(u8 index) const
 {
-    return ivs.at(index);
+    return ivs[index];
 }
 
 void Result::setIV(const u8 &index, const u8 &iv)
@@ -139,7 +143,7 @@ void Result::setIV(const u8 &index, const u8 &iv)
     ivs[index] = iv;
 }
 
-void Result::setIVs(const QVector<u8> &ivs)
+void Result::setIVs(const std::array<u8, 6> &ivs)
 {
     this->ivs = ivs;
 }

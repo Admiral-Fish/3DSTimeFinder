@@ -21,8 +21,7 @@
 #include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
-#include <QThreadPool>
-#include <QtConcurrent>
+#include <future>
 
 constexpr u8 grassSlots[10] = { 19, 39, 49, 59, 69, 79, 89, 94, 98, 99 };
 constexpr u8 waterSlots[3] = { 78, 98, 99 };
@@ -48,7 +47,6 @@ WildSearcher7::WildSearcher7(const QDateTime &startTime, const QDateTime &endTim
 void WildSearcher7::startSearch(int threads)
 {
     searching = true;
-    QThreadPool pool;
 
     u64 epochStart = Utility::getCitraTime(startTime, profile.getOffset());
     u64 epochEnd = Utility::getCitraTime(endTime, profile.getOffset());
@@ -58,31 +56,26 @@ void WildSearcher7::startSearch(int threads)
 
     if (epochSplit < 1000)
     {
-        pool.setMaxThreadCount(1);
-        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
-        future.waitForFinished();
-
-        return;
+        threads = 1;
     }
 
-    pool.setMaxThreadCount(threads);
-    QVector<QFuture<void>> threadContainer;
+    std::vector<std::future<void>> threadContainer;
     for (int i = 0; i < threads; i++)
     {
         if (i == threads - 1)
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochEnd); }));
         }
         else
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochStart + epochSplit); }));
         }
         epochStart += epochSplit;
     }
 
     for (int i = 0; i < threads; i++)
     {
-        threadContainer[i].waitForFinished();
+        threadContainer[i].wait();
     }
 }
 
@@ -104,7 +97,7 @@ int WildSearcher7::getMaxProgress() const
     return val + 1;
 }
 
-QVector<WildResult> WildSearcher7::getResults()
+std::vector<WildResult> WildSearcher7::getResults()
 {
     std::lock_guard<std::mutex> lock(resultMutex);
 
@@ -179,7 +172,7 @@ void WildSearcher7::search(u64 epochStart, u64 epochEnd)
                 result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
-                results.append(result);
+                results.emplace_back(result);
             }
         }
 

@@ -21,8 +21,7 @@
 #include <Core/RNG/MT.hpp>
 #include <Core/RNG/RNGList.hpp>
 #include <Core/Util/Utility.hpp>
-#include <QThreadPool>
-#include <QtConcurrent>
+#include <future>
 
 StationarySearcher6::StationarySearcher6(const QDateTime &startTime, const QDateTime &endTime, u32 startFrame, u32 endFrame, bool ivCount,
                                          u8 ability, u8 synchNature, u8 gender, bool alwaysSynch, bool shinyLocked, const Profile6 &profile,
@@ -48,7 +47,6 @@ StationarySearcher6::StationarySearcher6(const QDateTime &startTime, const QDate
 void StationarySearcher6::startSearch(int threads)
 {
     searching = true;
-    QThreadPool pool;
 
     u64 epochStart = Utility::getCitraTime(startTime);
     u64 epochEnd = Utility::getCitraTime(endTime);
@@ -58,31 +56,26 @@ void StationarySearcher6::startSearch(int threads)
 
     if (epochSplit < 1000)
     {
-        pool.setMaxThreadCount(1);
-        auto future = QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); });
-        future.waitForFinished();
-
-        return;
+        threads = 1;
     }
 
-    pool.setMaxThreadCount(threads);
-    QVector<QFuture<void>> threadContainer;
+    std::vector<std::future<void>> threadContainer;
     for (int i = 0; i < threads; i++)
     {
         if (i == threads - 1)
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochEnd); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochEnd); }));
         }
         else
         {
-            threadContainer.append(QtConcurrent::run(&pool, [=] { search(epochStart, epochStart + epochSplit); }));
+            threadContainer.emplace_back(std::async(std::launch::async, [=] { search(epochStart, epochStart + epochSplit); }));
         }
         epochStart += epochSplit;
     }
 
     for (int i = 0; i < threads; i++)
     {
-        threadContainer[i].waitForFinished();
+        threadContainer[i].wait();
     }
 }
 
@@ -102,7 +95,7 @@ int StationarySearcher6::getMaxProgress() const
     return val + 1;
 }
 
-QVector<StationaryResult> StationarySearcher6::getResults()
+std::vector<StationaryResult> StationarySearcher6::getResults()
 {
     std::lock_guard<std::mutex> lock(resultMutex);
 
@@ -188,7 +181,7 @@ void StationarySearcher6::search(u64 epochStart, u64 epochEnd)
                 result.setFrame(frame);
 
                 std::lock_guard<std::mutex> lock(resultMutex);
-                results.append(result);
+                results.emplace_back(result);
             }
         }
 

@@ -32,7 +32,7 @@ public:
     QJsonObject getJson();
     u32 getSaveVariable() const;
     u32 getTimeVariable() const;
-    static QVector<Profile6> loadProfileList();
+    static std::vector<Profile6> loadProfileList();
     void saveProfile();
     void deleteProfile();
     void updateProfile(const Profile6 &original);

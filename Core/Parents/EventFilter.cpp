@@ -19,16 +19,10 @@
 
 #include "EventFilter.hpp"
 
-EventFilter::EventFilter(const QVector<u8> &minIV, const QVector<u8> &maxIV, const QVector<bool> &nature,
-    const QVector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender)
+EventFilter::EventFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
+                         const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender) :
+    Filter(minIV, maxIV, nature, hiddenPower, ability, shiny, gender)
 {
-    this->minIV = minIV;
-    this->maxIV = maxIV;
-    this->nature = nature;
-    this->hiddenPower = hiddenPower;
-    this->ability = ability;
-    this->shiny = shiny;
-    this->gender = gender;
 }
 
 bool EventFilter::compare(const EventResult &frame)
@@ -48,12 +42,12 @@ bool EventFilter::compare(const EventResult &frame)
         return false;
     }
 
-    if (!nature.at(frame.getNature()))
+    if (!nature[frame.getNature()])
     {
         return false;
     }
 
-    if (!hiddenPower.at(frame.getHiddenPower()))
+    if (!hiddenPower[frame.getHiddenPower()])
     {
         return false;
     }
@@ -61,7 +55,7 @@ bool EventFilter::compare(const EventResult &frame)
     for (u8 i = 0; i < 6; i++)
     {
         u8 iv = frame.getIV(i);
-        if (iv < minIV.at(i) || iv > maxIV.at(i))
+        if (iv < minIV[i] || iv > maxIV[i])
         {
             return false;
         }

@@ -26,15 +26,34 @@ class WildResult : public Result
 {
 public:
     WildResult() = default;
-    WildResult(u32 seed, u16 tid, u16 sid);
-    bool getSynch() const;
-    void setSynch(const bool &synch);
-    u8 getEncounterSlot() const;
-    void setEncounterSlot(const u8 &encounterSlot);
+
+    WildResult(u32 seed, u16 tid, u16 sid) : Result(seed, tid, sid)
+    {
+    }
+
+    bool getSynch() const
+    {
+        return synch;
+    }
+
+    void setSynch(bool synch)
+    {
+        this->synch = synch;
+    };
+
+    u8 getEncounterSlot() const
+    {
+        return encounterSlot;
+    }
+
+    void setEncounterSlot(u8 encounterSlot)
+    {
+        this->encounterSlot = encounterSlot;
+    }
 
 private:
-    bool synch {};
-    u8 encounterSlot {};
+    bool synch;
+    u8 encounterSlot;
 };
 
 #endif // WILDRESULT_HPP
