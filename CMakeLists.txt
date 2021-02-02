@@ -152,7 +152,7 @@ if (WIN32)
         ${PROJECT_HEADERS}
         ${PROJECT_SOURCES}
     )
-else ()
+elseif (APPLE)
     add_executable(PokeFinder
         MACOSX_BUNDLE
         ${PROJECT_QRC}
@@ -163,6 +163,7 @@ else ()
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
     add_executable(PokeFinder
+        ${PROJECT_I18N}
         ${PROJECT_QRC}
         ${PROJECT_UI}
         ${PROJECT_HEADERS}
