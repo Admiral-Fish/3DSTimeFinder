@@ -35,7 +35,7 @@ after_build:
     - cmd: xcopy /I %QTPATH%\plugins\styles\qwindowsvistastyle.dll 3DSTimeFinder-windows\styles\
     - cmd: 7z a 3DSTimeFinder-%OS%.zip 3DSTimeFinder-windows\
     - cmd: sha256sum 3DSTimeFinder-%OS%.zip > 3DSTimeFinder-%OS%.zip.sha256
-    - sh: bash .ci/after_build.sh
+    - sh: bash ../.ci/after_build.sh
     
 artifacts:
 - path: build\3DSTimeFinder-%OS%.zip
