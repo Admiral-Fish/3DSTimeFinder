@@ -145,7 +145,7 @@ set(PROJECT_SOURCES
 )
 
 if (WIN32)
-    add_executable(PokeFinder
+    add_executable(3DSTimeFinder
         WIN32
         ${PROJECT_QRC}
         ${PROJECT_UI}
@@ -153,7 +153,7 @@ if (WIN32)
         ${PROJECT_SOURCES}
     )
 elseif (APPLE)
-    add_executable(PokeFinder
+    add_executable(3DSTimeFinder
         MACOSX_BUNDLE
         ${PROJECT_QRC}
         ${PROJECT_UI}
@@ -162,7 +162,7 @@ elseif (APPLE)
     )
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-    add_executable(PokeFinder
+    add_executable(3DSTimeFinder
         ${PROJECT_I18N}
         ${PROJECT_QRC}
         ${PROJECT_UI}
