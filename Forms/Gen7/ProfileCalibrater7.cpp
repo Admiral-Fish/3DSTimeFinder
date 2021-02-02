@@ -22,8 +22,8 @@
 #include <Core/Gen7/ProfileSearcher7.hpp>
 #include <Forms/Gen7/ProfileEditor7.hpp>
 #include <QSettings>
+#include <QThread>
 #include <QTimer>
-#include <QtConcurrent>
 
 ProfileCalibrater7::ProfileCalibrater7(QWidget *parent)
     : QWidget(parent)
@@ -98,6 +98,10 @@ void ProfileCalibrater7::search()
 
     ui->progressBar->setRange(0, searcher->getMaxProgress());
 
+    auto *thread = QThread::create([=] { searcher->startSearch(); });
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, [searcher] { searcher->cancelSearch(); });
+
     auto *timer = new QTimer();
     connect(timer, &QTimer::timeout, [=] {
         ui->progressBar->setValue(searcher->getProgress());
@@ -107,15 +111,11 @@ void ProfileCalibrater7::search()
             model->appendRow({ new QStandardItem(QString::number(result.first, 16)), new QStandardItem(QString::number(result.second)) });
         }
     });
-
-    auto *watcher = new QFutureWatcher<void>();
-    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
-    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
+    connect(thread, &QThread::finished, timer, &QTimer::stop);
+    connect(thread, &QThread::finished, timer, &QTimer::deleteLater);
+    connect(timer, &QTimer::destroyed, [=] {
         ui->pushButtonSearch->setEnabled(true);
         ui->pushButtonCancel->setEnabled(false);
-
-        timer->stop();
-        delete timer;
 
         ui->progressBar->setValue(searcher->getProgress());
         auto results = searcher->getResults();
@@ -127,9 +127,7 @@ void ProfileCalibrater7::search()
         delete searcher;
     });
 
-    auto future = QtConcurrent::run([=] { searcher->startSearch(); });
-
-    watcher->setFuture(future);
+    thread->start();
     timer->start(1000);
 }
 

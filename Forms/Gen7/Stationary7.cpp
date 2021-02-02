@@ -25,8 +25,8 @@
 #include <Models/StationaryModel.hpp>
 #include <QMessageBox>
 #include <QSettings>
+#include <QThread>
 #include <QTimer>
-#include <QtConcurrent>
 
 Stationary7::Stationary7(QWidget *parent)
     : QWidget(parent)
@@ -157,33 +157,29 @@ void Stationary7::search()
 
     ui->progressBar->setRange(0, searcher->getMaxProgress());
 
+    QSettings settings;
+    int threads = settings.value("settings/threads", QThread::idealThreadCount()).toInt();
+
+    auto *thread = QThread::create([=] { searcher->startSearch(threads); });
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    connect(ui->pushButtonCancel, &QPushButton::clicked, [searcher] { searcher->cancelSearch(); });
+
     auto *timer = new QTimer();
     connect(timer, &QTimer::timeout, [=] {
         ui->progressBar->setValue(searcher->getProgress());
         model->addItems(searcher->getResults());
     });
-
-    auto *watcher = new QFutureWatcher<void>();
-    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
-    connect(watcher, &QFutureWatcher<void>::destroyed, this, [=] {
+    connect(thread, &QThread::finished, timer, &QTimer::stop);
+    connect(thread, &QThread::finished, timer, &QTimer::deleteLater);
+    connect(timer, &QTimer::destroyed, [=] {
         ui->pushButtonSearch->setEnabled(true);
         ui->pushButtonCancel->setEnabled(false);
-
-        timer->stop();
-        delete timer;
-
         ui->progressBar->setValue(searcher->getProgress());
         model->addItems(searcher->getResults());
-
         delete searcher;
     });
 
-    QSettings settings;
-    int threads = settings.value("settings/threads", QThread::idealThreadCount()).toInt();
-
-    auto future = QtConcurrent::run([=] { searcher->startSearch(threads); });
-
-    watcher->setFuture(future);
+    thread->start();
     timer->start(1000);
 }
 
