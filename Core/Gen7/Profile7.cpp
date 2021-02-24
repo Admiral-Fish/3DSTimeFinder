@@ -23,7 +23,7 @@
 #include <QSettings>
 #include <QVector>
 
-Profile7::Profile7() : Profile(), offset(55), tick(0x41D9CB9)
+Profile7::Profile7() : offset(55), tick(0x41D9CB9)
 {
     version = Game::UltraSun;
 }
@@ -103,7 +103,7 @@ void Profile7::deleteProfile()
     QJsonObject profiles(QJsonDocument::fromJson(setting.value("profiles").toByteArray()).object());
     QJsonArray gen7 = profiles["gen7"].toArray();
 
-    for (u8 i = 0; i < gen7.size(); i++)
+    for (int i = 0; i < gen7.size(); i++)
     {
         Profile7 profile(gen7[i].toObject());
 

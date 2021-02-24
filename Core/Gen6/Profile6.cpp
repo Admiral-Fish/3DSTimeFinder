@@ -23,7 +23,7 @@
 #include <QSettings>
 #include <QVector>
 
-Profile6::Profile6() : Profile(), saveVariable(0), timeVariable(0)
+Profile6::Profile6() : saveVariable(0), timeVariable(0)
 {
 }
 
@@ -100,7 +100,7 @@ void Profile6::deleteProfile()
     QJsonObject profiles(QJsonDocument::fromJson(setting.value("profiles").toByteArray()).object());
     QJsonArray gen6 = profiles["gen6"].toArray();
 
-    for (u8 i = 0; i < gen6.size(); i++)
+    for (int i = 0; i < gen6.size(); i++)
     {
         Profile6 profile(gen6[i].toObject());
 

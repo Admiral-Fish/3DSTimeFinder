@@ -31,9 +31,7 @@
 #include <QSettings>
 #include <QThread>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     this->setWindowTitle(QString("3DS Time Finder %1").arg(VERSION));
@@ -79,7 +77,7 @@ void MainWindow::setupStyle()
     currentStyle = setting.value("settings/style", "dark").toString();
 
     QStringList styles = { "dark", "light" };
-    for (u8 i = 0; i < styles.size(); i++)
+    for (int i = 0; i < styles.size(); i++)
     {
         const QString &style = styles.at(i);
 

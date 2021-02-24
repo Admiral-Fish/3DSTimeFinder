@@ -82,10 +82,13 @@ u8 Result::getHiddenPower() const
 
 void Result::calcHiddenPower()
 {
-    hiddenPower = ((((ivs.at(0) & 1) + 2 * (ivs.at(1) & 1) + 4 * (ivs.at(2) & 1) + 8 * (ivs.at(5) & 1)
-                        + 16 * (ivs.at(3) & 1) + 32 * (ivs.at(4) & 1))
-                       * 15)
-        / 63);
+    constexpr int order[6] = { 0, 1, 2, 5, 3, 4 };
+    u8 val = 0;
+    for (int i = 0; i < 6; i++)
+    {
+        val += (ivs[order[i]] & 1) * (1 << i);
+    }
+    hiddenPower = val / 63;
 }
 
 QString Result::getAbilityString() const
