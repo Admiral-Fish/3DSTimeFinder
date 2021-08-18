@@ -34,7 +34,7 @@ QVariant WildModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole)
     {
-        const auto &frame = model.at(index.row());
+        const auto &frame = model[index.row()];
         int column = index.column();
         switch (column)
         {
@@ -72,7 +72,7 @@ QVariant WildModel::headerData(int section, Qt::Orientation orientation, int rol
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
     {
-        return header.at(section);
+        return header[section];
     }
     return QVariant();
 }

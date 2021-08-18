@@ -79,7 +79,7 @@ void MainWindow::setupStyle()
     QStringList styles = { "dark", "light" };
     for (int i = 0; i < styles.size(); i++)
     {
-        const QString &style = styles.at(i);
+        const QString &style = styles[i];
 
         auto *action = ui->menuStyle->actions()[i];
         action->setData(style);

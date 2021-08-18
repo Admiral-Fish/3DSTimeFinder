@@ -141,7 +141,7 @@ void ID7::search()
 
     IDFilter filter(ui->textEditFilter->toPlainText().toStdString(), ui->textEditTSVFilter->toPlainText().toStdString(), type);
 
-    auto *searcher = new IDSearcher7(start, end, frameStart, frameEnd, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    auto *searcher = new IDSearcher7(start, end, frameStart, frameEnd, profiles[ui->comboBoxProfiles->currentIndex()], filter);
     connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
     ui->progressBar->setRange(0, searcher->getMaxProgress());
@@ -184,7 +184,7 @@ void ID7::profilesIndexChanged(int index)
 {
     if (index >= 0)
     {
-        auto profile = profiles.at(index);
+        auto profile = profiles[index];
         ui->labelProfileOffsetValue->setText(QString::number(profile.getOffset()));
         ui->labelProfileTickValue->setText(QString::number(profile.getTick(), 16));
         ui->labelProfileTIDValue->setText(QString::number(profile.getTID()));

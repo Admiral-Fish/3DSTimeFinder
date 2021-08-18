@@ -170,7 +170,7 @@ void Event7::search()
     ivTemplate[5] = ui->checkBoxSpe->isChecked() ? static_cast<u8>(ui->spinBoxSpe->value()) : 255;
 
     auto *searcher
-        = new EventSearcher7(start, end, frameStart, frameEnd, ivCount, type, profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+        = new EventSearcher7(start, end, frameStart, frameEnd, ivCount, type, profiles[ui->comboBoxProfiles->currentIndex()], filter);
     searcher->setLocks(ui->checkBoxAbilityLock->isChecked(), static_cast<u8>(ui->comboBoxAbilityLocked->currentIndex()),
                        ui->checkBoxNatureLocked->isChecked(), static_cast<u8>(ui->comboBoxNatureLocked->currentIndex()),
                        ui->checkBoxGenderLocked->isChecked(), static_cast<u8>(ui->comboBoxGenderLocked->currentIndex()));
@@ -220,7 +220,7 @@ void Event7::profilesIndexChanged(int index)
 {
     if (index >= 0)
     {
-        auto profile = profiles.at(index);
+        auto profile = profiles[index];
         ui->labelProfileOffsetValue->setText(QString::number(profile.getOffset()));
         ui->labelProfileTickValue->setText(QString::number(profile.getTick(), 16));
         ui->labelProfileTIDValue->setText(QString::number(profile.getTID()));
@@ -264,9 +264,9 @@ void Event7::importEvent()
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly))
         {
-            QByteArray data = file.readAll();
+            QByteArray fileData = file.readAll();
             file.close();
-            if (data.size() != 784 && data.size() != 264)
+            if (fileData.size() != 784 && fileData.size() != 264)
             {
                 QMessageBox error;
                 error.setText("Invalid format for wondercard");
@@ -274,12 +274,13 @@ void Event7::importEvent()
                 return;
             }
 
-            if (data.size() == 784)
+            if (fileData.size() == 784)
             {
-                data = data.mid(520);
+                fileData = fileData.mid(520);
             }
 
-            if (data.at(0x51) != 0)
+            auto data = fileData.data();
+            if (data[0x51] != 0)
             {
                 QMessageBox error;
                 error.setText("Invalid wondercard type");
@@ -287,20 +288,20 @@ void Event7::importEvent()
                 return;
             }
 
-            ui->checkBoxAbilityLock->setChecked(data.at(0xA2) < 3);
+            ui->checkBoxAbilityLock->setChecked(data[0xA2] < 3);
             checkBoxAbilityLock(ui->checkBoxAbilityLock->isChecked());
-            ui->comboBoxAbilityLocked->setCurrentIndex(ui->checkBoxAbilityLock->isChecked() ? data.at(0xA2) + 1 : data.at(0xA2) - 3);
+            ui->comboBoxAbilityLocked->setCurrentIndex(ui->checkBoxAbilityLock->isChecked() ? data[0xA2] + 1 : data[0xA2] - 3);
 
-            ui->checkBoxNatureLocked->setChecked(static_cast<u8>(data.at(0xA0)) != 0xFF);
-            ui->comboBoxNatureLocked->setCurrentIndex(ui->checkBoxNatureLocked->isChecked() ? data.at(0xA0) : 0);
+            ui->checkBoxNatureLocked->setChecked(static_cast<u8>(data[0xA0]) != 0xFF);
+            ui->comboBoxNatureLocked->setCurrentIndex(ui->checkBoxNatureLocked->isChecked() ? data[0xA0] : 0);
 
-            ui->checkBoxGenderLocked->setChecked(data.at(0xA1) != 3);
-            ui->comboBoxGenderLocked->setCurrentIndex(ui->checkBoxGenderLocked->isChecked() ? (data.at(0xA1) + 1) % 3 : 0);
+            ui->checkBoxGenderLocked->setChecked(data[0xA1] != 3);
+            ui->comboBoxGenderLocked->setCurrentIndex(ui->checkBoxGenderLocked->isChecked() ? (data[0xA1] + 1) % 3 : 0);
 
             QVector<u8> ivs;
             for (u8 order : { 0, 1, 2, 4, 5, 3 })
             {
-                u8 iv = data.at(0xAF + order);
+                u8 iv = data[0xAF + order];
                 ivs.append(iv);
             }
 
@@ -317,45 +318,45 @@ void Event7::importEvent()
 
             ui->spinBoxRandomIVs->setValue(ivFlag == 0 ? 0 : ivFlag - 0xFB);
 
-            ui->checkBoxHP->setChecked(ivFlag == 0 && ivs.at(0) <= 31);
-            ui->spinBoxHP->setValue(ui->checkBoxHP->isChecked() ? ivs.at(0) : 0);
+            ui->checkBoxHP->setChecked(ivFlag == 0 && ivs[0] <= 31);
+            ui->spinBoxHP->setValue(ui->checkBoxHP->isChecked() ? ivs[0] : 0);
 
-            ui->checkBoxAtk->setChecked(ivFlag == 0 && ivs.at(1) <= 31);
-            ui->spinBoxAtk->setValue(ui->checkBoxAtk->isChecked() ? ivs.at(1) : 0);
+            ui->checkBoxAtk->setChecked(ivFlag == 0 && ivs[1] <= 31);
+            ui->spinBoxAtk->setValue(ui->checkBoxAtk->isChecked() ? ivs[1] : 0);
 
-            ui->checkBoxDef->setChecked(ivFlag == 0 && ivs.at(2) <= 31);
-            ui->spinBoxDef->setValue(ui->checkBoxDef->isChecked() ? ivs.at(2) : 0);
+            ui->checkBoxDef->setChecked(ivFlag == 0 && ivs[2] <= 31);
+            ui->spinBoxDef->setValue(ui->checkBoxDef->isChecked() ? ivs[2] : 0);
 
-            ui->checkBoxSpA->setChecked(ivFlag == 0 && ivs.at(3) <= 31);
-            ui->spinBoxSpA->setValue(ui->checkBoxSpA->isChecked() ? ivs.at(3) : 0);
+            ui->checkBoxSpA->setChecked(ivFlag == 0 && ivs[3] <= 31);
+            ui->spinBoxSpA->setValue(ui->checkBoxSpA->isChecked() ? ivs[3] : 0);
 
-            ui->checkBoxSpD->setChecked(ivFlag == 0 && ivs.at(4) <= 31);
-            ui->spinBoxSpD->setValue(ui->checkBoxSpD->isChecked() ? ivs.at(4) : 0);
+            ui->checkBoxSpD->setChecked(ivFlag == 0 && ivs[4] <= 31);
+            ui->spinBoxSpD->setValue(ui->checkBoxSpD->isChecked() ? ivs[4] : 0);
 
-            ui->checkBoxSpe->setChecked(ivFlag == 0 && ivs.at(5) <= 31);
-            ui->spinBoxSpe->setValue(ui->checkBoxSpe->isChecked() ? ivs.at(5) : 0);
+            ui->checkBoxSpe->setChecked(ivFlag == 0 && ivs[5] <= 31);
+            ui->spinBoxSpe->setValue(ui->checkBoxSpe->isChecked() ? ivs[5] : 0);
 
             ui->checkBoxOtherInfo->setChecked(true);
-            u16 tid = (static_cast<u16>(data.at(0x69)) << 8) | static_cast<u8>(data.at(0x68));
+            u16 tid = (static_cast<u16>(data[0x69]) << 8) | static_cast<u8>(data[0x68]);
             ui->textBoxTID->setText(QString::number(tid));
-            u16 sid = (static_cast<u16>(data.at(0x6B)) << 8) | static_cast<u8>(data.at(0x6A));
+            u16 sid = (static_cast<u16>(data[0x6B]) << 8) | static_cast<u8>(data[0x6A]);
             ui->textBoxSID->setText(QString::number(sid));
 
-            QVector<u8> typeOrder = { 3, 0, 2, 1 };
-            ui->comboBoxPIDType->setCurrentIndex(typeOrder.at(data.at(0xA3)));
+            u8 typeOrder[4] = { 3, 0, 2, 1 };
+            ui->comboBoxPIDType->setCurrentIndex(typeOrder[data[0xA3]]);
             if (ui->comboBoxPIDType->currentIndex() == 3)
             {
-                u32 pid = (data.at(0xD7) << 24) | (data.at(0xD6) << 16) | (data.at(0xD5) << 8) | data.at(0xD4);
+                u32 pid = (data[0xD7] << 24) | (data[0xD6] << 16) | (data[0xD5] << 8) | data[0xD4];
                 ui->textBoxPID->setText(QString::number(pid, 16));
             }
 
-            u32 ec = (data.at(0x73) << 24) | (data.at(0x72) << 16) | (data.at(0x71) << 8) | data.at(0x70);
+            u32 ec = (data[0x73] << 24) | (data[0x72] << 16) | (data[0x71] << 8) | data[0x70];
             ui->textBoxEC->setText(QString::number(ec, 16));
             ui->labelEC->setVisible(ec > 0);
             ui->textBoxEC->setVisible(ec > 0);
 
-            ui->checkBoxYourID->setChecked(data.at(0xB5) == 3);
-            ui->checkBoxEgg->setChecked(data.at(0xD1) == 1);
+            ui->checkBoxYourID->setChecked(data[0xB5] == 3);
+            ui->checkBoxEgg->setChecked(data[0xD1] == 1);
         }
         else
         {

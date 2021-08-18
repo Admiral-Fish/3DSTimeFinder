@@ -34,7 +34,7 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole)
     {
-        const auto &frame = model.at(index.row());
+        const auto &frame = model[index.row()];
         int column = index.column();
         switch (column)
         {
@@ -70,7 +70,7 @@ QVariant EventModel::headerData(int section, Qt::Orientation orientation, int ro
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
     {
-        return header.at(section);
+        return header[section];
     }
     return QVariant();
 }

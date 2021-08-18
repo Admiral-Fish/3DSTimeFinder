@@ -154,10 +154,10 @@ void Wild7::search()
                       ui->comboBoxEncounterSlot->getChecked(), ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(),
                       ui->comboBoxGender->getCurrentByte());
 
-    auto *searcher = new WildSearcher7(
-        start, end, frameStart, frameEnd, ui->checkBoxSynch->isChecked(), static_cast<u8>(ui->comboBoxSynchNature->currentIndex()),
-        static_cast<WildType>(ui->comboBoxEncounter->getCurrentByte()), ui->comboBoxGenderRatio->getCurrentByte(),
-        profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    auto *searcher = new WildSearcher7(start, end, frameStart, frameEnd, ui->checkBoxSynch->isChecked(),
+                                       static_cast<u8>(ui->comboBoxSynchNature->currentIndex()),
+                                       static_cast<WildType>(ui->comboBoxEncounter->getCurrentByte()),
+                                       ui->comboBoxGenderRatio->getCurrentByte(), profiles[ui->comboBoxProfiles->currentIndex()], filter);
     connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
     ui->progressBar->setRange(0, searcher->getMaxProgress());
@@ -200,7 +200,7 @@ void Wild7::profilesIndexChanged(int index)
 {
     if (index >= 0)
     {
-        auto profile = profiles.at(index);
+        auto profile = profiles[index];
         ui->labelProfileOffsetValue->setText(QString::number(profile.getOffset()));
         ui->labelProfileTickValue->setText(QString::number(profile.getTick(), 16));
         ui->labelProfileTIDValue->setText(QString::number(profile.getTID()));

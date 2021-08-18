@@ -151,12 +151,11 @@ void Stationary7::search()
     StationaryFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
                             ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(), ui->comboBoxGender->getCurrentByte());
 
-    auto *searcher
-        = new StationarySearcher7(start, end, frameStart, frameEnd, ui->checkBox3IVs->isChecked(),
-                                  ui->checkBoxAbilityLock->isChecked() ? static_cast<u8>(ui->comboBoxAbilityLock->currentIndex()) : 255,
-                                  static_cast<u8>(ui->comboBoxSynchNature->currentIndex()), ui->comboBoxGenderRatio->getCurrentByte(),
-                                  ui->checkBoxAlwaysSynch->isChecked(), ui->checkBoxShinyLock->isChecked(),
-                                  profiles.at(ui->comboBoxProfiles->currentIndex()), filter);
+    auto *searcher = new StationarySearcher7(
+        start, end, frameStart, frameEnd, ui->checkBox3IVs->isChecked(),
+        ui->checkBoxAbilityLock->isChecked() ? static_cast<u8>(ui->comboBoxAbilityLock->currentIndex()) : 255,
+        static_cast<u8>(ui->comboBoxSynchNature->currentIndex()), ui->comboBoxGenderRatio->getCurrentByte(),
+        ui->checkBoxAlwaysSynch->isChecked(), ui->checkBoxShinyLock->isChecked(), profiles[ui->comboBoxProfiles->currentIndex()], filter);
     connect(ui->pushButtonCancel, &QPushButton::clicked, this, [=] { searcher->cancelSearch(); });
 
     ui->progressBar->setRange(0, searcher->getMaxProgress());
@@ -199,7 +198,7 @@ void Stationary7::profilesIndexChanged(int index)
 {
     if (index >= 0)
     {
-        auto profile = profiles.at(index);
+        auto profile = profiles[index];
         ui->labelProfileOffsetValue->setText(QString::number(profile.getOffset()));
         ui->labelProfileTickValue->setText(QString::number(profile.getTick(), 16));
         ui->labelProfileTIDValue->setText(QString::number(profile.getTID()));
