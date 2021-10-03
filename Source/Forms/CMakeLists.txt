@@ -8,7 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 	
 set(PROJECT_QRC
     "${CMAKE_SOURCE_DIR}/Externals/QDarkStyleSheet/qdarkstyle/dark/style.qrc"
@@ -33,7 +33,7 @@ set(PROJECT_UI
 set(PROJECT_SOURCES
     Controls/CheckList.cpp
     Controls/ComboBox.cpp
-	Controls/DateTimeEdit.cpp
+    Controls/DateTimeEdit.cpp
     Controls/IVFilter.cpp
     Controls/Label.cpp
     Controls/TableView.cpp
@@ -82,4 +82,4 @@ else ()
     )
 endif ()
 
-target_link_libraries(3DSTimeFinder PRIVATE 3DSTimeFinderCore Qt5::Core Qt5::Widgets)
+target_link_libraries(3DSTimeFinder PRIVATE 3DSTimeFinderCore Qt6::Core Qt6::Widgets)

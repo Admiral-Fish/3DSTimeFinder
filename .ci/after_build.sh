@@ -8,7 +8,7 @@ case $OS in
   } ;;  
   macOS)
   {
-    macdeployqt 3DSTimeFinder.app -dmg -verbose=2
+    PATH=$PATH:$HOME/Qt/6.1/macos/bin macdeployqt 3DSTimeFinder.app -dmg -verbose=2
     zip -r 3DSTimeFinder-macOS.zip 3DSTimeFinder.dmg
     shasum -a 256 3DSTimeFinder-macOS.zip > 3DSTimeFinder-macOS.zip.sha256
   } ;;

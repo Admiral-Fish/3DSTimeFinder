@@ -1,14 +1,14 @@
 environment:
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    QTPATH: C:\Qt\5.15\msvc2019_64
+    QTPATH: C:\Qt\6.2\msvc2019_64
     OpenSSL: C:\OpenSSL-v111-Win64\bin
     OS: win
     VCVARSALLPATH: C:\"Program Files (x86)\Microsoft Visual Studio"\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSALL: x64
   - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
     OS: linux
-  - APPVEYOR_BUILD_WORKER_IMAGE: macos-mojave
+  - APPVEYOR_BUILD_WORKER_IMAGE: macos
     OS: macOS
 
 install:
@@ -29,7 +29,7 @@ build_script:
 after_build:
     - cmd: md 3DSTimeFinder-windows
     - cmd: move 3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe 
-    - cmd: windeployqt --no-translations --no-angle --no-plugins --no-opengl-sw 3DSTimeFinder-windows\3DSTimeFinder.exe
+    - cmd: windeployqt --no-translations --no-plugins --no-opengl-sw --no-system-d3d-compiler 3DSTimeFinder-windows\3DSTimeFinder.exe
     - cmd: del 3DSTimeFinder-windows\vc_redist*.exe
     - cmd: xcopy /I %QTPATH%\plugins\platforms\qwindows.dll 3DSTimeFinder-windows\platforms\
     - cmd: xcopy /I %QTPATH%\plugins\styles\qwindowsvistastyle.dll 3DSTimeFinder-windows\styles\
