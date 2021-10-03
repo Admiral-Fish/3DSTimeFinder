@@ -24,13 +24,12 @@ build_script:
     - cd build
     - cmd: cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE ../
     - sh: bash ../.ci/build.sh
-    - cmake --build .
+    - cmake --build . -j 4
     
 after_build:
     - cd ..
     - cmd: md 3DSTimeFinder-windows
     - cmd: move build\Source\Forms\3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe
-    - cmd: move 3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe 
     - cmd: windeployqt --no-translations --no-plugins --no-opengl-sw --no-system-d3d-compiler 3DSTimeFinder-windows\3DSTimeFinder.exe
     - cmd: del 3DSTimeFinder-windows\vc_redist*.exe
     - cmd: xcopy /I %QTPATH%\plugins\platforms\qwindows.dll 3DSTimeFinder-windows\platforms\
@@ -40,14 +39,14 @@ after_build:
     - sh: bash .ci/after_build.sh
     
 artifacts:
-- path: build\3DSTimeFinder-%OS%.zip
-- path: build\3DSTimeFinder-%OS%.zip.sha256
+- path: 3DSTimeFinder-%OS%.zip
+- path: 3DSTimeFinder-%OS%.zip.sha256
 
 deploy:
     provider: GitHub
     description: ''
     auth_token:
         secure: SFsouaBlVG46u5QjtuDZMhTxq9FHVPr1BRF6YwNJhOtlj+vk707p3MEzHttr7Vep
-    artifact: build\3DSTimeFinder-%OS%.zip,build\3DSTimeFinder-%OS%.zip.sha256
+    artifact: 3DSTimeFinder-%OS%.zip,3DSTimeFinder-%OS%.zip.sha256
     on:
         APPVEYOR_REPO_TAG: true
