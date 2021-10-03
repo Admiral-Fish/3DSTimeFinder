@@ -27,7 +27,9 @@ build_script:
     - cmake --build .
     
 after_build:
+    - cd ..
     - cmd: md 3DSTimeFinder-windows
+    - cmd: move build\Source\Forms\3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe
     - cmd: move 3DSTimeFinder.exe 3DSTimeFinder-windows\3DSTimeFinder.exe 
     - cmd: windeployqt --no-translations --no-plugins --no-opengl-sw --no-system-d3d-compiler 3DSTimeFinder-windows\3DSTimeFinder.exe
     - cmd: del 3DSTimeFinder-windows\vc_redist*.exe
@@ -35,7 +37,7 @@ after_build:
     - cmd: xcopy /I %QTPATH%\plugins\styles\qwindowsvistastyle.dll 3DSTimeFinder-windows\styles\
     - cmd: 7z a 3DSTimeFinder-%OS%.zip 3DSTimeFinder-windows\
     - cmd: sha256sum 3DSTimeFinder-%OS%.zip > 3DSTimeFinder-%OS%.zip.sha256
-    - sh: bash ../.ci/after_build.sh
+    - sh: bash .ci/after_build.sh
     
 artifacts:
 - path: build\3DSTimeFinder-%OS%.zip
