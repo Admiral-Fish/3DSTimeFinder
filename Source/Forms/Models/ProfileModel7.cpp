@@ -45,7 +45,7 @@ QVariant ProfileModel7::data(const QModelIndex &index, int role) const
         case 3:
             return profile.getSID();
         case 4:
-            return profile.getShinyCharm() ? tr("Yes") : tr("No");
+            return profile.getShinyCharm() ? "Yes" : "No";
         case 5:
             return QString::number(profile.getTick(), 16);
         case 6:

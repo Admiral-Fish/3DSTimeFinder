@@ -40,7 +40,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(bool profile, QWidget *parent = nullptr);
     ~MainWindow() override;
 
 private:
@@ -62,6 +62,7 @@ private:
 private slots:
     void slotStyleChanged(QAction *action);
     void slotThreadChanged(QAction *action);
+    void updateProfilePath();
     void updateProfiles(int num);
     void openEvent6();
     void openStationary6();

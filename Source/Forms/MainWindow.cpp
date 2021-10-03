@@ -26,12 +26,14 @@
 #include <Forms/Gen7/ProfileCalibrater7.hpp>
 #include <Forms/Gen7/Stationary7.hpp>
 #include <Forms/Gen7/Wild7.hpp>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
 #include <QThread>
+#include <QTimer>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(bool profile, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     this->setWindowTitle(QString("3DS Time Finder %1").arg(VERSION));
@@ -39,6 +41,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     setupModel();
     setupStyle();
     setupThread();
+
+    QTimer::singleShot(1000, [this, &profile] {
+        if (!profile)
+        {
+            QMessageBox message(QMessageBox::Warning, "Unable to locate profiles",
+                                "Please update path to your profiles file to restore existing profiles.");
+            message.exec();
+        }
+    });
 }
 
 MainWindow::~MainWindow()
@@ -58,6 +69,7 @@ void MainWindow::setupModel()
     connect(ui->pushButtonID7, &QPushButton::clicked, this, &MainWindow::openID7);
     connect(ui->pushButtonStationary7, &QPushButton::clicked, this, &MainWindow::openStationary7);
     connect(ui->pushButtonWild7, &QPushButton::clicked, this, &MainWindow::openWild7);
+    connect(ui->actionProfiles, &QAction::triggered, this, &MainWindow::updateProfilePath);
     connect(ui->actionCalibrator7, &QAction::triggered, this, &MainWindow::openCalibrator7);
 
     QSettings setting;
@@ -95,7 +107,7 @@ void MainWindow::setupStyle()
 
 void MainWindow::setupThread()
 {
-    threadGroup = new QActionGroup(ui->menuCPU_Threads);
+    threadGroup = new QActionGroup(ui->menuThreads);
     threadGroup->setExclusive(true);
     connect(threadGroup, &QActionGroup::triggered, this, &MainWindow::slotThreadChanged);
 
@@ -106,7 +118,7 @@ void MainWindow::setupThread()
 
     for (int i = 1; i <= maxThreads; i++)
     {
-        QAction *thread = ui->menuCPU_Threads->addAction(QString::number(i));
+        QAction *thread = ui->menuThreads->addAction(QString::number(i));
         thread->setData(i);
         thread->setCheckable(true);
 
@@ -128,8 +140,8 @@ void MainWindow::slotStyleChanged(QAction *action)
         {
             currentStyle = style;
 
-            QMessageBox message(QMessageBox::Question, tr("Style change"),
-                tr("Restart for changes to take effect. Restart now?"), QMessageBox::Yes | QMessageBox::No);
+            QMessageBox message(QMessageBox::Question, "Style change", "Restart for changes to take effect. Restart now?",
+                                QMessageBox::Yes | QMessageBox::No);
             if (message.exec() == QMessageBox::Yes)
             {
                 QProcess::startDetached(QApplication::applicationFilePath());
@@ -149,6 +161,34 @@ void MainWindow::slotThreadChanged(QAction *action)
         if (setting.value("settings/threads", QThread::idealThreadCount()).toInt() != thread)
         {
             setting.setValue("settings/threads", thread);
+        }
+    }
+}
+
+void MainWindow::updateProfilePath()
+{
+    QSettings setting;
+    QString path = setting.value("settings/profiles").toString();
+
+    QMessageBox box(QMessageBox::Question, "Profile Path", QString("Current profile path: %1\nWould you like to change it?").arg(path),
+                    QMessageBox::Yes | QMessageBox::No);
+    if (box.exec() == QMessageBox::Yes)
+    {
+        QString fileName = QFileDialog::getSaveFileName(this, "Select Profile json", QDir::currentPath(), "json (*.json)");
+        if (!fileName.isEmpty())
+        {
+            if (!QFile::exists(fileName))
+            {
+                QFile f(fileName);
+                if (!f.open(QIODevice::WriteOnly))
+                {
+                    QMessageBox message(QMessageBox::Information, "Profile File", "There was a problem creating the file", QMessageBox::Ok);
+                    message.exec();
+                    return;
+                }
+            }
+
+            setting.setValue("settings/profiles", fileName);
         }
     }
 }

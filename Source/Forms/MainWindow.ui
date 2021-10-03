@@ -86,7 +86,7 @@
      <x>0</x>
      <y>0</y>
      <width>450</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSettings">
@@ -100,12 +100,13 @@
      <addaction name="actionDark"/>
      <addaction name="actionLight"/>
     </widget>
-    <widget class="QMenu" name="menuCPU_Threads">
+    <widget class="QMenu" name="menuThreads">
      <property name="title">
       <string>CPU Threads</string>
      </property>
     </widget>
-    <addaction name="menuCPU_Threads"/>
+    <addaction name="menuThreads"/>
+    <addaction name="actionProfiles"/>
     <addaction name="menuStyle"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -136,6 +137,11 @@
   <action name="actionCalibrator7">
    <property name="text">
     <string>Gen 7 Calibrator</string>
+   </property>
+  </action>
+  <action name="actionProfiles">
+   <property name="text">
+    <string>Profiles</string>
    </property>
   </action>
  </widget>

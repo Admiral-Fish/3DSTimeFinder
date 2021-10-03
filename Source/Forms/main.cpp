@@ -17,11 +17,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <Core/Parents/ProfileLoader.hpp>
 #include <Forms/MainWindow.hpp>
 #include <QApplication>
 #include <QFile>
+#include <QJsonDocument>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QTextStream>
+
+void validateSettings(QSettings &setting)
+{
+    if (!setting.contains("settings/profiles"))
+    {
+        QString documentFolder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+        setting.setValue("settings/profiles", QString("%1/profiles.json").arg(documentFolder));
+    }
+
+    if (!setting.contains("settings/style"))
+    {
+        setting.setValue("settings/style", "dark");
+    }
+
+    if (!setting.contains("settings/threads") || (setting.value("settings/threads").toInt() > QThread::idealThreadCount()))
+    {
+        setting.setValue("settings/threads", QThread::idealThreadCount());
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +52,25 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Admiral-Fish");
 
     QSettings setting;
+    validateSettings(setting);
+
+    QString profilePath = setting.value("settings/profiles").toString();
+    bool profile = ProfileLoader::init(profilePath.toStdString());
+
+    // Transfer profiles to new setup
+    // TODO: remove in a future version
+    if (setting.contains("profiles"))
+    {
+        QByteArray data = setting.value("profiles").toByteArray();
+        QJsonDocument profiles(QJsonDocument::fromJson(data));
+
+        QFile f(profilePath);
+        if (f.open(QIODevice::WriteOnly))
+        {
+            f.write(QJsonDocument(profiles).toJson());
+            setting.remove("profiles");
+        }
+    }
 
     QString style = setting.value("settings/style", "dark").toString();
     if (style == "dark")
@@ -43,7 +84,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    MainWindow w;
+    MainWindow w(profile);
     w.show();
 
     return app.exec();
