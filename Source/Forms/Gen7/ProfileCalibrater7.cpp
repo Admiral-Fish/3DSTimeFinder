@@ -48,7 +48,8 @@ ProfileCalibrater7::~ProfileCalibrater7()
 void ProfileCalibrater7::setupModels()
 {
     model = new QStandardItemModel(ui->tableView);
-    model->setHorizontalHeaderLabels(QStringList() << tr("Tick") << tr("Offset"));
+    model->setHorizontalHeaderLabels(QStringList() << "Tick"
+                                                   << "Offset");
     ui->tableView->setModel(model);
 
     ui->textBoxInitialSeed->setValues(InputType::Seed32Bit);
@@ -62,7 +63,7 @@ void ProfileCalibrater7::setupModels()
     ui->dateTimeEdit->setMinimumDateTime(dt);
 
     contextMenu = new QMenu(ui->tableView);
-    QAction *createProfile = contextMenu->addAction(tr("Create profile from parameters"));
+    QAction *createProfile = contextMenu->addAction("Create profile from parameters");
     connect(createProfile, &QAction::triggered, this, &ProfileCalibrater7::createProfile);
 
     connect(ui->pushButtonSearch, &QPushButton::clicked, this, &ProfileCalibrater7::search);

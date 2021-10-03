@@ -24,8 +24,8 @@ IVFilter::IVFilter(QWidget *parent) : QWidget(parent), ui(new Ui::IVFilter)
 {
     ui->setupUi(this);
 
-    QStringList tips = { tr("Click to clear"), tr("Click holding ctrl to set 31"), tr("Click holding alt to set 30-31"),
-                         tr("Click holding ctrl+alt to set 0") };
+    QStringList tips
+        = { "Click to clear", "Click holding ctrl to set 31", "Click holding alt to set 30-31", "Click holding ctrl+alt to set 0" };
 
     QString tip = tips.join('\n');
     ui->labelHP->setToolTip(tip);

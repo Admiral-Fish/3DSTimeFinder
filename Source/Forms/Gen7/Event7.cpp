@@ -136,14 +136,14 @@ void Event7::search()
     if (start > end)
     {
         QMessageBox error;
-        error.setText(tr("Set end date to be after start date."));
+        error.setText("Set end date to be after start date.");
         error.exec();
         return;
     }
     if (frameStart > frameEnd)
     {
         QMessageBox error;
-        error.setText(tr("Set end frame to be after start frame"));
+        error.setText("Set end frame to be after start frame");
         error.exec();
         return;
     }

@@ -122,7 +122,7 @@ void CheckList::updateText()
     {
     case Qt::Checked:
     case Qt::Unchecked:
-        text = tr("Any");
+        text = "Any";
         break;
     case Qt::PartiallyChecked:
         for (int i = 0; i < model->rowCount(); i++)
@@ -139,7 +139,7 @@ void CheckList::updateText()
         }
         break;
     default:
-        text = tr("Any");
+        text = "Any";
     }
 
     lineEdit()->setText(text);

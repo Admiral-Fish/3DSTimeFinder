@@ -93,7 +93,7 @@ void ProfileEditor6::accepted()
     if (input.isEmpty())
     {
         QMessageBox error;
-        error.setText(tr("Enter a Profile Name."));
+        error.setText("Enter a Profile Name.");
         error.exec();
         return;
     }
