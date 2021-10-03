@@ -18,7 +18,7 @@
  */
 
 #include "SFMT.hpp"
-#include <emmintrin.h>
+#include <Core/RNG/SIMD.hpp>
 
 SFMT::SFMT(u32 seed, u32 frames)
 {
@@ -73,27 +73,27 @@ u64 SFMT::next()
 
 void SFMT::shuffle()
 {
-    __m128i c = _mm_load_si128((const __m128i *)&sfmt[616]);
-    __m128i d = _mm_load_si128((const __m128i *)&sfmt[620]);
-    __m128i mask = _mm_set_epi32(0xbffffff6, 0xbffaffff, 0xddfecb7f, 0xdfffffef);
+    vuint32x4 c = v32x4_load(&sfmt[616]);
+    vuint32x4 d = v32x4_load(&sfmt[620]);
+    vuint32x4 mask = v32x4_set(0xdfffffef, 0xddfecb7f, 0xbffaffff, 0xbffffff6);
 
-    auto mm_recursion = [&mask](__m128i &a, const __m128i &b, const __m128i &c, const __m128i &d) {
-        __m128i x = _mm_slli_si128(a, 1);
-        __m128i y = _mm_srli_si128(c, 1);
+    auto mm_recursion = [&mask](vuint32x4 &a, const vuint32x4 &b, const vuint32x4 &c, const vuint32x4 &d) {
+        vuint32x4 x = v128_shl<1>(a);
+        vuint32x4 y = v128_shr<1>(c);
 
-        __m128i b1 = _mm_and_si128(_mm_srli_epi32(b, 11), mask);
-        __m128i d1 = _mm_slli_epi32(d, 18);
+        vuint32x4 b1 = v32x4_and(v32x4_shr<11>(b), mask);
+        vuint32x4 d1 = v32x4_shl<18>(d);
 
-        a = _mm_xor_si128(_mm_xor_si128(_mm_xor_si128(_mm_xor_si128(a, x), b1), y), d1);
+        a = v32x4_xor(v32x4_xor(v32x4_xor(v32x4_xor(a, x), b1), y), d1);
     };
 
     for (int i = 0; i < 136; i += 4)
     {
-        __m128i a = _mm_load_si128((const __m128i *)&sfmt[i]);
-        __m128i b = _mm_load_si128((const __m128i *)&sfmt[i + 488]);
+        vuint32x4 a = v32x4_load(&sfmt[i]);
+        vuint32x4 b = v32x4_load(&sfmt[i + 488]);
 
         mm_recursion(a, b, c, d);
-        _mm_storeu_si128((__m128i *)&sfmt[i], a);
+        v32x4_store(&sfmt[i], a);
 
         c = d;
         d = a;
@@ -101,11 +101,11 @@ void SFMT::shuffle()
 
     for (int i = 136; i < 624; i += 4)
     {
-        __m128i a = _mm_load_si128((const __m128i *)&sfmt[i]);
-        __m128i b = _mm_load_si128((const __m128i *)&sfmt[i - 136]);
+        vuint32x4 a = v32x4_load(&sfmt[i]);
+        vuint32x4 b = v32x4_load(&sfmt[i - 136]);
 
         mm_recursion(a, b, c, d);
-        _mm_storeu_si128((__m128i *)&sfmt[i], a);
+        v32x4_store(&sfmt[i], a);
 
         c = d;
         d = a;
