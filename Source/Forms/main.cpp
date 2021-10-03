@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QTextStream>
+#include <QThread>
 
 void validateSettings(QSettings &setting)
 {

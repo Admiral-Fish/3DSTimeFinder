@@ -18,6 +18,7 @@
  */
 
 #include "IDFilter.hpp"
+#include <algorithm>
 #include <sstream>
 
 IDFilter::IDFilter(const std::string &idList, const std::string &tsvList, IDType type) : idType(type)
