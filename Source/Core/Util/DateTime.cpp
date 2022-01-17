@@ -160,13 +160,13 @@ DateTime::DateTime(int year, int month, int day, int hour, int minute, int secon
 DateTime::DateTime(u64 milliseconds)
 {
     u64 seconds = milliseconds / 1000;
-    u64 days = seconds % 86400;
+    u64 days = seconds / 86400;
 
     seconds -= days * 86400;
-    u64 hours = seconds % 3600;
+    u64 hours = seconds / 3600;
 
     seconds -= hours * 3600;
-    u64 minutes = seconds % 60;
+    u64 minutes = seconds / 60;
 
     seconds -= minutes * 60;
 
@@ -206,5 +206,5 @@ u64 DateTime::toMSecsSinceEpoch() const
 {
     Date epoch(1970, 1, 1);
     int days = date.jd - epoch.jd;
-    return (days * 86400000) + (time.md * 1000);
+    return (static_cast<u64>(days) * 86400000) + (static_cast<u64>(time.md) * 1000);
 }
