@@ -107,8 +107,8 @@ namespace ProfileLoader6
         std::vector<Profile6> profiles;
 
         json j = readJson();
-        const auto &gen3 = j["gen3"];
-        std::transform(gen3.begin(), gen3.end(), std::back_inserter(profiles), [](const json &j) { return getProfile(j); });
+        const auto &gen6 = j["gen6"];
+        std::transform(gen6.begin(), gen6.end(), std::back_inserter(profiles), [](const json &j) { return getProfile(j); });
 
         return profiles;
     }
@@ -117,8 +117,8 @@ namespace ProfileLoader6
     {
         json j = readJson();
 
-        auto &gen3 = j["gen3"];
-        gen3.emplace_back(getJson(profile));
+        auto &gen6 = j["gen6"];
+        gen6.emplace_back(getJson(profile));
 
         writeJson(j);
     }
@@ -127,14 +127,14 @@ namespace ProfileLoader6
     {
         json j = readJson();
 
-        auto &gen3 = j["gen3"];
-        for (size_t i = 0; i < gen3.size(); i++)
+        auto &gen6 = j["gen6"];
+        for (size_t i = 0; i < gen6.size(); i++)
         {
-            Profile6 profile = getProfile(gen3[i]);
+            Profile6 profile = getProfile(gen6[i]);
 
             if (profile == remove)
             {
-                gen3.erase(gen3.begin() + i);
+                gen6.erase(gen6.begin() + i);
 
                 writeJson(j);
                 break;
@@ -146,8 +146,8 @@ namespace ProfileLoader6
     {
         json j = readJson();
 
-        auto &gen3 = j["gen3"];
-        for (auto &i : gen3)
+        auto &gen6 = j["gen6"];
+        for (auto &i : gen6)
         {
             Profile6 profile = getProfile(i);
 
