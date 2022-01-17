@@ -3,10 +3,10 @@
 case $OS in
   linux)
   {
-    cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_PREFIX_PATH=$HOME/Qt/6.1/gcc_64 ../ 
+    cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_PREFIX_PATH=$HOME/Qt/$QTVER/gcc_64 ../
   } ;;  
   macOS)
   {
-	PATH=$PATH:$HOME/Qt/6.1/macos/bin cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE ../
+    PATH=$PATH:$HOME/Qt/$QTVER/macos/bin cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE ../
   } ;;
 esac
