@@ -189,6 +189,7 @@ namespace ProfileLoader7
             j["version"] = profile.getVersion();
             j["tid"] = profile.getTID();
             j["sid"] = profile.getSID();
+            j["charm"] = profile.getShinyCharm();
             return j;
         }
     }
