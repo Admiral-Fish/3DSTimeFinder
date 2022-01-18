@@ -86,9 +86,9 @@ void Result::calcHiddenPower()
     u8 val = 0;
     for (int i = 0; i < 6; i++)
     {
-        val += (ivs[order[i]] & 1) * (1 << i);
+        val += (ivs[order[i]] & 1) << i;
     }
-    hiddenPower = val / 63;
+    hiddenPower = val * 15 / 63;
 }
 
 std::string Result::getAbilityString() const
