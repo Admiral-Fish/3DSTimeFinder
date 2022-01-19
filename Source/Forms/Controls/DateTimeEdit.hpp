@@ -1,6 +1,6 @@
 /*
  * This file is part of 3DSTimeFinder
- * Copyright (C) 2019-2021 by Admiral_Fish
+ * Copyright (C) 2019-2022 by Admiral_Fish
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
