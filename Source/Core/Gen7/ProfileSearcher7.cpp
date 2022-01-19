@@ -23,7 +23,7 @@
 
 ProfileSearcher7::ProfileSearcher7(const DateTime &startDate, u32 initialSeed, u32 baseTick, u32 baseOffset, u32 tickRange,
                                    u32 offsetRange) :
-    epochBase(startDate.toMSecsSinceEpoch()),
+    epochBase(Utility::getCitraTime(startDate.toMSecsSinceEpoch())),
     initialSeed(initialSeed),
     baseTick(baseTick),
     baseOffset(baseOffset),
