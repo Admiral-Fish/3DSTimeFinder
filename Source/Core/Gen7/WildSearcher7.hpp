@@ -27,7 +27,7 @@
 #include <mutex>
 
 class WildResult;
-enum WildType;
+enum WildType : int;
 
 class WildSearcher7
 {

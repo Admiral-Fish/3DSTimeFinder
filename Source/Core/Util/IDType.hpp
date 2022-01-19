@@ -20,7 +20,7 @@
 #ifndef IDTYPE_HPP
 #define IDTYPE_HPP
 
-enum IDType
+enum IDType : int
 {
     TID,
     SID,

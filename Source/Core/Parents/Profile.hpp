@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-enum Game;
+enum Game : int;
 
 class Profile
 {

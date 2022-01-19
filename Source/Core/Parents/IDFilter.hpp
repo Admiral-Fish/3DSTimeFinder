@@ -25,7 +25,7 @@
 #include <vector>
 
 class IDResult;
-enum IDType;
+enum IDType : int;
 
 class IDFilter {
 public:

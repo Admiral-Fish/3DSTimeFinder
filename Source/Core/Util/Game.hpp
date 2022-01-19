@@ -20,7 +20,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-enum Game
+enum Game : int
 {
     X = 1 << 0,
     Y = 1 << 1,

@@ -27,7 +27,7 @@
 #include <mutex>
 
 class EventResult;
-enum PIDType;
+enum PIDType : int;
 
 class EventSearcher6
 {

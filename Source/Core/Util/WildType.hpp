@@ -20,7 +20,7 @@
 #ifndef WILDTYPE_HPP
 #define WILDTYPE_HPP
 
-enum WildType
+enum WildType : int
 {
     Grass,
     Fish

@@ -20,7 +20,7 @@
 #ifndef PIDTYPE_HPP
 #define PIDTYPE_HPP
 
-enum PIDType
+enum PIDType : int
 {
     Random,
     Nonshiny,
