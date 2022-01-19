@@ -20,10 +20,11 @@
 #ifndef PROFILESEARCHER7_HPP
 #define PROFILESEARCHER7_HPP
 
-#include <Core/Util/DateTime.hpp>
 #include <Core/Util/Global.hpp>
 #include <mutex>
 #include <vector>
+
+class DateTime;
 
 class ProfileSearcher7
 {

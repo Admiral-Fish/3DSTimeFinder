@@ -21,7 +21,8 @@
 #define WILDFILTER_HPP
 
 #include <Core/Parents/Filter.hpp>
-#include <Core/Parents/WildResult.hpp>
+
+class WildResult;
 
 class WildFilter : public Filter
 {

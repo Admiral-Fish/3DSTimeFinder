@@ -18,8 +18,11 @@
  */
 
 #include "EventSearcher6.hpp"
+#include <Core/Parents/EventResult.hpp>
 #include <Core/RNG/MT.hpp>
 #include <Core/RNG/RNGList.hpp>
+#include <Core/Util/Game.hpp>
+#include <Core/Util/PIDType.hpp>
 #include <Core/Util/Utility.hpp>
 #include <future>
 

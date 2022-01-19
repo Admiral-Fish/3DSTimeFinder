@@ -20,11 +20,10 @@
 #ifndef ID7_HPP
 #define ID7_HPP
 
-#include <Core/Gen7/Profile7.hpp>
-#include <Core/Parents/IDResult.hpp>
 #include <QWidget>
 
 class IDModel;
+class Profile7;
 
 namespace Ui
 {

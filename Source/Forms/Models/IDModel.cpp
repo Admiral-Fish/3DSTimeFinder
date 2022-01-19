@@ -18,6 +18,7 @@
  */
 
 #include "IDModel.hpp"
+#include <Core/Parents/IDResult.hpp>
 
 IDModel::IDModel(QObject *parent) : TableModel<IDResult>(parent)
 {

@@ -19,6 +19,7 @@
 
 #include "Utility.hpp"
 #include <Core/RNG/SHA256.hpp>
+#include <Core/Util/DateTime.hpp>
 
 std::vector<std::string> natures
     = { "Hardy", "Lonely", "Brave",  "Adamant", "Naughty", "Bold",    "Docile", "Relaxed", "Impish", "Lax",   "Timid",   "Hasty", "Serious",

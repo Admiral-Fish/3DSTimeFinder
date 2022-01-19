@@ -18,6 +18,7 @@
  */
 
 #include "EventFilter.hpp"
+#include <Core/Parents/EventResult.hpp>
 
 EventFilter::EventFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
                          const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender) :

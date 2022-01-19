@@ -22,10 +22,12 @@
 
 #include <Core/Gen6/Profile6.hpp>
 #include <Core/Parents/EventFilter.hpp>
-#include <Core/Parents/EventResult.hpp>
-#include <Core/Util/PIDType.hpp>
+#include <Core/Util/DateTime.hpp>
 #include <atomic>
 #include <mutex>
+
+class EventResult;
+enum PIDType;
 
 class EventSearcher6
 {

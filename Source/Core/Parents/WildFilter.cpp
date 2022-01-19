@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "WildFilter.hpp"
+#include <Core/Parents/WildResult.hpp>
 
 WildFilter::WildFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
                        const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender) :

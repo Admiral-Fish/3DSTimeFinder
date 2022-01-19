@@ -20,8 +20,9 @@
 #ifndef IDMODEL_HPP
 #define IDMODEL_HPP
 
-#include <Core/Parents/IDResult.hpp>
 #include <Forms/Models/TableModel.hpp>
+
+class IDResult;
 
 class IDModel : public TableModel<IDResult>
 {

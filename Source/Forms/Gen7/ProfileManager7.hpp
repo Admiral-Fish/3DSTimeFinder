@@ -20,7 +20,6 @@
 #ifndef PROFILEMANAGER7_HPP
 #define PROFILEMANAGER7_HPP
 
-#include <Core/Util/Utility.hpp>
 #include <QWidget>
 
 class ProfileModel7;

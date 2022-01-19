@@ -18,6 +18,7 @@
  */
 
 #include "EventModel.hpp"
+#include <Core/Parents/EventResult.hpp>
 #include <Core/Util/Utility.hpp>
 
 EventModel::EventModel(QObject *parent) : TableModel<EventResult>(parent)

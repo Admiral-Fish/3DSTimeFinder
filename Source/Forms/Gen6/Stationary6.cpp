@@ -21,6 +21,7 @@
 #include "ui_Stationary6.h"
 #include <Core/Gen6/StationarySearcher6.hpp>
 #include <Core/Parents/ProfileLoader.hpp>
+#include <Core/Parents/StationaryResult.hpp>
 #include <Core/Util/Utility.hpp>
 #include <Forms/Gen6/ProfileManager6.hpp>
 #include <Forms/Models/StationaryModel.hpp>

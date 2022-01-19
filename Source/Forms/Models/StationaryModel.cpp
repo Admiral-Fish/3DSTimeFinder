@@ -18,6 +18,7 @@
  */
 
 #include "StationaryModel.hpp"
+#include <Core/Parents/StationaryResult.hpp>
 #include <Core/Util/Utility.hpp>
 
 StationaryModel::StationaryModel(QObject *parent) : TableModel<StationaryResult>(parent)

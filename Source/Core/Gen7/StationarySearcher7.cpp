@@ -18,6 +18,7 @@
  */
 
 #include "StationarySearcher7.hpp"
+#include <Core/Parents/StationaryResult.hpp>
 #include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>

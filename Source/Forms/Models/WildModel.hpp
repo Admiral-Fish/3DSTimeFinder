@@ -20,8 +20,9 @@
 #ifndef WILDMODEL_HPP
 #define WILDMODEL_HPP
 
-#include <Core/Parents/WildResult.hpp>
 #include <Forms/Models/TableModel.hpp>
+
+class WildResult;
 
 class WildModel : public TableModel<WildResult>
 {

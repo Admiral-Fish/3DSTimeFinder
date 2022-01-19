@@ -20,7 +20,9 @@
 #include "Event6.hpp"
 #include "ui_Event6.h"
 #include <Core/Gen6/EventSearcher6.hpp>
+#include <Core/Parents/EventResult.hpp>
 #include <Core/Parents/ProfileLoader.hpp>
+#include <Core/Util/PIDType.hpp>
 #include <Core/Util/Utility.hpp>
 #include <Forms/Gen6/ProfileManager6.hpp>
 #include <Forms/Models/EventModel.hpp>

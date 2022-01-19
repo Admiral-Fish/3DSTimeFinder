@@ -29,15 +29,12 @@ public:
     Profile6(const std::string &name, u32 saveVariable, u32 timeVariable, u16 tid, u16 sid, Game version, bool shinyCharm);
     u32 getSaveVariable() const;
     u32 getTimeVariable() const;
-    friend bool operator==(const Profile6 &left, const Profile6 &right);
-    friend bool operator!=(const Profile6 &left, const Profile6 &right);
+    bool operator==(const Profile6 &other) const;
+    bool operator!=(const Profile6 &other) const;
 
 private:
     u32 saveVariable;
     u32 timeVariable;
 };
-
-bool operator==(const Profile6 &left, const Profile6 &right);
-bool operator!=(const Profile6 &left, const Profile6 &right);
 
 #endif // PROFILE6_HPP

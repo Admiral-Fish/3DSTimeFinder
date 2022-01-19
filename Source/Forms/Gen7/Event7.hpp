@@ -20,11 +20,10 @@
 #ifndef EVENT7_HPP
 #define EVENT7_HPP
 
-#include <Core/Gen7/Profile7.hpp>
-#include <Core/Parents/EventResult.hpp>
 #include <QWidget>
 
 class EventModel;
+class Profile7;
 
 namespace Ui
 {

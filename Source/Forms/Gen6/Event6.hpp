@@ -20,11 +20,10 @@
 #ifndef EVENT6_HPP
 #define EVENT6_HPP
 
-#include <Core/Gen6/Profile6.hpp>
-#include <Core/Parents/EventResult.hpp>
 #include <QWidget>
 
 class EventModel;
+class Profile6;
 
 namespace Ui
 {

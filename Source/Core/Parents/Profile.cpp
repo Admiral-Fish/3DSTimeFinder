@@ -18,6 +18,7 @@
  */
 
 #include "Profile.hpp"
+#include <Core/Util/Game.hpp>
 
 Profile::Profile() : name("None"), tid(12345), sid(54321), version(Game::UltraSun), shinyCharm(false)
 {
@@ -76,4 +77,14 @@ std::string Profile::getVersionString() const
 bool Profile::getShinyCharm() const
 {
     return shinyCharm;
+}
+
+bool Profile::operator==(const Profile &other) const
+{
+    return name == other.name && version == other.version && tid == other.tid && sid == other.sid && shinyCharm == other.shinyCharm;
+}
+
+bool Profile::operator!=(const Profile &other) const
+{
+    return !(operator==(other));
 }

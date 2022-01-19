@@ -19,6 +19,7 @@
 
 #include "ProfileEditor6.hpp"
 #include "ui_ProfileEditor6.h"
+#include <Core/Util/Game.hpp>
 #include <QMessageBox>
 #include <QSettings>
 

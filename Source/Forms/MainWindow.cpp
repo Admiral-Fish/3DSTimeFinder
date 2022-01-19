@@ -26,6 +26,7 @@
 #include <Forms/Gen7/ProfileCalibrater7.hpp>
 #include <Forms/Gen7/Stationary7.hpp>
 #include <Forms/Gen7/Wild7.hpp>
+#include <QActionGroup>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>

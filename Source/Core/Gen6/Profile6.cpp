@@ -38,13 +38,12 @@ u32 Profile6::getTimeVariable() const
     return timeVariable;
 }
 
-bool operator==(const Profile6 &left, const Profile6 &right)
+bool Profile6::operator==(const Profile6 &other) const
 {
-    return left.name == right.name && left.saveVariable == right.saveVariable && left.timeVariable == right.timeVariable
-        && left.tid == right.tid && left.sid == right.sid && left.version == right.version && left.shinyCharm == right.shinyCharm;
+    return Profile::operator==(other) && saveVariable == other.saveVariable && timeVariable == other.timeVariable;
 }
 
-bool operator!=(const Profile6 &left, const Profile6 &right)
+bool Profile6::operator!=(const Profile6 &other) const
 {
-    return !(left == right);
+    return !(operator==(other));
 }

@@ -18,6 +18,8 @@
  */
 
 #include "IDFilter.hpp"
+#include <Core/Parents/IDResult.hpp>
+#include <Core/Util/IDType.hpp>
 #include <algorithm>
 #include <sstream>
 

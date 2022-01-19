@@ -18,6 +18,7 @@
  */
 
 #include "Profile7.hpp"
+#include <Core/Util/Game.hpp>
 
 Profile7::Profile7() : offset(55), tick(0x41D9CB9)
 {
@@ -41,13 +42,12 @@ u32 Profile7::getTick() const
     return tick;
 }
 
-bool operator==(const Profile7 &left, const Profile7 &right)
+bool Profile7::operator==(const Profile7 &other) const
 {
-    return left.name == right.name && left.offset == right.offset && left.tick == right.tick && left.tid == right.tid
-        && left.sid == right.sid && left.version == right.version && left.shinyCharm == right.shinyCharm;
+    return Profile::operator==(other) && offset == other.offset && tick == other.tick;
 }
 
-bool operator!=(const Profile7 &left, const Profile7 &right)
+bool Profile7::operator!=(const Profile7 &other) const
 {
-    return !(left == right);
+    return !(operator==(other));
 }

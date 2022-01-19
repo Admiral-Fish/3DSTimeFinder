@@ -20,9 +20,11 @@
 #ifndef PROFILELOADER_HPP
 #define PROFILELOADER_HPP
 
-#include <Core/Gen6/Profile6.hpp>
-#include <Core/Gen7/Profile7.hpp>
+#include <string>
 #include <vector>
+
+class Profile6;
+class Profile7;
 
 namespace ProfileLoader
 {

@@ -20,10 +20,11 @@
 #ifndef UTILITY_HPP
 #define UTILITY_HPP
 
-#include <Core/Util/DateTime.hpp>
 #include <Core/Util/Global.hpp>
 #include <string>
 #include <vector>
+
+class DateTime;
 
 namespace Utility
 {

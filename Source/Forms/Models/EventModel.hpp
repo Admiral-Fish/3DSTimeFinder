@@ -20,8 +20,9 @@
 #ifndef EVENTMODEL_HPP
 #define EVENTMODEL_HPP
 
-#include <Core/Parents/EventResult.hpp>
 #include <Forms/Models/TableModel.hpp>
+
+class EventResult;
 
 class EventModel : public TableModel<EventResult>
 {

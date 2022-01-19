@@ -20,6 +20,7 @@
 #include "IDSearcher7.hpp"
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
+#include <Core/Parents/IDResult.hpp>
 #include <future>
 
 IDSearcher7::IDSearcher7(const DateTime &startTime, const DateTime &endTime, u32 startFrame, u32 endFrame, const Profile7 &profile,

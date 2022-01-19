@@ -21,7 +21,8 @@
 #define STATIONARYFILTER_HPP
 
 #include <Core/Parents/Filter.hpp>
-#include <Core/Parents/StationaryResult.hpp>
+
+class StationaryResult;
 
 class StationaryFilter : public Filter
 {

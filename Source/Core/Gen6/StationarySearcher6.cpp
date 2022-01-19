@@ -18,6 +18,7 @@
  */
 
 #include "StationarySearcher6.hpp"
+#include <Core/Parents/StationaryResult.hpp>
 #include <Core/RNG/MT.hpp>
 #include <Core/RNG/RNGList.hpp>
 #include <Core/Util/Utility.hpp>

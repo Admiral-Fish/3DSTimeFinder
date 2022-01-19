@@ -18,8 +18,10 @@
  */
 
 #include "EventSearcher7.hpp"
+#include <Core/Parents/EventResult.hpp>
 #include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
+#include <Core/Util/PIDType.hpp>
 #include <Core/Util/Utility.hpp>
 #include <future>
 

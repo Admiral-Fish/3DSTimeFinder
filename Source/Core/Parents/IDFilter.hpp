@@ -20,12 +20,14 @@
 #ifndef IDFILTER_HPP
 #define IDFILTER_HPP
 
-#include <Core/Parents/IDResult.hpp>
-#include <Core/Util/IDType.hpp>
+#include <Core/Util/Global.hpp>
+#include <string>
 #include <vector>
 
-class IDFilter
-{
+class IDResult;
+enum IDType;
+
+class IDFilter {
 public:
     IDFilter() = default;
     IDFilter(const std::string &idList, const std::string &tsvList, IDType type);

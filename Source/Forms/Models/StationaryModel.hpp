@@ -20,8 +20,9 @@
 #ifndef STATIONARYMODEL_HPP
 #define STATIONARYMODEL_HPP
 
-#include <Core/Parents/StationaryResult.hpp>
 #include <Forms/Models/TableModel.hpp>
+
+class StationaryResult;
 
 class StationaryModel : public TableModel<StationaryResult>
 {

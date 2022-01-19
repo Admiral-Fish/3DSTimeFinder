@@ -18,9 +18,11 @@
  */
 
 #include "WildSearcher7.hpp"
+#include <Core/Parents/WildResult.hpp>
 #include <Core/RNG/RNGList.hpp>
 #include <Core/RNG/SFMT.hpp>
 #include <Core/Util/Utility.hpp>
+#include <Core/Util/WildType.hpp>
 #include <future>
 
 constexpr u8 grassSlots[10] = { 19, 39, 49, 59, 69, 79, 89, 94, 98, 99 };

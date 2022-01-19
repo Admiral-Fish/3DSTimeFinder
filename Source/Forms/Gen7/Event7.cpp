@@ -20,7 +20,9 @@
 #include "Event7.hpp"
 #include "ui_Event7.h"
 #include <Core/Gen7/EventSearcher7.hpp>
+#include <Core/Parents/EventResult.hpp>
 #include <Core/Parents/ProfileLoader.hpp>
+#include <Core/Util/PIDType.hpp>
 #include <Core/Util/Utility.hpp>
 #include <Forms/Gen7/ProfileManager7.hpp>
 #include <Forms/Models/EventModel.hpp>

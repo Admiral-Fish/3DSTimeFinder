@@ -21,7 +21,8 @@
 #define CHECKLIST
 
 #include <QComboBox>
-#include <QStandardItemModel>
+
+class QStandardItemModel;
 
 class CheckList : public QComboBox
 {

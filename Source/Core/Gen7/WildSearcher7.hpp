@@ -22,10 +22,12 @@
 
 #include <Core/Gen7/Profile7.hpp>
 #include <Core/Parents/WildFilter.hpp>
-#include <Core/Parents/WildResult.hpp>
-#include <Core/Util/WildType.hpp>
+#include <Core/Util/DateTime.hpp>
 #include <atomic>
 #include <mutex>
+
+class WildResult;
+enum WildType;
 
 class WildSearcher7
 {

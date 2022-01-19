@@ -22,9 +22,11 @@
 
 #include <Core/Gen6/Profile6.hpp>
 #include <Core/Parents/StationaryFilter.hpp>
-#include <Core/Parents/StationaryResult.hpp>
+#include <Core/Util/DateTime.hpp>
 #include <atomic>
 #include <mutex>
+
+class StationaryResult;
 
 class StationarySearcher6
 {

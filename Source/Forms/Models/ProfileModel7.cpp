@@ -18,6 +18,7 @@
  */
 
 #include "ProfileModel7.hpp"
+#include <Core/Gen7/Profile7.hpp>
 
 ProfileModel7::ProfileModel7(QObject *parent) : TableModel<Profile7>(parent)
 {

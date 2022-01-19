@@ -29,14 +29,12 @@ public:
     Profile7(const std::string &name, u32 offset, u32 tick, u16 tid, u16 sid, Game version, bool shinyCharm);
     u32 getOffset() const;
     u32 getTick() const;
-    friend bool operator==(const Profile7 &left, const Profile7 &right);
-    friend bool operator!=(const Profile7 &left, const Profile7 &right);
+    bool operator==(const Profile7 &other) const;
+    bool operator!=(const Profile7 &other) const;
 
 private:
     u32 offset;
     u32 tick;
 };
-bool operator==(const Profile7 &left, const Profile7 &right);
-bool operator!=(const Profile7 &left, const Profile7 &right);
 
 #endif // PROFILE7_HPP

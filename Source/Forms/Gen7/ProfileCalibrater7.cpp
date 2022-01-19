@@ -21,8 +21,11 @@
 #include "ui_ProfileCalibrater7.h"
 #include <Core/Gen7/ProfileSearcher7.hpp>
 #include <Core/Parents/ProfileLoader.hpp>
+#include <Core/Util/DateTime.hpp>
 #include <Forms/Gen7/ProfileEditor7.hpp>
+#include <QMenu>
 #include <QSettings>
+#include <QStandardItemModel>
 #include <QThread>
 #include <QTimer>
 

@@ -18,6 +18,7 @@
  */
 
 #include "ProfileSearcher7.hpp"
+#include <Core/Util/DateTime.hpp>
 #include <Core/Util/Utility.hpp>
 #include <future>
 

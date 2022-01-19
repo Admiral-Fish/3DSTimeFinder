@@ -21,9 +21,10 @@
 #define PROFILECALIBRATER7_HPP
 
 #include <Core/Util/Global.hpp>
-#include <QMenu>
-#include <QStandardItemModel>
-#include <QVector>
+#include <QWidget>
+
+class QMenu;
+class QStandardItemModel;
 
 namespace Ui
 {

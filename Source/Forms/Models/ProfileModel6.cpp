@@ -18,6 +18,7 @@
  */
 
 #include "ProfileModel6.hpp"
+#include <Core/Gen6/Profile6.hpp>
 
 ProfileModel6::ProfileModel6(QObject *parent) : TableModel<Profile6>(parent)
 {

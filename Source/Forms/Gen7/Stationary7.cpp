@@ -21,6 +21,7 @@
 #include "ui_Stationary7.h"
 #include <Core/Gen7/StationarySearcher7.hpp>
 #include <Core/Parents/ProfileLoader.hpp>
+#include <Core/Parents/StationaryResult.hpp>
 #include <Core/Util/Utility.hpp>
 #include <Forms/Gen7/ProfileManager7.hpp>
 #include <Forms/Models/StationaryModel.hpp>

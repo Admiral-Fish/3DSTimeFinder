@@ -20,7 +20,9 @@
 #include "ID7.hpp"
 #include "ui_ID7.h"
 #include <Core/Gen7/IDSearcher7.hpp>
+#include <Core/Parents/IDResult.hpp>
 #include <Core/Parents/ProfileLoader.hpp>
+#include <Core/Util/IDType.hpp>
 #include <Forms/Gen7/ProfileManager7.hpp>
 #include <Forms/Models/IDModel.hpp>
 #include <QMessageBox>

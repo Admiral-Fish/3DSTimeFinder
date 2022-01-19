@@ -21,6 +21,7 @@
 #include <QEvent>
 #include <QLineEdit>
 #include <QListView>
+#include <QStandardItemModel>
 
 CheckList::CheckList(QWidget *parent) : QComboBox(parent)
 {

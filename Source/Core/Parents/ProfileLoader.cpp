@@ -18,6 +18,9 @@
  */
 
 #include "ProfileLoader.hpp"
+#include <Core/Gen6/Profile6.hpp>
+#include <Core/Gen7/Profile7.hpp>
+#include <Core/Util/Game.hpp>
 #include <filesystem>
 #include <fstream>
 #include <nlohmann/json.hpp>

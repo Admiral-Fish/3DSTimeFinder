@@ -20,8 +20,9 @@
 #ifndef EVENTFILTER_HPP
 #define EVENTFILTER_HPP
 
-#include <Core/Parents/EventResult.hpp>
 #include <Core/Parents/Filter.hpp>
+
+class EventResult;
 
 class EventFilter : public Filter
 {

@@ -20,10 +20,9 @@
 #ifndef STATIONARY6_HPP
 #define STATIONARY6_HPP
 
-#include <Core/Gen6/Profile6.hpp>
-#include <Core/Parents/StationaryResult.hpp>
 #include <QWidget>
 
+class Profile6;
 class StationaryModel;
 
 namespace Ui

@@ -18,6 +18,7 @@
  */
 
 #include "WildModel.hpp"
+#include <Core/Parents/WildResult.hpp>
 #include <Core/Util/Utility.hpp>
 
 WildModel::WildModel(QObject *parent) : TableModel<WildResult>(parent)

@@ -22,9 +22,11 @@
 
 #include <Core/Gen7/Profile7.hpp>
 #include <Core/Parents/IDFilter.hpp>
-#include <Core/Parents/IDResult.hpp>
 #include <atomic>
 #include <mutex>
+#include <Core/Util/DateTime.hpp>
+
+class IDResult;
 
 class IDSearcher7
 {

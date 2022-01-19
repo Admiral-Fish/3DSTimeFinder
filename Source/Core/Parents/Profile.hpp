@@ -20,10 +20,11 @@
 #ifndef PROFILE_HPP
 #define PROFILE_HPP
 
-#include <Core/Util/Game.hpp>
 #include <Core/Util/Global.hpp>
 #include <string>
 #include <vector>
+
+enum Game;
 
 class Profile
 {
@@ -36,6 +37,9 @@ public:
     Game getVersion() const;
     std::string getVersionString() const;
     bool getShinyCharm() const;
+
+    bool operator==(const Profile &other) const;
+    bool operator!=(const Profile &other) const;
 
 protected:
     std::string name;

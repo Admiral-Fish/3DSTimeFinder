@@ -20,13 +20,13 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QActionGroup>
 #include <QMainWindow>
 
 class Event6;
 class Stationary6;
 class Event7;
 class ID7;
+class QActionGroup;
 class Stationary7;
 class Wild7;
 
