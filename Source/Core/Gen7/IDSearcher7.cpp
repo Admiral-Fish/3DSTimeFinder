@@ -101,7 +101,7 @@ void IDSearcher7::search(u64 epochStart, u64 epochEnd)
     u32 offset = profile.getOffset();
 
     DateTime target = DateTime(Utility::getNormalTime(epochStart, offset));
-    for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000)
+    for (u64 epoch = epochStart; epoch <= epochEnd && searching; epoch += 1000, target.addSeconds(1))
     {
         u32 initialSeed = Utility::calcInitialSeed(tick, epoch);
 
