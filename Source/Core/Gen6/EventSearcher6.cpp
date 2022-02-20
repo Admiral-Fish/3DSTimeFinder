@@ -166,7 +166,6 @@ void EventSearcher6::search(u64 epochStart, u64 epochEnd)
                     break;
                 case PIDType::Shiny:
                     result.setPID(rngList.getValue());
-                    result.setShiny(true);
                     if (otherInfo)
                     {
                         result.setPID(((tid ^ sid ^ (result.getPID() & 0xFFFF)) << 16) | (result.getPID() & 0xFFFF));

@@ -24,6 +24,7 @@
 #include <Core/Parents/ProfileLoader.hpp>
 #include <Core/Util/PIDType.hpp>
 #include <Core/Util/Utility.hpp>
+#include <Forms/Controls/Controls.hpp>
 #include <Forms/Gen6/ProfileManager6.hpp>
 #include <Forms/Models/EventModel.hpp>
 #include <QFileDialog>
@@ -78,21 +79,12 @@ void Event6::setupModels()
 
     ui->tableView->setModel(model);
 
-    auto natures = Utility::getNatures();
-    auto hiddenPowers = Utility::getHiddenPowers();
-
-    for (const auto &nature : natures)
+    for (const auto &nature : *Utility::getNatures())
     {
-        ui->comboBoxNature->addItem(QString::fromStdString(nature));
         ui->comboBoxNatureLocked->addItem(QString::fromStdString(nature));
     }
 
-    for (const auto &hiddenPower : hiddenPowers)
-    {
-        ui->comboBoxHiddenPower->addItem(QString::fromStdString(hiddenPower));
-    }
-
-    ui->comboBoxNature->setup({});
+    ui->filter->disableControls(Controls::EncounterSlots);
 
     ui->labelPID->setVisible(false);
     ui->textBoxPID->setVisible(false);
@@ -100,10 +92,6 @@ void Event6::setupModels()
     ui->textBoxEC->setVisible(false);
 
     ui->comboBoxPIDType->setup({ PIDType::Random, PIDType::Nonshiny, PIDType::Shiny, PIDType::Specified });
-
-    ui->comboBoxGender->setup({ 255, 0, 1 });
-
-    ui->comboBoxAbility->setup({ 255, 0, 1, 2 });
 
     ui->textBoxStartFrame->setValues(InputType::Frame32Bit);
     ui->textBoxEndFrame->setValues(InputType::Frame32Bit);
@@ -165,14 +153,14 @@ void Event6::search()
     ui->pushButtonSearch->setEnabled(false);
     ui->pushButtonCancel->setEnabled(true);
 
-    std::array<u8, 6> min = ui->ivFilter->getLower();
-    std::array<u8, 6> max = ui->ivFilter->getUpper();
+    std::array<u8, 6> min = ui->filter->getMinIVs();
+    std::array<u8, 6> max = ui->filter->getMaxIVs();
 
     u8 ivCount = static_cast<u8>(ui->spinBoxRandomIVs->value());
     auto type = static_cast<PIDType>(ui->comboBoxPIDType->getCurrentByte());
 
-    EventFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
-                       ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(), ui->comboBoxGender->getCurrentByte());
+    EventFilter filter(min, max, ui->filter->getNatures(), ui->filter->getHiddenPowers(), ui->filter->getAbility(), ui->filter->getShiny(),
+                       ui->filter->getGender());
 
     std::array<u8, 6> ivTemplate;
     ivTemplate[0] = ui->checkBoxHP->isChecked() ? static_cast<u8>(ui->spinBoxHP->value()) : 255;

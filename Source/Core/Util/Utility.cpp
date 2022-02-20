@@ -45,27 +45,27 @@ u32 Utility::calcInitialSeed(u32 tick, u64 epoch)
     return SHA256::hash(tick, static_cast<u32>(epoch & 0xffffffff), static_cast<u32>(epoch >> 32));
 }
 
-std::string Utility::getNature(u8 nature)
+std::string *Utility::getNature(u8 nature)
 {
-    return natures[nature];
+    return &natures[nature];
 }
 
-std::string Utility::getHiddenPower(u8 hiddenPower)
+std::string *Utility::getHiddenPower(u8 hiddenPower)
 {
-    return hiddenPowers[hiddenPower];
+    return &hiddenPowers[hiddenPower];
 }
 
-std::vector<std::string> Utility::getNatures()
+std::vector<std::string> *Utility::getNatures()
 {
-    return natures;
+    return &natures;
 }
 
-std::vector<std::string> Utility::getHiddenPowers()
+std::vector<std::string> *Utility::getHiddenPowers()
 {
-    return hiddenPowers;
+    return &hiddenPowers;
 }
 
-std::vector<std::string> Utility::getGenderRatios()
+std::vector<std::string> *Utility::getGenderRatios()
 {
-    return genderRatios;
+    return &genderRatios;
 }

@@ -29,8 +29,9 @@ class CheckList : public QComboBox
     Q_OBJECT
 public:
     explicit CheckList(QWidget *parent = nullptr);
-    void setup(const std::vector<std::string> &items);
-    std::vector<bool> getChecked();
+    void setup(const std::vector<std::string> &items = std::vector<std::string>());
+    std::vector<bool> getChecked() const;
+    void setChecks(std::vector<bool> flags);
 
 public slots:
     void resetChecks();
@@ -41,10 +42,10 @@ protected:
 private:
     QStandardItemModel *model;
 
-    int checkState();
+    int checkState() const;
 
 private slots:
-    void updateText();
+    void modelDataChanged();
     void itemPressed(const QModelIndex &index);
 };
 

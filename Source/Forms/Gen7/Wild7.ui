@@ -305,184 +305,8 @@
       <string>Filters</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_19">
-      <item row="0" column="1">
-       <widget class="QLabel" name="labelNature">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="text">
-         <string>Nature</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="CheckList" name="comboBoxNature"/>
-      </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="pushButtonAnyNature">
-        <property name="text">
-         <string>Any</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="labelHiddenPower">
-        <property name="text">
-         <string>Hidden Power</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="CheckList" name="comboBoxHiddenPower"/>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="pushButtonAnyHiddenPower">
-        <property name="text">
-         <string>Any</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="labelEncounterSlot">
-        <property name="text">
-         <string>Encounter Slots</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="CheckList" name="comboBoxEncounterSlot">
-        <item>
-         <property name="text">
-          <string>1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>5</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>7</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>9</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>10</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="pushButtonAnyEncounterSlot">
-        <property name="text">
-         <string>Any</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="labelAbility">
-        <property name="text">
-         <string>Ability</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="ComboBox" name="comboBoxAbility">
-        <item>
-         <property name="text">
-          <string>Any</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">H</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="labelGender">
-        <property name="text">
-         <string>Gender</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="ComboBox" name="comboBoxGender">
-        <item>
-         <property name="text">
-          <string>Any</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">♂</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string notr="true">♀</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="labelShiny">
-        <property name="text">
-         <string>Shiny</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QCheckBox" name="checkBoxShiny">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" rowspan="6">
-       <widget class="IVFilter" name="ivFilter" native="true"/>
+      <item row="0" column="0" rowspan="2">
+       <widget class="Filter" name="filter" native="true"/>
       </item>
      </layout>
     </widget>
@@ -524,20 +348,6 @@
    <header>Forms/Controls/TableView.hpp</header>
   </customwidget>
   <customwidget>
-   <class>IVFilter</class>
-   <extends>QWidget</extends>
-   <header>Forms/Controls/IVFilter.hpp</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>CheckList</class>
-   <extends>QComboBox</extends>
-   <header>Forms/Controls/CheckList.hpp</header>
-   <slots>
-    <slot>resetChecks()</slot>
-   </slots>
-  </customwidget>
-  <customwidget>
    <class>ComboBox</class>
    <extends>QComboBox</extends>
    <header>Forms/Controls/ComboBox.hpp</header>
@@ -546,6 +356,12 @@
    <class>DateTimeEdit</class>
    <extends>QDateTimeEdit</extends>
    <header>Forms/Controls/DateTimeEdit.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>Filter</class>
+   <extends>QWidget</extends>
+   <header>Forms/Controls/Filter.hpp</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -561,66 +377,8 @@
   <tabstop>checkBoxSynch</tabstop>
   <tabstop>comboBoxSynchNature</tabstop>
   <tabstop>comboBoxGenderRatio</tabstop>
-  <tabstop>comboBoxNature</tabstop>
-  <tabstop>pushButtonAnyNature</tabstop>
-  <tabstop>comboBoxHiddenPower</tabstop>
-  <tabstop>pushButtonAnyHiddenPower</tabstop>
-  <tabstop>comboBoxEncounterSlot</tabstop>
-  <tabstop>pushButtonAnyEncounterSlot</tabstop>
-  <tabstop>comboBoxAbility</tabstop>
-  <tabstop>comboBoxGender</tabstop>
-  <tabstop>checkBoxShiny</tabstop>
   <tabstop>tableView</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButtonAnyNature</sender>
-   <signal>clicked()</signal>
-   <receiver>comboBoxNature</receiver>
-   <slot>resetChecks()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1038</x>
-     <y>171</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1012</x>
-     <y>166</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonAnyHiddenPower</sender>
-   <signal>clicked()</signal>
-   <receiver>comboBoxHiddenPower</receiver>
-   <slot>resetChecks()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1053</x>
-     <y>198</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>976</x>
-     <y>195</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonAnyEncounterSlot</sender>
-   <signal>clicked()</signal>
-   <receiver>comboBoxEncounterSlot</receiver>
-   <slot>resetChecks()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1068</x>
-     <y>224</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>934</x>
-     <y>227</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

@@ -20,14 +20,14 @@
 #include <Core/Parents/WildResult.hpp>
 
 WildFilter::WildFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
-                       const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender) :
-    Filter(minIV, maxIV, nature, hiddenPower, ability, shiny, gender), encounterSlots(encounterSlots)
+                       const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, u8 shiny, u8 gender) :
+    ResultFilter(minIV, maxIV, nature, hiddenPower, ability, shiny, gender), encounterSlots(encounterSlots)
 {
 }
 
 bool WildFilter::compare(const WildResult &frame)
 {
-    if (shiny && !frame.getShiny())
+    if (shiny != 255 && !(shiny & frame.getShiny()))
     {
         return false;
     }

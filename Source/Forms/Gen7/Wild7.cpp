@@ -77,29 +77,19 @@ void Wild7::setupModel()
 
     ui->tableView->setModel(model);
 
-    auto natures = Utility::getNatures();
-    auto hiddenPowers = Utility::getHiddenPowers();
-    auto genderRatios = Utility::getGenderRatios();
-
-    ui->comboBoxNature->setup(natures);
-    ui->comboBoxHiddenPower->setup(hiddenPowers);
-    ui->comboBoxEncounterSlot->setup({});
-
-    for (const auto &genderRatio : genderRatios)
-    {
-        ui->comboBoxGenderRatio->addItem(QString::fromStdString(genderRatio));
-    }
-
-    for (const auto &nature : natures)
+    for (const auto &nature : *Utility::getNatures())
     {
         ui->comboBoxSynchNature->addItem(QString::fromStdString(nature));
     }
 
+    for (const auto &genderRatio : *Utility::getGenderRatios())
+    {
+        ui->comboBoxGenderRatio->addItem(QString::fromStdString(genderRatio));
+    }
+
+    ui->filter->setEncounterSlots({"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"});
+
     ui->comboBoxGenderRatio->setup({ 255, 127, 191, 63, 31, 0, 254 });
-
-    ui->comboBoxGender->setup({ 255, 0, 1 });
-
-    ui->comboBoxAbility->setup({ 255, 0, 1, 2 });
 
     ui->comboBoxEncounter->setup({ WildType::Grass, WildType::Fish });
 
@@ -150,12 +140,11 @@ void Wild7::search()
     ui->pushButtonSearch->setEnabled(false);
     ui->pushButtonCancel->setEnabled(true);
 
-    std::array<u8, 6> min = ui->ivFilter->getLower();
-    std::array<u8, 6> max = ui->ivFilter->getUpper();
+    std::array<u8, 6> min = ui->filter->getMinIVs();
+    std::array<u8, 6> max = ui->filter->getMaxIVs();
 
-    WildFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
-                      ui->comboBoxEncounterSlot->getChecked(), ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(),
-                      ui->comboBoxGender->getCurrentByte());
+    WildFilter filter(min, max, ui->filter->getNatures(), ui->filter->getHiddenPowers(), ui->filter->getEncounterSlots(),
+                      ui->filter->getAbility(), ui->filter->getShiny(), ui->filter->getGender());
 
     auto *searcher = new WildSearcher7(start, end, frameStart, frameEnd, ui->checkBoxSynch->isChecked(),
                                        static_cast<u8>(ui->comboBoxSynchNature->currentIndex()),

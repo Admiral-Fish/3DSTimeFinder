@@ -20,15 +20,15 @@
 #ifndef WILDFILTER_HPP
 #define WILDFILTER_HPP
 
-#include <Core/Parents/Filter.hpp>
+#include <Core/Parents/ResultFilter.hpp>
 
 class WildResult;
 
-class WildFilter : public Filter
+class WildFilter : public ResultFilter
 {
 public:
     WildFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
-               const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, bool shiny, u8 gender);
+               const std::vector<bool> &hiddenPower, const std::vector<bool> &encounterSlots, u8 ability, u8 shiny, u8 gender);
     bool compare(const WildResult &frame);
 
 private:

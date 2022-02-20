@@ -17,25 +17,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef UTILITY_HPP
-#define UTILITY_HPP
+#ifndef RESULTFILTER_HPP
+#define RESULTFILTER_HPP
 
 #include <Core/Util/Global.hpp>
-#include <string>
+#include <array>
 #include <vector>
 
-class DateTime;
-
-namespace Utility
+class ResultFilter
 {
-    u64 getCitraTime(const DateTime &dt, u64 offset = 0);
-    u64 getNormalTime(u64 time, u64 offset = 0);
-    u32 calcInitialSeed(u32 tick, u64 epoch);
-    std::string *getNature(u8 nature);
-    std::string *getHiddenPower(u8 hiddenPower);
-    std::vector<std::string> *getNatures();
-    std::vector<std::string> *getHiddenPowers();
-    std::vector<std::string> *getGenderRatios();
-}
+public:
+    ResultFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
+           const std::vector<bool> &hiddenPower, u8 ability, u8 shiny, u8 gender) :
+        minIV(minIV), maxIV(maxIV), nature(nature), hiddenPower(hiddenPower), ability(ability), gender(gender), shiny(shiny)
+    {
+    }
 
-#endif // UTILITY_HPP
+protected:
+    std::array<u8, 6> minIV, maxIV;
+    std::vector<bool> nature, hiddenPower;
+    u8 ability, gender, shiny;
+};
+
+#endif // RESULTFILTER_HPP

@@ -1,6 +1,6 @@
 /*
- * This file is part of 3DSTimeFinder
- * Copyright (C) 2019-2022 by Admiral_Fish
+ * This file is part of PokéFinder
+ * Copyright (C) 2017-2022 by Admiral_Fish, bumba, and EzPzStreamz
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,27 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef FILTER_HPP
-#define FILTER_HPP
+#ifndef CONTROLS_HPP
+#define CONTROLS_HPP
 
 #include <Core/Util/Global.hpp>
-#include <array>
-#include <vector>
 
-class Filter
+enum class Controls : u16
 {
-public:
-    Filter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
-           const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender) :
-        minIV(minIV), maxIV(maxIV), nature(nature), hiddenPower(hiddenPower), ability(ability), gender(gender), shiny(shiny)
-    {
-    }
-
-protected:
-    std::array<u8, 6> minIV, maxIV;
-    std::vector<bool> nature, hiddenPower;
-    u8 ability, gender;
-    bool shiny;
+    None = 0,
+    IVs = 1 << 0,
+    Ability = 1 << 1,
+    Gender = 1 << 2,
+    EncounterSlots = 1 << 3,
+    HiddenPowers = 1 << 4,
+    Natures = 1 << 5,
+    Shiny = 1 << 6,
 };
 
-#endif // FILTER_HPP
+constexpr Controls operator|(Controls left, Controls right)
+{
+    return static_cast<Controls>(static_cast<u16>(left) | static_cast<u16>(right));
+};
+
+constexpr Controls operator&(Controls left, Controls right)
+{
+    return static_cast<Controls>(static_cast<u16>(left) & static_cast<u16>(right));
+};
+
+#endif // CONTROLS_HPP

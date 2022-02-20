@@ -20,15 +20,15 @@
 #ifndef EVENTFILTER_HPP
 #define EVENTFILTER_HPP
 
-#include <Core/Parents/Filter.hpp>
+#include <Core/Parents/ResultFilter.hpp>
 
 class EventResult;
 
-class EventFilter : public Filter
+class EventFilter : public ResultFilter
 {
 public:
     EventFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
-                const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender);
+                const std::vector<bool> &hiddenPower, u8 ability, u8 shiny, u8 gender);
     bool compare(const EventResult &frame);
 };
 

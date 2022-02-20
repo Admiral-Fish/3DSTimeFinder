@@ -20,15 +20,15 @@
 #ifndef STATIONARYFILTER_HPP
 #define STATIONARYFILTER_HPP
 
-#include <Core/Parents/Filter.hpp>
+#include <Core/Parents/ResultFilter.hpp>
 
 class StationaryResult;
 
-class StationaryFilter : public Filter
+class StationaryFilter : public ResultFilter
 {
 public:
     StationaryFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
-                     const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender);
+                     const std::vector<bool> &hiddenPower, u8 ability, u8 shiny, u8 gender);
     bool compare(const StationaryResult &frame);
 };
 

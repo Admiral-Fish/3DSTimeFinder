@@ -28,7 +28,7 @@ StationaryModel::StationaryModel(QObject *parent) : TableModel<StationaryResult>
 int StationaryModel::columnCount(const QModelIndex &parent) const
 {
     (void)parent;
-    return 14;
+    return 16;
 }
 
 QVariant StationaryModel::data(const QModelIndex &index, int role) const
@@ -46,21 +46,28 @@ QVariant StationaryModel::data(const QModelIndex &index, int role) const
         case 2:
             return frame.getFrame();
         case 3:
+        return QString::number(frame.getPID(), 16).toUpper();
         case 4:
+        return QString::number(frame.getEC(), 16).toUpper();
         case 5:
+        {
+            u8 shiny = frame.getShiny();
+            return shiny == 2 ? tr("Square") : shiny == 1 ? tr("Star") : tr("No");
+        }
         case 6:
         case 7:
         case 8:
-            return frame.getIV(static_cast<u8>(column - 3));
         case 9:
-            return QString::fromStdString(Utility::getNature(frame.getNature()));
         case 10:
-            return QString::fromStdString(Utility::getHiddenPower(frame.getHiddenPower()));
         case 11:
-            return frame.getPSV();
+            return frame.getIV(static_cast<u8>(column - 6));
         case 12:
-            return QString::fromStdString(frame.getGenderString());
+            return QString::fromStdString(*Utility::getNature(frame.getNature()));
         case 13:
+            return QString::fromStdString(*Utility::getHiddenPower(frame.getHiddenPower()));
+        case 14:
+            return QString::fromStdString(frame.getGenderString());
+        case 15:
             return QString::fromStdString(frame.getAbilityString());
         }
     }

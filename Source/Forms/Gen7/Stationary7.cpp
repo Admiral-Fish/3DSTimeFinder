@@ -23,6 +23,7 @@
 #include <Core/Parents/ProfileLoader.hpp>
 #include <Core/Parents/StationaryResult.hpp>
 #include <Core/Util/Utility.hpp>
+#include <Forms/Controls/Controls.hpp>
 #include <Forms/Gen7/ProfileManager7.hpp>
 #include <Forms/Models/StationaryModel.hpp>
 #include <QMessageBox>
@@ -76,28 +77,19 @@ void Stationary7::setupModel()
 
     ui->tableView->setModel(model);
 
-    auto natures = Utility::getNatures();
-    auto hiddenPowers = Utility::getHiddenPowers();
-    auto genderRatios = Utility::getGenderRatios();
-
-    ui->comboBoxNature->setup(natures);
-    ui->comboBoxHiddenPower->setup(hiddenPowers);
-
-    for (const auto &nature : natures)
+    for (const auto &nature : *Utility::getNatures())
     {
         ui->comboBoxSynchNature->addItem(QString::fromStdString(nature));
     }
 
-    for (const auto &genderRatio : genderRatios)
+    for (const auto &genderRatio : *Utility::getGenderRatios())
     {
         ui->comboBoxGenderRatio->addItem(QString::fromStdString(genderRatio));
     }
 
+    ui->filter->disableControls(Controls::EncounterSlots);
+
     ui->comboBoxGenderRatio->setup({ 255, 127, 191, 63, 31, 0, 254 });
-
-    ui->comboBoxGender->setup({ 255, 0, 1 });
-
-    ui->comboBoxAbility->setup({ 255, 0, 1, 2 });
 
     ui->textBoxStartFrame->setValues(InputType::Frame32Bit);
     ui->textBoxEndFrame->setValues(InputType::Frame32Bit);
@@ -146,11 +138,11 @@ void Stationary7::search()
     ui->pushButtonSearch->setEnabled(false);
     ui->pushButtonCancel->setEnabled(true);
 
-    std::array<u8, 6> min = ui->ivFilter->getLower();
-    std::array<u8, 6> max = ui->ivFilter->getUpper();
+    std::array<u8, 6> min = ui->filter->getMinIVs();
+    std::array<u8, 6> max = ui->filter->getMaxIVs();
 
-    StationaryFilter filter(min, max, ui->comboBoxNature->getChecked(), ui->comboBoxHiddenPower->getChecked(),
-                            ui->comboBoxAbility->getCurrentByte(), ui->checkBoxShiny->isChecked(), ui->comboBoxGender->getCurrentByte());
+    StationaryFilter filter(min, max, ui->filter->getNatures(), ui->filter->getHiddenPowers(), ui->filter->getAbility(),
+                            ui->filter->getShiny(), ui->filter->getGender());
 
     auto *searcher = new StationarySearcher7(
         start, end, frameStart, frameEnd, ui->checkBox3IVs->isChecked(),

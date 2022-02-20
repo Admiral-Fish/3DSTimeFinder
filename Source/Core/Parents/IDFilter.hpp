@@ -27,7 +27,8 @@
 class IDResult;
 enum IDType : int;
 
-class IDFilter {
+class IDFilter
+{
 public:
     IDFilter() = default;
     IDFilter(const std::string &idList, const std::string &tsvList, IDType type);

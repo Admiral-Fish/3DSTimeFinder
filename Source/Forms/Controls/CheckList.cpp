@@ -33,8 +33,8 @@ CheckList::CheckList(QWidget *parent) : QComboBox(parent)
     lineEdit()->installEventFilter(this);
 
     connect(lineEdit(), &QLineEdit::selectionChanged, lineEdit(), &QLineEdit::deselect);
-    connect(dynamic_cast<QListView *>(view()), &QAbstractItemView::pressed, this, &CheckList::itemPressed);
-    connect(model, &QAbstractItemModel::dataChanged, this, &CheckList::updateText);
+    connect(qobject_cast<QListView *>(view()), &QAbstractItemView::pressed, this, &CheckList::itemPressed);
+    connect(model, &QAbstractItemModel::dataChanged, this, &CheckList::modelDataChanged);
 }
 
 void CheckList::setup(const std::vector<std::string> &items)
@@ -42,7 +42,7 @@ void CheckList::setup(const std::vector<std::string> &items)
     if (!items.empty())
     {
         clear();
-        for (const auto &item : items)
+        for (const std::string &item : items)
         {
             addItem(QString::fromStdString(item));
         }
@@ -56,23 +56,30 @@ void CheckList::setup(const std::vector<std::string> &items)
     }
 }
 
-std::vector<bool> CheckList::getChecked()
+std::vector<bool> CheckList::getChecked() const
 {
-    std::vector<bool> result(model->rowCount());
+    std::vector<bool> result;
 
     if (checkState() == Qt::PartiallyChecked)
     {
         for (auto i = 0; i < model->rowCount(); i++)
         {
-            result[i] = model->item(i)->checkState() == Qt::Checked;
+            result.emplace_back(model->item(i)->checkState() == Qt::Checked);
         }
     }
     else
     {
-        std::fill(result.begin(), result.end(), true);
+        result = std::vector<bool>(model->rowCount(), true);
     }
-
     return result;
+}
+
+void CheckList::setChecks(std::vector<bool> flags)
+{
+    for (auto i = 0; i < model->rowCount(); i++)
+    {
+        model->item(i)->setCheckState(flags[i] ? Qt::Checked : Qt::Unchecked);
+    }
 }
 
 void CheckList::resetChecks()
@@ -94,7 +101,7 @@ bool CheckList::eventFilter(QObject *object, QEvent *event)
     return false;
 }
 
-int CheckList::checkState()
+int CheckList::checkState() const
 {
     int total = model->rowCount();
     int checked = 0;
@@ -115,7 +122,7 @@ int CheckList::checkState()
     return checked == total ? Qt::Checked : unchecked == total ? Qt::Unchecked : Qt::PartiallyChecked;
 }
 
-void CheckList::updateText()
+void CheckList::modelDataChanged()
 {
     QString text;
 

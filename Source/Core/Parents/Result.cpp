@@ -19,7 +19,7 @@
 
 #include "Result.hpp"
 
-Result::Result(u32 seed, u16 tid, u16 sid) : seed(seed), tsv((tid ^ sid) >> 4), ivs { 255, 255, 255, 255, 255, 255 }
+Result::Result(u32 seed, u16 tid, u16 sid) : seed(seed), tsv(tid ^ sid), ivs { 255, 255, 255, 255, 255, 255 }
 {
 }
 
@@ -43,11 +43,23 @@ u32 Result::getPID() const
     return pid;
 }
 
-void Result::setPID(const u32 &pid)
+void Result::setPID(const u32 pid)
 {
     this->pid = pid;
-    psv = ((pid >> 16) ^ (pid & 0xffff)) >> 4;
-    shiny = psv == tsv;
+    u16 psv = (pid >> 16) ^ (pid & 0xffff);
+
+    if (tsv == psv)
+    {
+        shiny = 2; // Square
+    }
+    else if ((tsv ^ psv) < 16)
+    {
+        shiny = 1; // Star
+    }
+    else
+    {
+        shiny = 0;
+    }
 }
 
 u32 Result::getEC() const
@@ -55,7 +67,7 @@ u32 Result::getEC() const
     return ec;
 }
 
-void Result::setEC(const u32 &ec)
+void Result::setEC(const u32 ec)
 {
     this->ec = ec;
 }
@@ -65,14 +77,9 @@ u32 Result::getFrame() const
     return frame;
 }
 
-void Result::setFrame(const u32 &frame)
+void Result::setFrame(const u32 frame)
 {
     this->frame = frame;
-}
-
-u16 Result::getPSV() const
-{
-    return psv;
 }
 
 u8 Result::getHiddenPower() const
@@ -106,7 +113,7 @@ u8 Result::getAbility() const
     return ability;
 }
 
-void Result::setAbility(const u8 &ability)
+void Result::setAbility(const u8 ability)
 {
     this->ability = ability;
 }
@@ -116,7 +123,7 @@ u8 Result::getNature() const
     return nature;
 }
 
-void Result::setNature(const u8 &nature)
+void Result::setNature(const u8 nature)
 {
     this->nature = nature;
 }
@@ -131,7 +138,7 @@ u8 Result::getGender() const
     return gender;
 }
 
-void Result::setGender(const u8 &gender)
+void Result::setGender(const u8 gender)
 {
     this->gender = gender;
 }
@@ -141,7 +148,7 @@ u8 Result::getIV(u8 index) const
     return ivs[index];
 }
 
-void Result::setIV(const u8 &index, const u8 &iv)
+void Result::setIV(const u8 index, const u8 iv)
 {
     ivs[index] = iv;
 }
@@ -151,12 +158,7 @@ void Result::setIVs(const std::array<u8, 6> &ivs)
     this->ivs = ivs;
 }
 
-bool Result::getShiny() const
+u8 Result::getShiny() const
 {
     return shiny;
-}
-
-void Result::setShiny(const bool &shiny)
-{
-    this->shiny = shiny;
 }

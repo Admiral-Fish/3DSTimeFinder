@@ -21,14 +21,14 @@
 #include <Core/Parents/StationaryResult.hpp>
 
 StationaryFilter::StationaryFilter(const std::array<u8, 6> &minIV, const std::array<u8, 6> &maxIV, const std::vector<bool> &nature,
-                                   const std::vector<bool> &hiddenPower, u8 ability, bool shiny, u8 gender) :
-    Filter(minIV, maxIV, nature, hiddenPower, ability, shiny, gender)
+                                   const std::vector<bool> &hiddenPower, u8 ability, u8 shiny, u8 gender) :
+    ResultFilter(minIV, maxIV, nature, hiddenPower, ability, shiny, gender)
 {
 }
 
 bool StationaryFilter::compare(const StationaryResult &frame)
 {
-    if (shiny && !frame.getShiny())
+    if (shiny != 255 && !(shiny & frame.getShiny()))
     {
         return false;
     }

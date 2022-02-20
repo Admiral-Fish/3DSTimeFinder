@@ -34,35 +34,32 @@ public:
     void setTarget(const DateTime &target);
     u32 getSeed() const;
     u32 getPID() const;
-    void setPID(const u32 &pid);
+    void setPID(const u32 pid);
     u32 getEC() const;
-    void setEC(const u32 &ec);
+    void setEC(const u32 ec);
     u32 getFrame() const;
-    void setFrame(const u32 &frame);
-    u16 getPSV() const;
+    void setFrame(const u32 frame);
     u8 getHiddenPower() const;
     void calcHiddenPower();
     std::string getAbilityString() const;
     u8 getAbility() const;
-    void setAbility(const u8 &ability);
+    void setAbility(const u8 ability);
     u8 getNature() const;
-    void setNature(const u8 &nature);
+    void setNature(const u8 nature);
     std::string getGenderString() const;
     u8 getGender() const;
-    void setGender(const u8 &gender);
+    void setGender(const u8 gender);
     u8 getIV(u8 index) const;
-    void setIV(const u8 &index, const u8 &iv);
+    void setIV(const u8 index, const u8 iv);
     void setIVs(const std::array<u8, 6> &ivs);
-    bool getShiny() const;
-    void setShiny(const bool &shiny);
+    u8 getShiny() const;
 
 protected:
     DateTime target;
     u32 seed, pid, ec, frame;
-    u16 psv, tsv;
-    u8 hiddenPower, ability, nature, gender;
+    u16 tsv;
+    u8 hiddenPower, ability, nature, gender, shiny;
     std::array<u8, 6> ivs;
-    bool shiny;
 };
 
 #endif // RESULT_HPP

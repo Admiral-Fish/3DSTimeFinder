@@ -9,12 +9,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
-	
+
 set(PROJECT_QRC
     "${CMAKE_SOURCE_DIR}/Externals/QDarkStyleSheet/qdarkstyle/dark/style.qrc"
 )
 
-set(PROJECT_UI	
+set(PROJECT_UI
+    Controls/Filter.ui
     Controls/IVFilter.ui
     Gen6/Event6.ui
     Gen6/ProfileEditor6.ui
@@ -34,6 +35,7 @@ set(PROJECT_SOURCES
     Controls/CheckList.cpp
     Controls/ComboBox.cpp
     Controls/DateTimeEdit.cpp
+    Controls/Filter.cpp
     Controls/IVFilter.cpp
     Controls/Label.cpp
     Controls/TableView.cpp

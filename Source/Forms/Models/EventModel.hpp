@@ -33,8 +33,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    QStringList header
-        = { "Date/Time", "Initial Seed", "Frame", "HP", "Atk", "Def", "SpA", "SpD", "Spe", "Nature", "Power", "PSV", "Gender", "Ability" };
+    QStringList header = { "Date/Time", "Initial Seed", "Frame", "PID", "EC",     "Shiny", "HP",     "Atk",
+                           "Def",       "SpA",          "SpD",   "Spe", "Nature", "Power", "Gender", "Ability" };
 };
 
 #endif // EVENTMODEL_HPP
