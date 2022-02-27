@@ -43,7 +43,7 @@ MainWindow::MainWindow(bool profile, QWidget *parent) : QMainWindow(parent), ui(
     setupStyle();
     setupThread();
 
-    QTimer::singleShot(1000, this, [this, profile] {
+    QTimer::singleShot(1000, this, [profile] {
         if (!profile)
         {
             QMessageBox message(QMessageBox::Warning, "Unable to locate profiles",
