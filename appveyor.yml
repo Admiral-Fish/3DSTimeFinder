@@ -1,19 +1,19 @@
 environment:
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    QTPATH: C:\Qt\6.2\msvc2019_64
+    QTPATH: C:\Qt\5.15\msvc2019_64
     OpenSSL: C:\OpenSSL-v111-Win64\bin
     OS: win
     EXT: zip
     VCVARSALLPATH: C:\"Program Files (x86)\Microsoft Visual Studio"\2019\Community\VC\Auxiliary\Build\vcvarsall.bat
     VCVARSALL: x64
-  - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2004
+  - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
     OS: linux
-    QTVER: 6.1
+    QTVER: 5.15
     EXT: tar.gz
   - APPVEYOR_BUILD_WORKER_IMAGE: macos
     OS: macOS
-    QTVER: 6.1
+    QTVER: 5.15
     EXT: tar.gz
 
 install:

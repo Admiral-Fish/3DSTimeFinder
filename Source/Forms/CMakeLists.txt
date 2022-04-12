@@ -8,7 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt5 5.15 COMPONENTS Core Widgets REQUIRED)
 
 set(PROJECT_QRC
     "${CMAKE_SOURCE_DIR}/Externals/QDarkStyleSheet/qdarkstyle/dark/style.qrc"
