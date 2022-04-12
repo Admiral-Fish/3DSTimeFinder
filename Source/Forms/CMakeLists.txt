@@ -84,4 +84,4 @@ else ()
     )
 endif ()
 
-target_link_libraries(3DSTimeFinder PRIVATE 3DSTimeFinderCore Qt6::Core Qt6::Widgets)
+target_link_libraries(3DSTimeFinder PRIVATE 3DSTimeFinderCore Qt::Core Qt::Widgets)
