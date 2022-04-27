@@ -36,8 +36,6 @@ ProfileCalibrater7::ProfileCalibrater7(QWidget *parent) : QWidget(parent), ui(ne
     setAttribute(Qt::WA_DeleteOnClose);
 
     setupModels();
-
-    qRegisterMetaType<QVector<QPair<u32, u32>>>("QVector<QPair<u32, u32>>");
 }
 
 ProfileCalibrater7::~ProfileCalibrater7()

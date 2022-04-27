@@ -38,8 +38,6 @@ Wild7::Wild7(QWidget *parent) : QWidget(parent), ui(new Ui::Wild7)
 
     setupModel();
     updateProfiles();
-
-    qRegisterMetaType<QVector<WildResult>>("QVector<WildResult>");
 }
 
 Wild7::~Wild7()

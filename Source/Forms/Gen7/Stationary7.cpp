@@ -38,8 +38,6 @@ Stationary7::Stationary7(QWidget *parent) : QWidget(parent), ui(new Ui::Stationa
 
     setupModel();
     updateProfiles();
-
-    qRegisterMetaType<QVector<StationaryResult>>("QVector<StationaryResult");
 }
 
 Stationary7::~Stationary7()

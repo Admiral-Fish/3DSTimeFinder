@@ -37,8 +37,6 @@ ID7::ID7(QWidget *parent) : QWidget(parent), ui(new Ui::ID7)
 
     setupModel();
     updateProfiles();
-
-    qRegisterMetaType<QVector<IDResult>>("QVector<IDResult>");
 }
 
 ID7::~ID7()

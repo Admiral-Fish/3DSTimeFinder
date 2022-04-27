@@ -40,8 +40,6 @@ Event7::Event7(QWidget *parent) : QWidget(parent), ui(new Ui::Event7)
 
     setupModel();
     updateProfiles();
-
-    qRegisterMetaType<QVector<EventResult>>("QVector<EventResult>");
 }
 
 Event7::~Event7()
@@ -115,6 +113,7 @@ void Event7::setupModel()
     connect(ui->comboBoxProfiles, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Event7::profilesIndexChanged);
     connect(ui->checkBoxAbilityLock, &QCheckBox::clicked, this, &Event7::checkBoxAbilityLock);
     connect(ui->comboBoxPIDType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Event7::comboBoxPIDTypeIndexChanged);
+    connect(ui->pushButtonImport, &QPushButton::clicked, this, &Event7::importEvent);
 
     QSettings setting;
     if (setting.contains("event7/geometry"))
