@@ -136,12 +136,12 @@ void ProfileCalibrater7::indexChanged(int index)
     if (index == 0)
     {
         ui->textBoxBaseOffset->setText("55");
-        ui->textBoxBaseTick->setText("3730114");
+        ui->textBoxBaseTick->setText("36ec43b");
     }
     else if (index == 1)
     {
         ui->textBoxBaseOffset->setText("56");
-        ui->textBoxBaseTick->setText("4470937");
+        ui->textBoxBaseTick->setText("43b1cf3");
     }
 }
 
