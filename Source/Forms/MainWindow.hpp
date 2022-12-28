@@ -70,6 +70,7 @@ private slots:
     void openID7();
     void openStationary7();
     void openWild7();
+    void openAbout();
     void openCalibrator7();
 };
 #endif // MAINWINDOW_HPP

@@ -27,17 +27,19 @@
 #include <Forms/Gen7/Stationary7.hpp>
 #include <Forms/Gen7/Wild7.hpp>
 #include <QActionGroup>
+#include <QClipboard>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
 #include <QThread>
 #include <QTimer>
+#include <version.h>
 
 MainWindow::MainWindow(bool profile, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle(QString("3DS Time Finder %1").arg(VERSION));
+    this->setWindowTitle(QString("3DS Time Finder %1").arg(GIT_VERSION));
 
     setupModel();
     setupStyle();
@@ -71,6 +73,7 @@ void MainWindow::setupModel()
     connect(ui->pushButtonStationary7, &QPushButton::clicked, this, &MainWindow::openStationary7);
     connect(ui->pushButtonWild7, &QPushButton::clicked, this, &MainWindow::openWild7);
     connect(ui->actionProfiles, &QAction::triggered, this, &MainWindow::updateProfilePath);
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::openAbout);
     connect(ui->actionCalibrator7, &QAction::triggered, this, &MainWindow::openCalibrator7);
 
     QSettings setting;
@@ -292,6 +295,20 @@ void MainWindow::openWild7()
     }
     wild7->show();
     wild7->raise();
+}
+
+void MainWindow::openAbout()
+{
+    QStringList info = { tr("Version: %1").arg(GIT_VERSION), tr("Branch: %1").arg(GIT_BRANCH), tr("Commit: %1").arg(GIT_COMMIT) };
+
+    QMessageBox msg(QMessageBox::Information, tr("About"), info.join('\n'), QMessageBox::Close);
+    QAbstractButton *copy = msg.addButton(tr("Copy"), QMessageBox::NoRole);
+    msg.exec();
+    if (msg.clickedButton() == copy)
+    {
+        QApplication::clipboard()->setText(info.join('\n'));
+    }
+    delete copy;
 }
 
 void MainWindow::openCalibrator7()
