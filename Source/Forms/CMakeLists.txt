@@ -35,6 +35,7 @@ include_directories(${CMAKE_BINARY_DIR}/generated)
 
 set(PROJECT_QRC
     "${CMAKE_SOURCE_DIR}/Externals/QDarkStyleSheet/qdarkstyle/dark/darkstyle.qrc"
+    "${CMAKE_SOURCE_DIR}/Externals/QDarkStyleSheet/qdarkstyle/light/lightstyle.qrc"
 )
 
 set(PROJECT_UI

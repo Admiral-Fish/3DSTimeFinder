@@ -73,16 +73,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    QString style = setting.value("settings/style", "dark").toString();
-    if (style == "dark")
+    QFile file(QString(":/qdarkstyle/%1/%1style.qss").arg(setting.value("settings/style").toString()));
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        QFile file(":/qdarkstyle/dark/style.qss");
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QTextStream ts(&file);
-            app.setStyleSheet(ts.readAll());
-            file.close();
-        }
+        QTextStream ts(&file);
+        app.setStyleSheet(ts.readAll());
     }
 
     MainWindow w(profile);

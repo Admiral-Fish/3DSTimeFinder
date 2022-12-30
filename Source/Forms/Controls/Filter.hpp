@@ -35,7 +35,7 @@ class Filter  : public QWidget
     Q_OBJECT
 public:
     explicit Filter(QWidget *parent = nullptr);
-    ~Filter() override ;
+    ~Filter() override;
 
     std::array<u8, 6> getMinIVs() const;
     std::array<u8, 6> getMaxIVs() const;
