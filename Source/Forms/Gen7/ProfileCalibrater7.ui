@@ -62,9 +62,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="maxLength">
-         <number>8</number>
-        </property>
        </widget>
       </item>
       <item row="1" column="3">
@@ -81,9 +78,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="maxLength">
-         <number>5</number>
         </property>
        </widget>
       </item>
@@ -154,9 +148,6 @@
         <property name="text">
          <string notr="true">1000</string>
         </property>
-        <property name="maxLength">
-         <number>8</number>
-        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -174,9 +165,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="maxLength">
-         <number>8</number>
-        </property>
        </widget>
       </item>
       <item row="1" column="3">
@@ -189,9 +177,6 @@
         </property>
         <property name="text">
          <string notr="true">10</string>
-        </property>
-        <property name="maxLength">
-         <number>8</number>
         </property>
        </widget>
       </item>

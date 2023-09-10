@@ -83,7 +83,7 @@ void ProfileEditor7::setupModels()
     ui->textBoxProfileTID->setValues(InputType::ID);
     ui->textBoxProfileSID->setValues(InputType::ID);
     ui->textBoxProfileTick->setValues(InputType::Seed32Bit);
-    ui->textBoxProfileOffset->setValues(0, 100, 3, 10);
+    ui->textBoxProfileOffset->setValues(InputType::Frame32Bit);
 
     ui->comboBoxProfileVersion->setItemData(0, Game::Sun);
     ui->comboBoxProfileVersion->setItemData(1, Game::Moon);
