@@ -28,8 +28,8 @@ Filter::Filter(QWidget *parent) : QWidget(parent), ui(new Ui::Filter)
 
     ui->comboBoxAbility->setup({ 255, 0, 1 });
     ui->comboBoxGender->setup({ 255, 0, 1 });
-    ui->checkListHiddenPower->setup(*Utility::getHiddenPowers());
-    ui->checkListNature->setup(*Utility::getNatures());
+    ui->checkListHiddenPower->setup(Utility::getHiddenPowers());
+    ui->checkListNature->setup(Utility::getNatures());
     ui->comboBoxShiny->setup({ 255, 1, 2, 3 });
 
     connect(ui->pushButtonEncounterSlotAny, &QPushButton::clicked, ui->checkListEncounterSlot, &CheckList::resetChecks);

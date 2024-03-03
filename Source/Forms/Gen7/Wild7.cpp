@@ -75,17 +75,17 @@ void Wild7::setupModel()
 
     ui->tableView->setModel(model);
 
-    for (const auto &nature : *Utility::getNatures())
+    for (const auto &nature : Utility::getNatures())
     {
         ui->comboBoxSynchNature->addItem(QString::fromStdString(nature));
     }
 
-    for (const auto &genderRatio : *Utility::getGenderRatios())
+    for (const auto &genderRatio : Utility::getGenderRatios())
     {
         ui->comboBoxGenderRatio->addItem(QString::fromStdString(genderRatio));
     }
 
-    ui->filter->setEncounterSlots({"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"});
+    ui->filter->setEncounterSlots({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
 
     ui->comboBoxGenderRatio->setup({ 255, 127, 191, 63, 31, 0, 254 });
 

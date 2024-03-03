@@ -21,8 +21,14 @@
 #define DATETIME_HPP
 
 #include <Core/Util/Global.hpp>
-#include <array>
 #include <string>
+
+struct DateParts
+{
+    u16 year;
+    u8 month;
+    u8 day;
+};
 
 // Julian date bound between Jan 1, 2000 (2451545) and Dec 31, 2099 (2488069)
 class Date
@@ -39,7 +45,7 @@ public:
     int month() const;
     int day() const;
     int dayOfWeek() const;
-    std::array<int, 3> getParts() const;
+    DateParts getParts() const;
     static int daysInMonth(int month, int year);
     int weekDay() const;
     std::string toString() const;

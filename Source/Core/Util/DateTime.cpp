@@ -18,7 +18,30 @@
  */
 
 #include "DateTime.hpp"
+#include <array>
 
+consteval std::array<char[2], 100> computeNumbers()
+{
+    std::array<char[2], 100> strings;
+
+    for (char i = 0; i < strings.size(); i++)
+    {
+        if (i < 10)
+        {
+            strings[i][0] = '0';
+            strings[i][1] = i + '0';
+        }
+        else
+        {
+            strings[i][0] = (i / 10) + '0';
+            strings[i][1] = (i % 10) + '0';
+        }
+    }
+
+    return strings;
+}
+
+constexpr std::array<char[2], 100> numbers = computeNumbers();
 constexpr int monthDays[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 inline bool isLeapYear(int year)
@@ -48,17 +71,17 @@ int Date::daysTo(const Date &other) const
 
 int Date::year() const
 {
-    return getParts()[0];
+    return getParts().year;
 }
 
 int Date::month() const
 {
-    return getParts()[1];
+    return getParts().month;
 }
 
 int Date::day() const
 {
-    return getParts()[2];
+    return getParts().day;
 }
 
 int Date::dayOfWeek() const
@@ -66,22 +89,22 @@ int Date::dayOfWeek() const
     return (jd + 1) % 7;
 }
 
-std::array<int, 3> Date::getParts() const
+DateParts Date::getParts() const
 {
-    int a = jd + 32044;
-    int b = (4 * a + 3) / 146097;
-    int c = a - (146097 * b) / 4;
+    u32 a = jd + 32044;
+    u32 b = (4 * a + 3) / 146097;
+    u32 c = a - (146097 * b) / 4;
 
-    int d = (4 * c + 3) / 1461;
-    int e = c - (1461 * d) / 4;
-    int m = (5 * e + 2) / 153;
+    u32 d = (4 * c + 3) / 1461;
+    u32 e = c - (1461 * d) / 4;
+    u32 m = (5 * e + 2) / 153;
 
     // int y = 100 * b + d - 4800 + (m / 10);
     // int year = y > 0 ? y : y - 1;
 
-    int year = 100 * b + d - 4800 + (m / 10);
-    int month = m + 3 - 12 * (m / 10);
-    int day = e - ((153 * m + 2) / 5) + 1;
+    u16 year = 100 * b + d - 4800 + (m / 10);
+    u8 month = m + 3 - 12 * (m / 10);
+    u8 day = e - ((153 * m + 2) / 5) + 1;
 
     return { year, month, day };
 }
@@ -97,17 +120,14 @@ int Date::daysInMonth(int month, int year)
 
 std::string Date::toString() const
 {
+    char buf[11] = "20  -  -  ";
     auto parts = getParts();
 
-    std::string y = std::to_string(parts[0]);
+    std::memcpy(buf + 2, numbers[parts.year - 2000], 2);
+    std::memcpy(buf + 5, numbers[parts.month], 2);
+    std::memcpy(buf + 8, numbers[parts.day], 2);
 
-    std::string m = std::to_string(parts[1]);
-    m.insert(m.begin(), 2 - m.size(), '0');
-
-    std::string d = std::to_string(parts[2]);
-    d.insert(d.begin(), 2 - d.size(), '0');
-
-    return y + "-" + m + "-" + d;
+    return std::string(buf, sizeof(buf) - 1);
 }
 
 int Time::addSeconds(int seconds)
@@ -140,16 +160,13 @@ int Time::second() const
 
 std::string Time::toString() const
 {
-    std::string h = std::to_string(hour());
-    h.insert(h.begin(), 2 - h.size(), '0');
+    char buf[9] = "  :  :  ";
 
-    std::string m = std::to_string(minute());
-    m.insert(m.begin(), 2 - m.size(), '0');
+    std::memcpy(buf, numbers[hour()], 2);
+    std::memcpy(buf + 3, numbers[minute()], 2);
+    std::memcpy(buf + 6, numbers[second()], 2);
 
-    std::string s = std::to_string(second());
-    s.insert(s.begin(), 2 - s.size(), '0');
-
-    return h + ":" + m + ":" + s;
+    return std::string(buf, sizeof(buf) - 1);
 }
 
 DateTime::DateTime(int year, int month, int day, int hour, int minute, int second) :
@@ -199,7 +216,17 @@ Time DateTime::getTime() const
 
 std::string DateTime::toString() const
 {
-    return date.toString() + " " + time.toString();
+    char buf[20] = "20  -  -     :  :  ";
+    auto parts = date.getParts();
+
+    std::memcpy(buf + 2, numbers[parts.year - 2000], 2);
+    std::memcpy(buf + 5, numbers[parts.month], 2);
+    std::memcpy(buf + 8, numbers[parts.day], 2);
+    std::memcpy(buf + 11, numbers[time.hour()], 2);
+    std::memcpy(buf + 14, numbers[time.minute()], 2);
+    std::memcpy(buf + 17, numbers[time.second()], 2);
+
+    return std::string(buf, sizeof(buf) - 1);
 }
 
 u64 DateTime::toMSecsSinceEpoch() const

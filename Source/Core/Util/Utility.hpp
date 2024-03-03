@@ -31,11 +31,11 @@ namespace Utility
     u64 getCitraTime(const DateTime &dt, u64 offset = 0);
     u64 getNormalTime(u64 time, u64 offset = 0);
     u32 calcInitialSeed(u32 tick, u64 epoch);
-    std::string *getNature(u8 nature);
-    std::string *getHiddenPower(u8 hiddenPower);
-    std::vector<std::string> *getNatures();
-    std::vector<std::string> *getHiddenPowers();
-    std::vector<std::string> *getGenderRatios();
+    const std::string &getNature(u8 nature);
+    const std::string &getHiddenPower(u8 hiddenPower);
+    const std::vector<std::string> &getNatures();
+    const std::vector<std::string> &getHiddenPowers();
+    const std::vector<std::string> &getGenderRatios();
 }
 
 #endif // UTILITY_HPP

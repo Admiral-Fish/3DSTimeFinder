@@ -75,12 +75,12 @@ void Stationary7::setupModel()
 
     ui->tableView->setModel(model);
 
-    for (const auto &nature : *Utility::getNatures())
+    for (const auto &nature : Utility::getNatures())
     {
         ui->comboBoxSynchNature->addItem(QString::fromStdString(nature));
     }
 
-    for (const auto &genderRatio : *Utility::getGenderRatios())
+    for (const auto &genderRatio : Utility::getGenderRatios())
     {
         ui->comboBoxGenderRatio->addItem(QString::fromStdString(genderRatio));
     }

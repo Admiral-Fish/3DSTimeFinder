@@ -77,7 +77,7 @@ void Event7::setupModel()
 
     ui->tableView->setModel(model);
 
-    for (const auto &nature : *Utility::getNatures())
+    for (const auto &nature : Utility::getNatures())
     {
         ui->comboBoxNatureLocked->addItem(QString::fromStdString(nature));
     }

@@ -62,9 +62,9 @@ QVariant WildModel::data(const QModelIndex &index, int role) const
         case 11:
             return frame.getIV(static_cast<u8>(column - 6));
         case 12:
-            return QString::fromStdString(*Utility::getNature(frame.getNature()));
+            return QString::fromStdString(Utility::getNature(frame.getNature()));
         case 13:
-            return QString::fromStdString(*Utility::getHiddenPower(frame.getHiddenPower()));
+            return QString::fromStdString(Utility::getHiddenPower(frame.getHiddenPower()));
         case 14:
             return QString::fromStdString(frame.getGenderString());
         case 15:
