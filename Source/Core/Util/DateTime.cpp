@@ -19,6 +19,7 @@
 
 #include "DateTime.hpp"
 #include <array>
+#include <cstring>
 
 consteval std::array<char[2], 100> computeNumbers()
 {
@@ -42,7 +43,7 @@ consteval std::array<char[2], 100> computeNumbers()
 }
 
 constexpr std::array<char[2], 100> numbers = computeNumbers();
-constexpr int monthDays[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+constexpr u8 monthDays[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 inline bool isLeapYear(int year)
 {
@@ -115,7 +116,7 @@ int Date::daysInMonth(int month, int year)
     {
         return 29;
     }
-    return monthDays[month];
+    return monthDays[month - 1];
 }
 
 std::string Date::toString() const
